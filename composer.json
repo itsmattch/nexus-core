@@ -1,24 +1,27 @@
 {
-    "name": "itsmattch/nexus",
-    "type": "library",
-    "autoload": {
-        "psr-4": {
-            "Itsmattch\\Nexus\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "itsmattch",
-            "email": "hello@itsmattch.com"
-        }
-    ],
-    "require-dev": {
-        "phpunit/phpunit": "^10.2",
-        "pestphp/pest": "^2.6"
-    },
-    "config": {
-        "allow-plugins": {
-            "pestphp/pest-plugin": true
-        }
+  "name": "itsmattch/nexus",
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "Itsmattch\\Nexus\\": "src/"
     }
+  },
+  "authors": [
+    {
+      "name": "Mateusz Chmielewski",
+      "email": "hello@itsmattch.com"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "^10.2",
+    "pestphp/pest": "^2.6"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
+  "require": {
+    "php": "^8.2"
+  }
 }
