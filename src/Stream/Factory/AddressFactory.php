@@ -8,6 +8,7 @@ class AddressFactory
 {
     public static function from(string $address): Address
     {
+        // todo address registry to catch common schemes
         return new class($address) extends Address {
             public function __construct(string $template)
             {

@@ -1,5 +1,6 @@
 <?php
 
+use Itsmattch\Nexus\Stream\Component\Address\OptionalParameter;
 use Itsmattch\Nexus\Stream\Component\Address\Parameter;
 
 it('returns default value when no explicit value is set', function () {
@@ -16,13 +17,13 @@ it('returns explicit value when both are present', function () {
 });
 
 it('is valid when is optional and has no values', function () {
-    $parameter = new Parameter('param', '', true);
+    $parameter = new OptionalParameter('param', '');
 
     expect($parameter->isValid())->toBeTrue();
 });
 
 it('is valid when explicit value is set', function () {
-    $parameter = new Parameter('param', '', false);
+    $parameter = new Parameter('param', 'getter', '');
     $parameter->setValue('value');
     expect($parameter->isValid())->toBeTrue();
 });
@@ -33,7 +34,7 @@ it('is invalid when is not optional and explicit value is not set ', function ()
 });
 
 it('emulates getValue() method when cast to a string', function () {
-    $parameter = new Parameter('param');
+    $parameter = new Parameter('param', 'getter');
     $parameter->setValue('value');
 
     expect((string)$parameter)->toBe('value');

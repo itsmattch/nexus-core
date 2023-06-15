@@ -2,6 +2,7 @@
 
 namespace Itsmattch\Nexus\Stream\Factory;
 
+use Itsmattch\Nexus\Stream\Component\Address\OptionalParameter;
 use Itsmattch\Nexus\Stream\Component\Address\Parameter;
 use Itsmattch\Nexus\Stream\Component\Address\ParametersCollection;
 
@@ -30,7 +31,11 @@ class ParametersCollectionFactory
             $default = $defaults[$name] ?? '';
             $optional = $parameter[1] == '@';
 
-            $collection->set(new Parameter($name, $default, $optional));
+            if ($optional) {
+                $collection->set(new OptionalParameter($name, $default));
+            } else {
+                $collection->set(new Parameter($name, $default));
+            }
         }
         return $collection;
     }

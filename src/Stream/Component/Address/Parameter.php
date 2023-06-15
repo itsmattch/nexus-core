@@ -18,9 +18,6 @@ class Parameter implements Stringable
     /** The default value of the parameter. */
     protected string $default;
 
-    /** Whether the parameter is optional or not. */
-    protected bool $optional;
-
     /** The explicitly set value of the parameter. */
     protected string $value;
 
@@ -28,14 +25,12 @@ class Parameter implements Stringable
      * The constructor for the Parameter class.
      *
      * @param string $name The name of the parameter.
-     * @param bool $optional Whether the parameter is optional or not.
      * @param string $default The default value of the parameter.
      */
-    public function __construct(string $name, string $default = '', bool $optional = false)
+    public function __construct(string $name, string $default = '')
     {
         $this->name = $name;
         $this->default = $default;
-        $this->optional = $optional;
     }
 
     /**
@@ -45,7 +40,7 @@ class Parameter implements Stringable
      */
     public function isValid(): bool
     {
-        return $this->optional || ($this->getValue() !== '');
+        return $this->getValue() !== '';
     }
 
     /**

@@ -1,6 +1,5 @@
 <?php
 
-use Itsmattch\Nexus\Exceptions\Stream\Address\CaptureMethodValueTypeException;
 use Itsmattch\Nexus\Stream\Component\Address;
 
 it('sets scalar parameters as strings', function () {
@@ -101,7 +100,7 @@ it('is invalid when not all required parameters are set', function () {
     $address->with('param1', 'foo');
 
     expect($address->isValid())->toBeFalse();
-    expect($address->getAddressCurrentState())->toBe('foofoo{param2}');
+    expect($address->getCurrentState())->toBe('foofoo{param2}');
     expect($address->getAddress())->toBe('');
 });
 
@@ -130,7 +129,7 @@ it('returns address template', function () {
     };
     $address->with('param1', 'foo');
 
-    expect($address->getAddressTemplate())->toBe('{param1}foo{@param2}');
+    expect($address->getTemplate())->toBe('{param1}foo{@param2}');
 });
 
 it('emulates getAddress() method when cast to a string', function () {
@@ -172,24 +171,4 @@ it('enforces data type of parameters', function () {
         }
     };
     $address->with('param', true);
-
-    expect($address->isValid())->toBeFalse();
-    expect($address->getExceptions())->not()->toBeEmpty();
-    expect($address->getExceptions()[0])->toBeInstanceOf(CaptureMethodValueTypeException::class);
-});
-
-it('gracefully catches validation exceptions', function () {
-    $address = new class extends Address {
-        protected string $template = '{param}';
-
-        protected function captureParam(): string
-        {
-            throw new Exception();
-        }
-    };
-    $address->with('param', true);
-
-    expect($address->isValid())->toBeFalse();
-    expect($address->getExceptions())->not()->toBeEmpty();
-    expect($address->getExceptions()[0])->toBeInstanceOf(Exception::class);
-});
+})->expectException(TypeError::class);

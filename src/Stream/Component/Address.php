@@ -2,9 +2,6 @@
 
 namespace Itsmattch\Nexus\Stream\Component;
 
-use Exception;
-use Itsmattch\Nexus\Common\Trait\CollectsExceptions;
-use Itsmattch\Nexus\Exceptions\Stream\Address\CaptureMethodValueTypeException;
 use Itsmattch\Nexus\Exceptions\Stream\Address\DynamicMethodMissingValueException;
 use Itsmattch\Nexus\Exceptions\Stream\Address\MissingParameterException;
 use Itsmattch\Nexus\Exceptions\Stream\Address\UncaughtDynamicMethodException;
@@ -13,7 +10,6 @@ use Itsmattch\Nexus\Stream\Component\Address\NullParameter;
 use Itsmattch\Nexus\Stream\Component\Address\ParametersCollection;
 use Itsmattch\Nexus\Stream\Factory\ParametersCollectionFactory;
 use Stringable;
-use TypeError;
 
 /**
  * The Address class encapsulates an address to a resource,
@@ -25,8 +21,6 @@ use TypeError;
  */
 abstract class Address implements Stringable
 {
-    use CollectsExceptions;
-
     /** Address template allowing for mustache-styled parameters. */
     protected string $template = '';
 
@@ -43,6 +37,8 @@ abstract class Address implements Stringable
      *
      * @param array $parameters An associative array of
      * parameters and their corresponding values
+     * @throws MissingParameterException
+     * @throws ValuePreparationException
      */
     public function __construct(array $parameters = [])
     {
@@ -59,26 +55,21 @@ abstract class Address implements Stringable
      * @param string $parameterName The name of the parameter.
      * @param mixed $value The value to be set.
      * @return Address The current instance, allowing for method chaining.
+     * @throws MissingParameterException
+     * @throws ValuePreparationException
      */
     public function with(string $parameterName, mixed $value): Address
     {
-        try {
-            if ($this->parametersCollection->get($parameterName) instanceof NullParameter) {
-                throw new MissingParameterException($parameterName);
-            }
-
-            $value = $this->callCaptureMethodIfExists($parameterName, $value);
-            $value = $this->prepareValue($value);
-
-            $this->parametersCollection->get($parameterName)->setValue($value);
-
-        } catch (Exception $e) {
-            $this->addException($e);
-        } catch (TypeError $e) {
-            $this->addException(new CaptureMethodValueTypeException($e));
-        } finally {
-            return $this;
+        if ($this->parametersCollection->get($parameterName) instanceof NullParameter) {
+            throw new MissingParameterException($parameterName);
         }
+
+        $value = $this->callCaptureMethodIfExists($parameterName, $value);
+        $value = $this->prepareValue($value);
+
+        $this->parametersCollection->get($parameterName)->setValue($value);
+
+        return $this;
     }
 
     /**
@@ -134,12 +125,14 @@ abstract class Address implements Stringable
      * @param string $name The name of the method.
      * @param array $arguments The arguments passed to the method.
      * @return Address The current instance, allowing for method chaining.
+     * @throws MissingParameterException
+     * @throws ValuePreparationException
+     * @throws DynamicMethodMissingValueException
      */
     public function __call(string $name, array $arguments)
     {
         if (sizeof($arguments) < 1) {
-            $this->addException(new DynamicMethodMissingValueException());
-            return $this;
+            throw new DynamicMethodMissingValueException();
         }
         if (str_starts_with($name, 'with') && strlen($name) > 4) {
             $parameter = $this->camelToSnake(substr($name, 4));
@@ -149,8 +142,7 @@ abstract class Address implements Stringable
             $parameter = $this->camelToSnake(substr($name, 2));
             return $this->with($parameter, $arguments[0]);
         }
-        $this->addException(new UncaughtDynamicMethodException($name));
-        return $this;
+        throw new UncaughtDynamicMethodException($name);
     }
 
     /** Converts a camelCase string to snake_case. */
@@ -180,7 +172,7 @@ abstract class Address implements Stringable
      *
      * @return string The address template.
      */
-    public function getAddressTemplate(): string
+    public function getTemplate(): string
     {
         return $this->template;
     }
@@ -191,7 +183,7 @@ abstract class Address implements Stringable
      *
      * @return string The address in its current state.
      */
-    public function getAddressCurrentState(): string
+    public function getCurrentState(): string
     {
         $address = $this->template;
         foreach ($this->parametersCollection as $parameter) {
@@ -215,7 +207,7 @@ abstract class Address implements Stringable
         if (!$this->isValid()) {
             return '';
         }
-        return $this->getAddressCurrentState();
+        return $this->getCurrentState();
     }
 
     public function __toString(): string

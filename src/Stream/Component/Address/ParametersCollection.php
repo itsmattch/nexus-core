@@ -9,10 +9,6 @@ use Iterator;
  */
 class ParametersCollection implements Iterator
 {
-
-    /** The original string */
-    protected string $string;
-
     /** A collection of parameters */
     protected array $parameters = [];
 

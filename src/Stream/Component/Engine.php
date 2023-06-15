@@ -2,7 +2,13 @@
 
 namespace Itsmattch\Nexus\Stream\Component;
 
-class Engine
+/**
+ * The Engine class encapsulates the logic responsible for
+ * handling the connection and reading of a resource.
+ *
+ * @link https://nexus.itsmattch.com/streams/engines Engines Documentation
+ */
+abstract class Engine
 {
     protected string $response = Response::class;
 
@@ -24,10 +30,7 @@ class Engine
 
     protected function bootResponse(Response $response): bool { return true; }
 
-    public function access(string $address): bool
-    {
-        return true;
-    }
+    // todo
 
     public function getResponse(): Response
     {
