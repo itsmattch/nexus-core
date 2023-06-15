@@ -1,6 +1,9 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Contract\Address;
+namespace Itsmattch\Nexus\Stream\Factory;
+
+use Itsmattch\Nexus\Stream\Component\Address\Parameter;
+use Itsmattch\Nexus\Stream\Component\Address\ParametersCollection;
 
 /** Static factory of ParametersCollection class. */
 class ParametersCollectionFactory

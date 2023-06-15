@@ -1,6 +1,6 @@
 <?php
 
-use Itsmattch\Nexus\Stream\Contract\Address\NullParameter;
+use Itsmattch\Nexus\Stream\Component\Address\NullParameter;
 
 it('has only one instance', function () {
     $firstInstance = NullParameter::getInstance();

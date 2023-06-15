@@ -3,10 +3,11 @@
 namespace Itsmattch\Nexus\Stream;
 
 use Itsmattch\Nexus\Base\Resource;
-use Itsmattch\Nexus\Stream\Contract\Address;
-use Itsmattch\Nexus\Stream\Contract\Engine;
-use Itsmattch\Nexus\Stream\Contract\Reader;
-use Itsmattch\Nexus\Stream\Contract\Response;
+use Itsmattch\Nexus\Stream\Component\Address;
+use Itsmattch\Nexus\Stream\Component\Engine;
+use Itsmattch\Nexus\Stream\Component\Reader;
+use Itsmattch\Nexus\Stream\Component\Response;
+use Itsmattch\Nexus\Stream\Factory\AddressFactory;
 
 /**
  * The Stream class represents a single access point of data
@@ -107,8 +108,14 @@ class Stream
 
     protected final function internallyBootAddress(): bool
     {
-        $this->addressInstance = new $this->address;
-        return $this->bootAddress($this->addressInstance);
+        if (is_a($this->address, Address::class)) {
+            $this->addressInstance = new $this->address;
+            return $this->bootAddress($this->addressInstance);
+        } else if (str_contains($this->address, '://')) {
+            $this->address = AddressFactory::from($this->address);
+            return $this->bootAddress($this->addressInstance);
+        }
+        return false;
     }
 
     protected final function internallyBootEngine(): bool

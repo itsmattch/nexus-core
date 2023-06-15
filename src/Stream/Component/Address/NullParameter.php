@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Contract\Address;
+namespace Itsmattch\Nexus\Stream\Component\Address;
 
 /**
  * This class represents a singleton Null Object extending

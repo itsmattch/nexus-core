@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Contract;
+namespace Itsmattch\Nexus\Stream\Component;
 
 use Exception;
 use Itsmattch\Nexus\Common\Trait\CollectsExceptions;
@@ -9,9 +9,9 @@ use Itsmattch\Nexus\Exceptions\Stream\Address\DynamicMethodMissingValueException
 use Itsmattch\Nexus\Exceptions\Stream\Address\MissingParameterException;
 use Itsmattch\Nexus\Exceptions\Stream\Address\UncaughtDynamicMethodException;
 use Itsmattch\Nexus\Exceptions\Stream\Address\ValuePreparationException;
-use Itsmattch\Nexus\Stream\Contract\Address\NullParameter;
-use Itsmattch\Nexus\Stream\Contract\Address\ParametersCollection;
-use Itsmattch\Nexus\Stream\Contract\Address\ParametersCollectionFactory;
+use Itsmattch\Nexus\Stream\Component\Address\NullParameter;
+use Itsmattch\Nexus\Stream\Component\Address\ParametersCollection;
+use Itsmattch\Nexus\Stream\Factory\ParametersCollectionFactory;
 use Stringable;
 use TypeError;
 

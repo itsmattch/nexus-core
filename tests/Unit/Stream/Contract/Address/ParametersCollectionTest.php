@@ -1,7 +1,7 @@
 <?php
 
-use Itsmattch\Nexus\Stream\Contract\Address\Parameter;
-use Itsmattch\Nexus\Stream\Contract\Address\ParametersCollection;
+use Itsmattch\Nexus\Stream\Component\Address\Parameter;
+use Itsmattch\Nexus\Stream\Component\Address\ParametersCollection;
 
 it('is valid when all parameters are valid', function () {
     $firstParameter = new Parameter('param', 'default');

@@ -1,7 +1,7 @@
 <?php
 
-use Itsmattch\Nexus\Stream\Contract\Address\ParametersCollection;
-use Itsmattch\Nexus\Stream\Contract\Address\ParametersCollectionFactory;
+use Itsmattch\Nexus\Stream\Component\Address\ParametersCollection;
+use Itsmattch\Nexus\Stream\Factory\ParametersCollectionFactory;
 
 it('creates collection', function () {
     $collection = ParametersCollectionFactory::from('{param1}{param2}');

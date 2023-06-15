@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Contract;
+namespace Itsmattch\Nexus\Stream\Component;
 
 class Engine
 {

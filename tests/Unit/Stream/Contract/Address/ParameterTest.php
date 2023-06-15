@@ -1,6 +1,6 @@
 <?php
 
-use Itsmattch\Nexus\Stream\Contract\Address\Parameter;
+use Itsmattch\Nexus\Stream\Component\Address\Parameter;
 
 it('returns default value when no explicit value is set', function () {
     $parameter = new Parameter('param', 'default');

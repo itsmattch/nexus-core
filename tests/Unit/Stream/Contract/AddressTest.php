@@ -1,7 +1,7 @@
 <?php
 
 use Itsmattch\Nexus\Exceptions\Stream\Address\CaptureMethodValueTypeException;
-use Itsmattch\Nexus\Stream\Contract\Address;
+use Itsmattch\Nexus\Stream\Component\Address;
 
 it('sets scalar parameters as strings', function () {
     $address = new class extends Address {
