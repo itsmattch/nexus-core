@@ -6,19 +6,18 @@ use Itsmattch\Nexus\Stream\Component\Address;
 
 class HttpAddress extends Address
 {
-    protected string $template = '{ scheme }://{ domain }{ @ port }/{ path }{ @query_string }';
+    protected string $template = '{ secure }://{ domain }{ @ port }/{ path }{ @query_string }';
+    protected array $defaults = [
+        'secure' => 'https',
+    ];
 
-    public function captureSecure(): callable
+    protected function captureSecure(bool $secure): string
     {
-        return function (bool $secure): string {
-            return $secure ? 'https' : 'http';
-        };
+        return $secure ? 'https' : 'http';
     }
 
-    public function releaseScheme(): callable
+    protected function releaseSecure(string $secure): string
     {
-        return function (string $string): bool {
-            return true;
-        };
+        return $secure === 'https';
     }
 }

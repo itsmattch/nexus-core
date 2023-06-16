@@ -1,11 +1,12 @@
 <?php
 
+use Itsmattch\Nexus\Stream\Component\Address\Collection\ParametersCollection;
+use Itsmattch\Nexus\Stream\Component\Address\OptionalParameter;
 use Itsmattch\Nexus\Stream\Component\Address\Parameter;
-use Itsmattch\Nexus\Stream\Component\Address\ParametersCollection;
 
 it('is valid when all parameters are valid', function () {
-    $firstParameter = new Parameter('param', 'default');
-    $secondParameter = new Parameter('param', '', false);
+    $firstParameter = new Parameter('{param}', 'param', 'default');
+    $secondParameter = new OptionalParameter('{param}', 'param');
     $secondParameter->setValue('value');
 
     $parametersCollection = new ParametersCollection();
@@ -28,9 +29,9 @@ it('is invalid when at least one parameter is invalid', function () {
 
 it('iterates', function () {
     $parametersCollection = new ParametersCollection();
-    $parametersCollection->set(new Parameter('param1', 'default'));
-    $parametersCollection->set(new Parameter('param2', 'default'));
-    $parametersCollection->set(new Parameter('param3', 'default'));
+    $parametersCollection->set(new Parameter('{param1}', 'param1', 'default'));
+    $parametersCollection->set(new Parameter('{param1}', 'param2', 'default'));
+    $parametersCollection->set(new Parameter('{param1}', 'param3', 'default'));
 
     expect($parametersCollection)->toHaveCount(3);
     expect($parametersCollection)->each->toBeInstanceOf(Parameter::class);

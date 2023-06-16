@@ -1,8 +1,10 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Component\Address;
+namespace Itsmattch\Nexus\Stream\Component\Address\Collection;
 
 use Iterator;
+use Itsmattch\Nexus\Stream\Component\Address\Contract\ParameterInterface;
+use Itsmattch\Nexus\Stream\Component\Address\NullParameter;
 
 /**
  * This class is a collection of Parameter objects.
@@ -19,9 +21,9 @@ class ParametersCollection implements Iterator
      * Add or update a parameter to the collection.
      * Parameters are recognized by their name, and it must
      * be unique within collection.
-     * @param Parameter $parameter Parameter to be added.
+     * @param ParameterInterface $parameter Parameter to be added.
      */
-    public function set(Parameter $parameter): void
+    public function set(ParameterInterface $parameter): void
     {
         $this->parameters[$parameter->getName()] = $parameter;
     }
@@ -30,13 +32,51 @@ class ParametersCollection implements Iterator
      * Get parameter by its name. Returns singleton instance
      * of null parameter if the name is not found.
      * @param string $name
-     * @return Parameter
+     * @return ParameterInterface
      */
-    public function get(string $name): Parameter
+    public function get(string $name): ParameterInterface
     {
         return $this->parameters[$name] ?? NullParameter::getInstance();
     }
 
+    /**
+     * Checks if the collection contains parameters with
+     * the given names. This method accepts an arbitrary
+     * number of arguments, each of which should be a string
+     * representing a parameter name.
+     *
+     * @param string ...$names The names of the parameters to check for.
+     * @return bool Returns true if all parameters are found, false otherwise.
+     */
+    public function has(string ...$names): bool
+    {
+        foreach ($names as $name) {
+            if (!array_key_exists($name, $this->parameters)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Checks if the collection contains parameters with
+     * the given names and validates them. This method
+     * accepts an arbitrary number of arguments, each of
+     * which should be a string representing a parameter
+     * name.
+     *
+     * @param string ...$names The names of the parameters to check for.
+     * @return bool Returns true if all parameters are found, false otherwise.
+     */
+    public function hasValid(string ...$names): bool
+    {
+        foreach ($names as $name) {
+            if (!array_key_exists($name, $this->parameters) || !$this->parameters[$name]->isValid()) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * Checks if all the parameters in the collection are valid.
@@ -54,9 +94,9 @@ class ParametersCollection implements Iterator
 
     /**
      * Returns the current parameter in the iteration.
-     * @return Parameter The current parameter.
+     * @return ParameterInterface The current parameter.
      */
-    public final function current(): Parameter
+    public final function current(): ParameterInterface
     {
         return $this->parameters[array_keys($this->parameters)[$this->position]];
     }

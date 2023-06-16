@@ -2,6 +2,7 @@
 
 namespace Itsmattch\Nexus\Stream\Component\Address;
 
+use Itsmattch\Nexus\Stream\Component\Address\Contract\ParameterInterface;
 use Stringable;
 
 /**
@@ -10,8 +11,11 @@ use Stringable;
  * A parameter is an entity that holds a value that is
  * either set explicitly or derived from a default value.
  */
-class Parameter implements Stringable
+class Parameter implements ParameterInterface, Stringable
 {
+    /** The full name of the parameter matched with regex, including braces. */
+    protected string $literal;
+
     /** The name of the parameter. */
     protected string $name;
 
@@ -27,54 +31,37 @@ class Parameter implements Stringable
      * @param string $name The name of the parameter.
      * @param string $default The default value of the parameter.
      */
-    public function __construct(string $name, string $default = '')
+    public function __construct(string $literal, string $name, string $default = '')
     {
+        $this->literal = $literal;
         $this->name = $name;
         $this->default = $default;
     }
 
-    /**
-     * Checks whether the parameter has any valid value.
-     *
-     * @return bool Returns true if the parameter is valid, false otherwise.
-     */
     public function isValid(): bool
     {
         return $this->getValue() !== '';
     }
 
-    /**
-     * Returns the value of the parameter. If an explicit
-     * value is not set, the default value is returned.
-     *
-     * @return string The value of the parameter.
-     */
     public function getValue(): string
     {
         return $this->value ?? $this->default;
     }
 
-    /**
-     * Sets the explicit value of the parameter.
-     *
-     * @param string $value The explicit value of the parameter
-     * @return void
-     */
-    public function setValue(string $value): void
+    public function setValue($value): void
     {
         $this->value = $value;
     }
 
-    /**
-     * Returns the name of the parameter.
-     *
-     * @return string The name of the parameter.
-     */
+    public function getLiteral(): string
+    {
+        return $this->literal;
+    }
+
     public function getName(): string
     {
         return $this->name;
     }
-
 
     public function __toString(): string
     {

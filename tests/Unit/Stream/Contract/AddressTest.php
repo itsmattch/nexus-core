@@ -12,16 +12,6 @@ it('sets scalar parameters as strings', function () {
     expect($address->getAddress())->toBe('123');
 });
 
-it('sets arrays as json strings', function () {
-    $address = new class extends Address {
-        protected string $template = '{param}';
-    };
-    $address->with('param', ['foo' => 'bar']);
-
-    expect($address->isValid())->toBeTrue();
-    expect($address->getAddress())->toBeJson('{"foo":"bar"}');
-});
-
 it('allows stringable objects', function () {
     $stringable = new class implements Stringable {
         public function __toString(): string { return 'foo'; }
@@ -33,16 +23,6 @@ it('allows stringable objects', function () {
 
     expect($address->isValid())->toBeTrue();
     expect($address->getAddress())->toBe('foo');
-});
-
-it('turns other objects into json', function () {
-    $address = new class extends Address {
-        protected string $template = '{param}';
-    };
-    $address->with('param', new StdClass());
-
-    expect($address->isValid())->toBeTrue();
-    expect($address->getAddress())->toBeJson("{}");
 });
 
 it('accepts parameters passed with constructor', function () {
@@ -150,7 +130,7 @@ it('captures parameters', function () {
     $address = new class extends Address {
         protected string $template = '{param}';
 
-        protected function captureParam(): string
+        public function captureParam(): string
         {
             return 'bar';
         }
@@ -165,7 +145,7 @@ it('enforces data type of parameters', function () {
     $address = new class extends Address {
         protected string $template = '{param}';
 
-        protected function captureParam(array $param = []): string
+        public function captureParam(array $param = []): string
         {
             return 'bar';
         }

@@ -2,21 +2,15 @@
 
 namespace Itsmattch\Nexus\Stream\Component\Address;
 
+use Itsmattch\Nexus\Stream\Component\Address\Contract\ParameterInterface;
+
 /**
  * This class represents a singleton Null Object extending
  * Parameter. It doesn't hold any meaningful value and is
  * considered invalid.
  */
-class NullParameter extends Parameter
+class NullParameter implements ParameterInterface
 {
-    protected string $name = '';
-
-    protected string $default = '';
-
-    protected bool $optional = false;
-
-    protected string $value = '';
-
     protected static NullParameter $instance;
 
     /**
@@ -29,6 +23,7 @@ class NullParameter extends Parameter
         if (empty(self::$instance)) {
             self::$instance = new NullParameter();
         }
+
         return self::$instance;
     }
 
@@ -43,5 +38,25 @@ class NullParameter extends Parameter
      * It does nothing since the NullParameter is
      * forbidden to hold any meaningful value.
      */
-    public function setValue(string $value): void {}
+    public function setValue($value): void {}
+
+    public function getLiteral(): string
+    {
+        return '';
+    }
+
+    public function getName(): string
+    {
+        return '';
+    }
+
+    public function getValue(): string
+    {
+        return '';
+    }
+
+    public function isValid(): bool
+    {
+        return false;
+    }
 }
