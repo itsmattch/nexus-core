@@ -33,7 +33,7 @@ interface ParameterInterface
      * @param mixed $value The explicit value of the parameter
      * @return void
      */
-    public function setValue($value): void;
+    public function setValue(mixed $value): void;
 
     /**
      * Checks whether the parameter has any valid value.

@@ -69,30 +69,30 @@ abstract class Address implements Stringable
      * Magic method for handling dynamic methods starting
      * with "with" or "is".
      *
-     * @param string $name The name of the method.
+     * @param string $method The name of the method.
      * @param array $arguments The arguments passed to the method.
      * @return Address The current instance, allowing for method chaining.
      * @throws UncaughtDynamicMethodException
      * @throws DynamicMethodMissingValueException
      * @throws MissingParameterException
      */
-    public function __call(string $name, array $arguments)
+    public function __call(string $method, array $arguments)
     {
         if (sizeof($arguments) < 1) {
-            throw new DynamicMethodMissingValueException();
+            throw new DynamicMethodMissingValueException($method);
         }
 
         $prefixes = ['with' => 4, 'is' => 2];
 
         foreach ($prefixes as $prefix => $length) {
-            if (str_starts_with($name, $prefix) && strlen($name) > $length) {
-                $substring = substr($name, $length);
+            if (str_starts_with($method, $prefix) && strlen($method) > $length) {
+                $substring = substr($method, $length);
                 $replacement = preg_replace('/(?<!^)[A-Z]/', '_$0', $substring);
                 $parameter = strtolower($replacement);
                 return $this->with($parameter, $arguments[0]);
             }
         }
-        throw new UncaughtDynamicMethodException($name);
+        throw new UncaughtDynamicMethodException($method);
     }
 
     /**
@@ -105,7 +105,15 @@ abstract class Address implements Stringable
         return $this->parametersCollection->isValid();
     }
 
-    /** todo */
+    /**
+     * Checks if the address contains parameters with
+     * the given names. This method accepts an arbitrary
+     * number of arguments, each of which should be a string
+     * representing a parameter name.
+     *
+     * @param string ...$names The names of the parameters to check for.
+     * @return bool Returns true if all parameters are found, false otherwise.
+     */
     public function has(string ...$names): bool
     {
         return $this->parametersCollection->has(... $names);
@@ -151,10 +159,14 @@ abstract class Address implements Stringable
         return $this->parametersCollection->get($name)->getValue();
     }
 
-    /** todo */
+    /**
+     * Returns a scheme name.
+     *
+     * @return string A scheme name.
+     */
     public function getScheme(): string
     {
-        return strstr($this->getCurrentState(), '://', true);
+        return strstr($this->getAddress(), '://', true);
     }
 
     /**

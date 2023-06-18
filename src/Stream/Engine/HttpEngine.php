@@ -34,9 +34,8 @@ class HttpEngine extends Engine
         return true;
     }
 
-    protected function close(): bool
+    protected function close(): void
     {
         curl_close($this->handle);
-        return true;
     }
 }

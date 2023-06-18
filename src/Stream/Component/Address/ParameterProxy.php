@@ -20,28 +20,51 @@ class ParameterProxy implements ParameterInterface
     /** The callback called upon getting value. */
     protected array $releaseCallback;
 
-    /** todo */
+    /**
+     * ParameterProxy constructor.
+     *
+     * @param Parameter $parameter The original parameter.
+     * @param array $captureCallback The callback called upon setting value.
+     * @param array $releaseCallback The callback called upon getting value.
+     */
     public function __construct(Parameter $parameter, array $captureCallback, array $releaseCallback)
     {
         $this->parameter = $parameter;
-        $this->captureCallback = $captureCallback;
-        $this->releaseCallback = $releaseCallback;
+
+        if (is_callable($captureCallback) && method_exists($captureCallback[0], $captureCallback[1])) {
+            $this->captureCallback = $captureCallback;
+        }
+
+        if (is_callable($releaseCallback) && method_exists($releaseCallback[0], $releaseCallback[1])) {
+            $this->releaseCallback = $releaseCallback;
+        }
     }
 
-    /** todo */
+    /**
+     * Returns the value of the parameter, applying
+     * the release callback if available.
+     *
+     * @return string The parameter value.
+     */
     public function getValue(): string
     {
-        if (is_callable($this->releaseCallback) && method_exists($this->releaseCallback[0], $this->releaseCallback[1])) {
+        if (isset($this->releaseCallback)) {
             return call_user_func($this->releaseCallback, $this->parameter->getValue());
         }
         return $this->parameter->getValue();
     }
 
-    /** todo */
-    public function setValue($value): void
+    /**
+     * Sets the value of the parameter, applying
+     * the capture callback if available.
+     *
+     * @param mixed $value
+     * @return void
+     */
+    public function setValue(mixed $value): void
     {
-        if (is_callable($this->captureCallback) && method_exists($this->captureCallback[0], $this->captureCallback[1])) {
-            $value = call_user_func($this->captureCallback, $value);
+        if (isset($this->captureCallback)) {
+            $value = call_user_func($this->captureCallback, $this->parameter->getValue());
         }
         $this->parameter->setValue($value);
     }

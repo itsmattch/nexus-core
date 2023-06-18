@@ -2,6 +2,7 @@
 
 namespace Itsmattch\Nexus\Stream\Component\Address\Collection;
 
+use Countable;
 use Iterator;
 use Itsmattch\Nexus\Stream\Component\Address\Contract\ParameterInterface;
 use Itsmattch\Nexus\Stream\Component\Address\NullParameter;
@@ -9,7 +10,7 @@ use Itsmattch\Nexus\Stream\Component\Address\NullParameter;
 /**
  * This class is a collection of Parameter objects.
  */
-class ParametersCollection implements Iterator
+class ParametersCollection implements Iterator, Countable
 {
     /** A collection of parameters */
     protected array $parameters = [];

@@ -1,11 +1,13 @@
 <?php
 
 use Itsmattch\Nexus\Stream\Component\Address;
+use Itsmattch\Nexus\Stream\Factory\AddressFactory;
 
 it('sets scalar parameters as strings', function () {
     $address = new class extends Address {
         protected string $template = '{param}';
     };
+    $address = AddressFactory::from("{param}");
     $address->with('param', 123);
 
     expect($address->isValid())->toBeTrue();

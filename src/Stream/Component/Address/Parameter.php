@@ -48,7 +48,7 @@ class Parameter implements ParameterInterface, Stringable
         return $this->value ?? $this->default;
     }
 
-    public function setValue($value): void
+    public function setValue(mixed $value): void
     {
         $this->value = $value;
     }

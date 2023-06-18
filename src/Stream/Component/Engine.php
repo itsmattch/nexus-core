@@ -38,19 +38,19 @@ abstract class Engine
     protected abstract function execute(): bool;
 
     /** todo */
-    protected abstract function close(): bool;
+    protected abstract function close(): void;
 
+    /** todo */
     public function access(): bool
     {
         if (!$this->boot()) {
             return false;
         }
         if (!$this->execute()) {
+            $this->close();
             return false;
         }
-        if (!$this->close()) {
-            return false;
-        }
+        $this->close();
         return true;
     }
 

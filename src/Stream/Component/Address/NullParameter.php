@@ -11,6 +11,7 @@ use Itsmattch\Nexus\Stream\Component\Address\Contract\ParameterInterface;
  */
 class NullParameter implements ParameterInterface
 {
+    /** The only instance of the NullParameter. */
     protected static NullParameter $instance;
 
     /**
@@ -38,7 +39,7 @@ class NullParameter implements ParameterInterface
      * It does nothing since the NullParameter is
      * forbidden to hold any meaningful value.
      */
-    public function setValue($value): void {}
+    public function setValue(mixed $value): void {}
 
     public function getLiteral(): string
     {

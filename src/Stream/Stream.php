@@ -84,22 +84,20 @@ class Stream
     private Resource $resourceInstance;
 
     protected array $parameters;
-    public function __construct(array $parameters = []) {
+
+    public function __construct(array $parameters = [])
+    {
         $this->parameters = $parameters;
     }
 
-    /** todo */
-    public static function find(string $identifier = '', string $parameterName = 'id'): ?Stream
-    {
-        if (empty($identifier) || empty($parameterName)) {
-            return self::get();
-        }
-        $parameter = [$parameterName => $identifier];
-
-        return static::get($parameter);
-    }
-
-    /** todo gets eg collection */
+    /**
+     * This method creates, boots, and retrieves a Stream
+     * instance and passes a set of parameters to its
+     * Address component.
+     *
+     * @param array $parameters An array of parameters for an Address component.
+     * @return Stream|null Returns Stream instance if accessed successfully, null otherwise.
+     */
     public static function get(array $parameters = []): ?Stream
     {
         $instance = new static($parameters);
@@ -112,6 +110,24 @@ class Stream
         }
 
         return $instance;
+    }
+
+    /**
+     * This method creates, boots, and retrieves a Stream
+     * instance based on a given unique identifier.
+     *
+     * @param string $identifier A unique identifier value.
+     * @param string $parameterName An alternative identifier parameter name.
+     * @return Stream|null Returns Stream instance if accessed successfully, null otherwise.
+     */
+    public static function find(string $identifier = '', string $parameterName = 'id'): ?Stream
+    {
+        if (empty($identifier) || empty($parameterName)) {
+            return self::get();
+        }
+        $parameter = [$parameterName => $identifier];
+
+        return static::get($parameter);
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace Itsmattch\Nexus\Exceptions\Stream\Address;
 
-use PHPUnit\Framework\Exception;
+use Exception;
 
 class UncaughtDynamicMethodException extends Exception
 {
