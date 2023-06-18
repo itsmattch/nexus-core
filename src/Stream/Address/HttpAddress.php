@@ -11,12 +11,12 @@ class HttpAddress extends Address
         'secure' => 'https',
     ];
 
-    protected function captureSecure(bool $secure): string
+    public function captureSecure(bool $secure): string
     {
         return $secure ? 'https' : 'http';
     }
 
-    protected function releaseSecure(string $secure): string
+    public function releaseSecure(string $secure): bool
     {
         return $secure === 'https';
     }

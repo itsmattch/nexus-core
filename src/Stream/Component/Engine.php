@@ -10,30 +10,53 @@ namespace Itsmattch\Nexus\Stream\Component;
  */
 abstract class Engine
 {
-    protected string $response = Response::class;
+    /** todo */
+    protected string $response = '';
 
-    private Response $responseInstance;
+    /** todo */
+    protected Address $address;
 
-    public function boot(): bool
+    /** todo */
+    protected string $message;
+
+    /** todo */
+    public function __construct(Address $address)
     {
-        if (!$this->internallyBootResponse()) {
+        $this->address = $address;
+    }
+
+    /** todo */
+    public function withMessage(string $message): void
+    {
+        $this->message = $message;
+    }
+
+    /** todo */
+    protected abstract function boot(): bool;
+
+    /** todo */
+    protected abstract function execute(): bool;
+
+    /** todo */
+    protected abstract function close(): bool;
+
+    public function access(): bool
+    {
+        if (!$this->boot()) {
+            return false;
+        }
+        if (!$this->execute()) {
+            return false;
+        }
+        if (!$this->close()) {
             return false;
         }
         return true;
     }
 
-    protected function internallyBootResponse(): bool
+    /** todo */
+    public function getResponse(): string
     {
-        $this->responseInstance = new $this->response;
-        return $this->bootResponse($this->responseInstance);
-    }
-
-    protected function bootResponse(Response $response): bool { return true; }
-
-    // todo
-
-    public function getResponse(): Response
-    {
-        return $this->responseInstance;
+        return $this->response;
     }
 }

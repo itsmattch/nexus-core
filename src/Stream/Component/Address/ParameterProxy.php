@@ -20,6 +20,7 @@ class ParameterProxy implements ParameterInterface
     /** The callback called upon getting value. */
     protected array $releaseCallback;
 
+    /** todo */
     public function __construct(Parameter $parameter, array $captureCallback, array $releaseCallback)
     {
         $this->parameter = $parameter;
@@ -27,6 +28,7 @@ class ParameterProxy implements ParameterInterface
         $this->releaseCallback = $releaseCallback;
     }
 
+    /** todo */
     public function getValue(): string
     {
         if (is_callable($this->releaseCallback) && method_exists($this->releaseCallback[0], $this->releaseCallback[1])) {
@@ -35,6 +37,7 @@ class ParameterProxy implements ParameterInterface
         return $this->parameter->getValue();
     }
 
+    /** todo */
     public function setValue($value): void
     {
         if (is_callable($this->captureCallback) && method_exists($this->captureCallback[0], $this->captureCallback[1])) {

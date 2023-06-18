@@ -6,8 +6,8 @@ use Itsmattch\Nexus\Base\Resource;
 use Itsmattch\Nexus\Stream\Component\Address;
 use Itsmattch\Nexus\Stream\Component\Engine;
 use Itsmattch\Nexus\Stream\Component\Reader;
-use Itsmattch\Nexus\Stream\Component\Response;
 use Itsmattch\Nexus\Stream\Factory\AddressFactory;
+use Itsmattch\Nexus\Stream\Factory\EngineFactory;
 
 /**
  * The Stream class represents a single access point of data
@@ -83,6 +83,37 @@ class Stream
      */
     private Resource $resourceInstance;
 
+    protected array $parameters;
+    public function __construct(array $parameters = []) {
+        $this->parameters = $parameters;
+    }
+
+    /** todo */
+    public static function find(string $identifier = '', string $parameterName = 'id'): ?Stream
+    {
+        if (empty($identifier) || empty($parameterName)) {
+            return self::get();
+        }
+        $parameter = [$parameterName => $identifier];
+
+        return static::get($parameter);
+    }
+
+    /** todo gets eg collection */
+    public static function get(array $parameters = []): ?Stream
+    {
+        $instance = new static($parameters);
+
+        if (!$instance->boot()) {
+            return null;
+        }
+        if (!$instance->access()) {
+            return null;
+        }
+
+        return $instance;
+    }
+
     /**
      * Boots all components by calling their respective
      * internal boot methods. Each method is then calling
@@ -108,11 +139,12 @@ class Stream
 
     protected final function internallyBootAddress(): bool
     {
-        if (is_a($this->address, Address::class)) {
-            $this->addressInstance = new $this->address;
+        if (is_subclass_of($this->address, Address::class)) {
+            $this->addressInstance = new $this->address($this->parameters);
             return $this->bootAddress($this->addressInstance);
-        } else if (str_contains($this->address, '://')) {
-            $this->address = AddressFactory::from($this->address);
+        }
+        if (str_contains($this->address, '://')) {
+            $this->addressInstance = AddressFactory::from($this->address, $this->parameters);
             return $this->bootAddress($this->addressInstance);
         }
         return false;
@@ -120,7 +152,10 @@ class Stream
 
     protected final function internallyBootEngine(): bool
     {
-        $this->engineInstance = new $this->engine;
+        $this->engineInstance = is_subclass_of($this->engine, Engine::class)
+            ? new $this->engine($this->addressInstance)
+            : EngineFactory::from($this->addressInstance);
+
         return $this->bootEngine($this->engineInstance);
     }
 
@@ -146,10 +181,10 @@ class Stream
 
     public function access(): bool
     {
-        return $this->engineInstance->access($this->addressInstance);
+        return $this->engineInstance->access();
     }
 
-    public function getResponse(): Response
+    public function getResponse(): string
     {
         return $this->engineInstance->getResponse();
     }

@@ -105,6 +105,12 @@ abstract class Address implements Stringable
         return $this->parametersCollection->isValid();
     }
 
+    /** todo */
+    public function has(string ...$names): bool
+    {
+        return $this->parametersCollection->has(... $names);
+    }
+
     /**
      * Retrieves the raw address template.
      *
@@ -132,6 +138,23 @@ abstract class Address implements Stringable
             $address = preg_replace("/{@?$name}/", $parameter->getValue(), $address);
         }
         return $address;
+    }
+
+    /**
+     * Returns value of a single parameter.
+     *
+     * @param string $name
+     * @return string
+     */
+    public function getParameterValue(string $name): string
+    {
+        return $this->parametersCollection->get($name)->getValue();
+    }
+
+    /** todo */
+    public function getScheme(): string
+    {
+        return strstr($this->getCurrentState(), '://', true);
     }
 
     /**

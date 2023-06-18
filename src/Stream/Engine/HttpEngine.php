@@ -2,27 +2,41 @@
 
 namespace Itsmattch\Nexus\Stream\Engine;
 
+use CurlHandle;
 use Itsmattch\Nexus\Stream\Component\Engine;
 
 class HttpEngine extends Engine
 {
-    public function example(): void
+    private CurlHandle $handle;
+
+    protected function boot(): bool
     {
-        // Initialize engine
-        // todo $address here
-        // curl_init()
+        $initializeCurlHandle = curl_init($this->address);
 
-        // Parametrize engine
-        // todo $message here
-        // - set headers...
-        //   - authenticate...
-        // - set http method...
-        // - set body...
+        if ($initializeCurlHandle === false) {
+            return false;
+        }
+        $this->handle = $initializeCurlHandle;
+        return true;
+    }
 
-        // Execute engine & get response
-        // curl_exec()
+    protected function execute(): bool
+    {
+        curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, 1);
 
-        // Close the stream
-        // curl_close()
+        $response = curl_exec($this->handle);
+
+        if ($response === false) {
+            return false;
+        }
+
+        $this->response = $response;
+        return true;
+    }
+
+    protected function close(): bool
+    {
+        curl_close($this->handle);
+        return true;
     }
 }
