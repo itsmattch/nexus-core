@@ -2,6 +2,8 @@
 
 namespace Itsmattch\Nexus\Stream\Component;
 
+use Itsmattch\Nexus\Base\Response;
+
 /**
  * The Engine class encapsulates the logic responsible for
  * handling the connection and reading of a resource.
@@ -11,7 +13,7 @@ namespace Itsmattch\Nexus\Stream\Component;
 abstract class Engine
 {
     /** todo */
-    protected string $response = '';
+    protected Response $response;
 
     /** todo */
     protected Address $address;
@@ -55,7 +57,7 @@ abstract class Engine
     }
 
     /** todo */
-    public function getResponse(): string
+    public function getResponse(): Response
     {
         return $this->response;
     }

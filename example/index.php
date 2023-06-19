@@ -8,4 +8,4 @@ include_once 'Stream/ReadUser.php';
 $userCollection = ReadUsersCollection::get();
 $user = ReadUser::find(1);
 
-// echo $user->getResponse();
+// echo $user->getResponse()->body;

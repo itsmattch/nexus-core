@@ -3,37 +3,91 @@
 namespace Itsmattch\Nexus\Stream\Engine;
 
 use CurlHandle;
+use Itsmattch\Nexus\Base\Response;
 use Itsmattch\Nexus\Stream\Component\Engine;
 
+/**
+ * The HttpEngine is a very simple implementation of the
+ * Engine using cURL functionality to manage HTTP requests.
+ */
 class HttpEngine extends Engine
 {
+    /** Stores the cURL handle for HTTP communication. */
     private CurlHandle $handle;
 
+    /**
+     * Initializes the cURL session and sets the necessary options.
+     *
+     * @return bool Returns true if the cURL handle is successfully initialized, false otherwise.
+     */
     protected function boot(): bool
     {
-        $initializeCurlHandle = curl_init($this->address);
+        $options = [
+            CURLOPT_URL => (string)$this->address,
+            CURLOPT_RETURNTRANSFER => true,
+        ];
 
-        if ($initializeCurlHandle === false) {
+        $initializeCurlHandle = curl_init();
+        $initializeCurlOptions = curl_setopt_array($initializeCurlHandle, $options);
+
+        if ($initializeCurlHandle === false || $initializeCurlOptions === false) {
             return false;
         }
+
         $this->handle = $initializeCurlHandle;
         return true;
     }
 
+    /**
+     *
+     * Executes the HTTP request and populates the response object.
+     *
+     * @return bool Returns true if the request is successfully executed, false otherwise.
+     */
     protected function execute(): bool
     {
-        curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, 1);
+        $responseBody = curl_exec($this->handle);
+        $responseType = $this->getContentType();
 
-        $response = curl_exec($this->handle);
-
-        if ($response === false) {
+        if ($responseBody === false) {
             return false;
         }
 
-        $this->response = $response;
+        $this->response = new Response(
+            body: $responseBody,
+            type: $responseType,
+        );
+
         return true;
     }
 
+    /**
+     * Retrieves the content type of the HTTP response. If
+     * the content type is not available, the method will
+     * return null.
+     *
+     * @return ?string The content type of the HTTP response.
+     */
+    private function getContentType(): ?string
+    {
+        $contentType = curl_getinfo($this->handle, CURLINFO_CONTENT_TYPE);
+
+        if ($contentType === null) {
+            return null;
+        }
+
+        $endPosition = strpos($contentType, ';');
+
+        if ($endPosition === false) {
+            return $contentType;
+        }
+
+        return substr($contentType, 0, $endPosition);
+    }
+
+    /**
+     * Closes the cURL handle to release resources.
+     */
     protected function close(): void
     {
         curl_close($this->handle);
