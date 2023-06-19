@@ -2,6 +2,10 @@
 
 namespace Itsmattch\Nexus\Stream\Component\Address\Contract;
 
+/**
+ * Represents a parameter in an address template
+ * that can be replaced with a value.
+ */
 interface ParameterInterface
 {
     /**

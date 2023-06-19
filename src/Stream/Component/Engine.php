@@ -2,7 +2,7 @@
 
 namespace Itsmattch\Nexus\Stream\Component;
 
-use Itsmattch\Nexus\Base\Response;
+use Itsmattch\Nexus\Stream\Component\Engine\Response;
 
 /**
  * The Engine class encapsulates the logic responsible for
@@ -13,28 +13,22 @@ use Itsmattch\Nexus\Base\Response;
 abstract class Engine
 {
     /** todo */
-    protected Response $response;
+    protected string $response = Response::class;
 
     /** todo */
-    protected Address $address;
+    private Address $address;
 
     /** todo */
-    protected string $message;
+    protected Response $responseInstance;
 
     /** todo */
-    public function __construct(Address $address)
+    public final function __construct(Address $address)
     {
         $this->address = $address;
     }
 
     /** todo */
-    public function withMessage(string $message): void
-    {
-        $this->message = $message;
-    }
-
-    /** todo */
-    protected abstract function boot(): bool;
+    protected abstract function prepare(): bool;
 
     /** todo */
     protected abstract function execute(): bool;
@@ -42,10 +36,25 @@ abstract class Engine
     /** todo */
     protected abstract function close(): void;
 
+    public final function boot(): bool
+    {
+        if (!$this->internallyBootResponse()) {
+            return false;
+        }
+        return true;
+    }
+
+    protected final function internallyBootResponse(): bool {
+        $this->responseInstance = new $this->response;
+        return $this->bootResponse($this->responseInstance);
+    }
+
+    protected function bootResponse(Response $response): bool { return true; }
+
     /** todo */
     public function access(): bool
     {
-        if (!$this->boot()) {
+        if (!$this->prepare()) {
             return false;
         }
         if (!$this->execute()) {
@@ -59,6 +68,11 @@ abstract class Engine
     /** todo */
     public function getResponse(): Response
     {
-        return $this->response;
+        return $this->responseInstance;
+    }
+
+    /** todo */
+    protected final function address(): string {
+        return (string) $this->address;
     }
 }

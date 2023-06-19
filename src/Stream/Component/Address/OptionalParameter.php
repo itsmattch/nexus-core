@@ -3,7 +3,7 @@
 namespace Itsmattch\Nexus\Stream\Component\Address;
 
 /**
- * This class represents an optional parameter.
+ * An optional parameter that is always considered valid.
  */
 class OptionalParameter extends Parameter
 {

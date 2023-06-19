@@ -2,12 +2,14 @@
 
 namespace Itsmattch\Nexus\Stream;
 
-use Itsmattch\Nexus\Base\Resource;
 use Itsmattch\Nexus\Stream\Component\Address;
 use Itsmattch\Nexus\Stream\Component\Engine;
+use Itsmattch\Nexus\Stream\Component\Engine\Response;
 use Itsmattch\Nexus\Stream\Component\Reader;
+use Itsmattch\Nexus\Stream\Component\Resource;
 use Itsmattch\Nexus\Stream\Factory\AddressFactory;
 use Itsmattch\Nexus\Stream\Factory\EngineFactory;
+use Itsmattch\Nexus\Stream\Factory\ReaderFactory;
 
 /**
  * The Stream class represents a single access point of data
@@ -15,7 +17,7 @@ use Itsmattch\Nexus\Stream\Factory\EngineFactory;
  * all information necessary to access, read and interpret
  * a resource.
  */
-class Stream
+abstract class Stream
 {
     /**
      * Represents the location of the resource. It must be
@@ -34,10 +36,16 @@ class Stream
      * Stream will use to connect to the resource. This
      * property should be set with the fully qualified class
      * name of a class that extends the Engine class.
-     *
-     * This property is required.
      */
     protected string $engine = Engine::class;
+
+    /**
+     * Nexus provides a default Resource class that is often
+     * sufficient for general use, but it can be replaced
+     * with a custom Resource class if necessary for more
+     * specific needs.
+     */
+    protected string $resource = Resource::class;
 
     /**
      * The reader property represents the strategy that the
@@ -47,14 +55,6 @@ class Stream
      * Reader based on the type of the retrieved resource.
      */
     protected string $reader = Reader::class;
-
-    /**
-     * Nexus provides a default Resource class that is often
-     * sufficient for general use, but it can be replaced
-     * with a custom Resource class if necessary for more
-     * specific needs.
-     */
-    protected string $resource = Resource::class;
 
     /**
      * Stores instance of the Address class that is created
@@ -102,10 +102,10 @@ class Stream
     {
         $instance = new static($parameters);
 
-        if (!$instance->boot()) {
+        if (!$instance->load()) {
             return null;
         }
-        if (!$instance->access()) {
+        if (!$instance->read()) {
             return null;
         }
 
@@ -136,7 +136,7 @@ class Stream
      * standard boot method, which can be extended to
      * modify created components instances.
      */
-    public final function boot(): bool
+    public final function load(): bool
     {
         if (!$this->internallyBootAddress()) {
             return false;
@@ -144,16 +144,22 @@ class Stream
         if (!$this->internallyBootEngine()) {
             return false;
         }
-        if (!$this->internallyBootReader()) {
-            return false;
-        }
+        return $this->engineInstance->access();
+    }
+
+    public final function read(): bool
+    {
         if (!$this->internallyBootResource()) {
             return false;
         }
-        return true;
+        if (!$this->internallyBootReader()) {
+            return false;
+        }
+        return $this->readerInstance->read();
     }
 
-    protected final function internallyBootAddress(): bool
+    /** todo */
+    private function internallyBootAddress(): bool
     {
         if (is_subclass_of($this->address, Address::class)) {
             $this->addressInstance = new $this->address($this->parameters);
@@ -166,45 +172,54 @@ class Stream
         return false;
     }
 
+    /** todo */
     protected final function internallyBootEngine(): bool
     {
         $this->engineInstance = is_subclass_of($this->engine, Engine::class)
             ? new $this->engine($this->addressInstance)
             : EngineFactory::from($this->addressInstance);
 
+        $this->engineInstance->boot();
+
         return $this->bootEngine($this->engineInstance);
     }
 
-    protected final function internallyBootReader(): bool
-    {
-        $this->readerInstance = new $this->reader;
-        return $this->bootReader($this->readerInstance);
-    }
-
-    protected final function internallyBootResource(): bool
+    /** todo */
+    private function internallyBootResource(): bool
     {
         $this->resourceInstance = new $this->resource;
         return $this->bootResource($this->resourceInstance);
     }
 
-    protected function bootAddress(Address $address): bool { return true; }
-
-    protected function bootEngine(Engine $engine): bool { return true; }
-
-    protected function bootReader(Reader $reader): bool { return true; }
-
-    protected function bootResource(Resource $resource): bool { return true; }
-
-    public function access(): bool
+    /** todo */
+    private function internallyBootReader(): bool
     {
-        return $this->engineInstance->access();
+        $this->readerInstance = is_subclass_of($this->reader, Reader::class)
+            ? new $this->reader($this->engineInstance->getResponse(), $this->resourceInstance)
+            : ReaderFactory::from($this->engineInstance->getResponse(), $this->resourceInstance);
+
+        return $this->bootReader($this->readerInstance);
     }
 
-    public function getResponse(): string
+    /** todo */
+    protected function bootAddress(Address $address): bool { return true; }
+
+    /** todo */
+    protected function bootEngine(Engine $engine): bool { return true; }
+
+    /** todo */
+    protected function bootResource(Resource $resource): bool { return true; }
+
+    /** todo */
+    protected function bootReader(Reader $reader): bool { return true; }
+
+    /** todo */
+    public function getResponse(): Response
     {
         return $this->engineInstance->getResponse();
     }
 
+    /** todo */
     public function getResource(): Resource
     {
         return $this->resourceInstance;

@@ -6,8 +6,6 @@ use Itsmattch\Nexus\Exceptions\Stream\Factory\EngineNotFoundException;
 use Itsmattch\Nexus\Exceptions\Stream\Factory\NotAnEngineException;
 use Itsmattch\Nexus\Stream\Component\Address;
 use Itsmattch\Nexus\Stream\Component\Engine;
-use Itsmattch\Nexus\Stream\Engine\FileEngine;
-use Itsmattch\Nexus\Stream\Engine\FtpEngine;
 use Itsmattch\Nexus\Stream\Engine\HttpEngine;
 
 /** Static factory class for creating Engine instances. */
@@ -17,9 +15,6 @@ final class EngineFactory
     private static array $registry = [
         'https' => HttpEngine::class,
         'http' => HttpEngine::class,
-        'ftps' => FtpEngine::class,
-        'ftp' => FtpEngine::class,
-        'file' => FileEngine::class,
     ];
 
     /**

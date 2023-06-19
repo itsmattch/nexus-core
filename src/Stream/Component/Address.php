@@ -3,10 +3,8 @@
 namespace Itsmattch\Nexus\Stream\Component;
 
 use Itsmattch\Nexus\Exceptions\Stream\Address\DynamicMethodMissingValueException;
-use Itsmattch\Nexus\Exceptions\Stream\Address\MissingParameterException;
 use Itsmattch\Nexus\Exceptions\Stream\Address\UncaughtDynamicMethodException;
 use Itsmattch\Nexus\Stream\Component\Address\Collection\ParametersCollection;
-use Itsmattch\Nexus\Stream\Component\Address\NullParameter;
 use Itsmattch\Nexus\Stream\Factory\ParametersCollectionFactory;
 use Stringable;
 
@@ -21,7 +19,7 @@ use Stringable;
 abstract class Address implements Stringable
 {
     /** Address template allowing for mustache-styled parameters. */
-    protected string $template = '';
+    protected string $template;
 
     /** Default values for parameters within the address template. */
     protected array $defaults = [];
@@ -36,7 +34,6 @@ abstract class Address implements Stringable
      *
      * @param array $parameters An associative array of
      * parameters and their corresponding values
-     * @throws MissingParameterException
      */
     public function __construct(array $parameters = [])
     {
@@ -53,15 +50,10 @@ abstract class Address implements Stringable
      * @param string $parameterName The name of the parameter.
      * @param mixed $value The value to be set.
      * @return Address The current instance, allowing for method chaining.
-     * @throws MissingParameterException
      */
     public function with(string $parameterName, mixed $value): Address
     {
-        if ($this->parametersCollection->get($parameterName) instanceof NullParameter) {
-            throw new MissingParameterException($parameterName);
-        }
         $this->parametersCollection->get($parameterName)->setValue($value);
-
         return $this;
     }
 
@@ -74,7 +66,6 @@ abstract class Address implements Stringable
      * @return Address The current instance, allowing for method chaining.
      * @throws UncaughtDynamicMethodException
      * @throws DynamicMethodMissingValueException
-     * @throws MissingParameterException
      */
     public function __call(string $method, array $arguments)
     {

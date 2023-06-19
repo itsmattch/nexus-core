@@ -6,8 +6,6 @@ use Itsmattch\Nexus\Stream\Component\Address\Contract\ParameterInterface;
 use Stringable;
 
 /**
- * This class represents a single parameter.
- *
  * A parameter is an entity that holds a value that is
  * either set explicitly or derived from a default value.
  */
@@ -45,7 +43,7 @@ class Parameter implements ParameterInterface, Stringable
 
     public function getValue(): string
     {
-        return $this->value ?? $this->default;
+        return !empty($this->value) ? $this->value : $this->default;
     }
 
     public function setValue(mixed $value): void

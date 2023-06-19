@@ -3,7 +3,6 @@
 namespace Itsmattch\Nexus\Stream\Engine;
 
 use CurlHandle;
-use Itsmattch\Nexus\Base\Response;
 use Itsmattch\Nexus\Stream\Component\Engine;
 
 /**
@@ -20,10 +19,10 @@ class HttpEngine extends Engine
      *
      * @return bool Returns true if the cURL handle is successfully initialized, false otherwise.
      */
-    protected function boot(): bool
+    protected function prepare(): bool
     {
         $options = [
-            CURLOPT_URL => (string)$this->address,
+            CURLOPT_URL => $this->address(),
             CURLOPT_RETURNTRANSFER => true,
         ];
 
@@ -53,10 +52,8 @@ class HttpEngine extends Engine
             return false;
         }
 
-        $this->response = new Response(
-            body: $responseBody,
-            type: $responseType,
-        );
+        $this->getResponse()->setBody($responseBody);
+        $this->getResponse()->setType($responseType);
 
         return true;
     }
