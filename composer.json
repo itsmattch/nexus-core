@@ -1,6 +1,7 @@
 {
   "name": "itsmattch/nexus",
   "type": "library",
+  "license": "MIT",
   "autoload": {
     "psr-4": {
       "Itsmattch\\Nexus\\": "src/"
@@ -9,7 +10,8 @@
   "authors": [
     {
       "name": "Mateusz Chmielewski",
-      "email": "hello@itsmattch.com"
+      "email": "hello@itsmattch.com",
+      "homepage":  "https://itsmattch.com/"
     }
   ],
   "require-dev": {

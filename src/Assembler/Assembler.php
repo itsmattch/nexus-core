@@ -2,13 +2,24 @@
 
 namespace Itsmattch\Nexus\Assembler;
 
-class Assembler
+use Itsmattch\Nexus\Common\Blueprint;
+use Itsmattch\Nexus\Common\Model;
+
+abstract class Assembler
 {
-    // Define: Stream[]
-    // Define: Entity
-    // Define: Blueprint
+    /** A class defining the model. */
+    protected string $model = Model::class;
 
-    // Input: Resource
+    /** A list of all resources containing pieces of the model. */
+    protected array $resources = [];
 
-    // Output: Entity
+    /** A blueprint mapping resource to model fields. */
+    protected string $blueprint = Blueprint::class;
+
+    /** Mappings of resources keys. */
+    protected array $keys = [];
+
+    private string $key;
+
+    // public function getModel(): Model {}
 }

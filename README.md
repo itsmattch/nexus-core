@@ -14,7 +14,7 @@ explore its potential and offer any feedback that might help to enhance the
 library.
 
 ## To Do Checklist
-- [ ] Streams - encapsulate entry points to resources
+- [x] Streams - encapsulate entry points to resources
     - [x] [Addresses](https://nexus.itsmattch.com/streams/addresses) - Parametrize the endpoints
     - [ ] Engines - Encapsulate connection logic and access resources
     - [ ] Reader - Turn raw responses into resources

@@ -1,13 +1,15 @@
 <?php
 
+use Repository\UserRepository;
+
 include_once '../vendor/autoload.php';
 
-include_once 'Stream/ReadUsersCollection.php';
-include_once 'Stream/ReadUser.php';
+include_once './Blueprint/UserBlueprint.php';
+include_once './Model/UserModel.php';
+include_once './Repository/UserRepository.php';
+include_once './Resource/UserCollectionResource.php';
+include_once './Resource/UserResource.php';
 
-$userCollection = ReadUsersCollection::get();
-$user = ReadUser::find(1);
+$repository = UserRepository::load();
 
-// $createUser = CreateUser::attach($message)->send();
-
- var_dump($user->getResource());
+var_dump($repository);
