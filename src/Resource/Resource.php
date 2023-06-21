@@ -3,8 +3,8 @@
 namespace Itsmattch\Nexus\Resource;
 
 use Itsmattch\Nexus\Common\Traits\GetDot;
-use Itsmattch\Nexus\Exceptions\Stream\Factory\EngineNotFoundException;
-use Itsmattch\Nexus\Exceptions\Stream\Factory\ReaderNotFoundException;
+use Itsmattch\Nexus\Exceptions\Resource\Factory\EngineNotFoundException;
+use Itsmattch\Nexus\Exceptions\Resource\Factory\ReaderNotFoundException;
 use Itsmattch\Nexus\Resource\Component\Address;
 use Itsmattch\Nexus\Resource\Component\Engine;
 use Itsmattch\Nexus\Resource\Component\Reader;
@@ -13,7 +13,7 @@ use Itsmattch\Nexus\Resource\Factory\EngineFactory;
 use Itsmattch\Nexus\Resource\Factory\ReaderFactory;
 
 /**
- * The Stream class represents a single access point of data
+ * The Resource class represents a single access point of data
  * within the Nexus system. It acts as an encapsulation of
  * all information necessary to access, read and interpret
  * a resource.
@@ -38,7 +38,7 @@ abstract class Resource
 
     /**
      * The engine property represents the strategy that the
-     * Stream will use to connect to the resource. This
+     * Resource will use to connect to the resource. This
      * property should be set with the fully qualified class
      * name of a class that extends the Engine class.
      */
@@ -46,7 +46,7 @@ abstract class Resource
 
     /**
      * The reader property represents the strategy that the
-     * Stream will use to read and interpret the retrieved
+     * Resource will use to read and interpret the retrieved
      * data. If this property is not explicitly set, Nexus
      * will attempt to automatically select an appropriate
      * Reader based on the type of the retrieved response.
@@ -109,12 +109,12 @@ abstract class Resource
     }
 
     /**
-     * This method creates, boots, and retrieves a Stream
+     * This method creates, boots, and retrieves a Resource
      * instance and passes a set of parameters to its
      * Address component.
      *
      * @param array $parameters An array of parameters for an Address component.
-     * @return Resource|null Returns Stream instance if accessed successfully, null otherwise.
+     * @return Resource|null Returns Resource instance if accessed successfully, null otherwise.
      */
     public static function load(array $parameters = []): ?Resource
     {
@@ -131,12 +131,12 @@ abstract class Resource
     }
 
     /**
-     * This method creates, boots, and retrieves a Stream
+     * This method creates, boots, and retrieves a Resource
      * instance based on a given unique identifier.
      *
      * @param string $identifier A unique identifier value.
      * @param string $parameterName An alternative identifier parameter name.
-     * @return Resource|null Returns Stream instance if accessed successfully, null otherwise.
+     * @return Resource|null Returns Resource instance if accessed successfully, null otherwise.
      */
     public static function find(string $identifier, string $parameterName = 'id'): ?Resource
     {

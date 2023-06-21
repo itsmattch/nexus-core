@@ -2,8 +2,8 @@
 
 namespace Itsmattch\Nexus\Resource\Component;
 
-use Itsmattch\Nexus\Exceptions\Stream\Address\DynamicMethodMissingValueException;
-use Itsmattch\Nexus\Exceptions\Stream\Address\UncaughtDynamicMethodException;
+use Itsmattch\Nexus\Exceptions\Resource\Address\DynamicMethodMissingValueException;
+use Itsmattch\Nexus\Exceptions\Resource\Address\UncaughtDynamicMethodException;
 use Itsmattch\Nexus\Resource\Component\Address\Collection\ParametersCollection;
 use Itsmattch\Nexus\Resource\Factory\ParametersCollectionFactory;
 use Stringable;

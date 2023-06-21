@@ -2,8 +2,8 @@
 
 namespace Itsmattch\Nexus\Resource\Factory;
 
-use Itsmattch\Nexus\Exceptions\Stream\Factory\InvalidReaderException;
-use Itsmattch\Nexus\Exceptions\Stream\Factory\ReaderNotFoundException;
+use Itsmattch\Nexus\Exceptions\Resource\Factory\InvalidReaderException;
+use Itsmattch\Nexus\Exceptions\Resource\Factory\ReaderNotFoundException;
 use Itsmattch\Nexus\Resource\Component\Engine\Response;
 use Itsmattch\Nexus\Resource\Component\Reader;
 use Itsmattch\Nexus\Resource\Reader\JsonReader;

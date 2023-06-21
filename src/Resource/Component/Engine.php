@@ -12,30 +12,62 @@ use Itsmattch\Nexus\Resource\Component\Engine\Response;
  */
 abstract class Engine
 {
-    /** todo */
+    /**
+     * Represents the Response class that should be used
+     * for handling the response from accessing the resource.
+     */
     protected string $response = Response::class;
 
-    /** todo */
+    /**
+     * Stores the instance of the Response class that is
+     * created during booting.
+     */
+    private Response $responseInstance;
+
+    /**
+     * Represents the location of the resource that the
+     * Engine should access.
+     */
     private Address $address;
 
-    /** todo */
-    protected Response $responseInstance;
-
-    /** todo */
     public final function __construct(Address $address)
     {
         $this->address = $address;
     }
 
-    /** todo */
+    /**
+     * A method for preparing to access the resource.
+     * This could involve setting up a connection,
+     * authenticating, or other setup tasks.
+     *
+     * The specific implementation depends on the subclass.
+     *
+     * @return bool True on successful preparation, false otherwise.
+     */
     protected abstract function prepare(): bool;
 
-    /** todo */
+    /**
+     * A method for executing the access to the resource.
+     * This could involve sending a request, receiving a
+     * response, or other execution tasks.
+     *
+     * The specific implementation depends on the subclass.
+     *
+     * @return bool True on successful execution, false otherwise.
+     */
     protected abstract function execute(): bool;
 
-    /** todo */
+    /**
+     * A method for cleaning up after the execution of
+     * resource access. This could involve closing a
+     * connection, deallocating resources, or other
+     * cleanup tasks.
+     *
+     * The specific implementation depends on the subclass.
+     */
     protected abstract function close(): void;
 
+    /** Boots the engine. */
     public final function boot(): bool
     {
         if (!$this->internallyBootResponse()) {
@@ -44,14 +76,12 @@ abstract class Engine
         return true;
     }
 
-    protected final function internallyBootResponse(): bool {
-        $this->responseInstance = new $this->response;
-        return $this->bootResponse($this->responseInstance);
-    }
-
-    protected function bootResponse(Response $response): bool { return true; }
-
-    /** todo */
+    /**
+     * A method for executing the entire process of
+     * accessing a resource.
+     *
+     * @return bool True on successful access, false otherwise.
+     */
     public function access(): bool
     {
         if (!$this->prepare()) {
@@ -65,14 +95,32 @@ abstract class Engine
         return true;
     }
 
-    /** todo */
+    /**
+     * A method for internally booting the Response
+     * instance. It creates a new instance of the Response
+     * subclass specified in the $response property.
+     */
+    private function internallyBootResponse(): bool
+    {
+        $this->responseInstance = new $this->response;
+        return $this->bootResponse($this->responseInstance);
+    }
+
+    /**
+     * This method allows you to modify created Response instance.
+     *
+     * @param Response $response Created Response instance.
+     * @return bool The result of booting.
+     */
+    protected function bootResponse(Response $response): bool { return true; }
+
     public function getResponse(): Response
     {
         return $this->responseInstance;
     }
 
-    /** todo */
-    protected final function address(): string {
-        return (string) $this->address;
+    protected final function address(): string
+    {
+        return (string)$this->address;
     }
 }

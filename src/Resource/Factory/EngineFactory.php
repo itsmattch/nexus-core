@@ -2,8 +2,8 @@
 
 namespace Itsmattch\Nexus\Resource\Factory;
 
-use Itsmattch\Nexus\Exceptions\Stream\Factory\EngineNotFoundException;
-use Itsmattch\Nexus\Exceptions\Stream\Factory\InvalidEngineException;
+use Itsmattch\Nexus\Exceptions\Resource\Factory\EngineNotFoundException;
+use Itsmattch\Nexus\Exceptions\Resource\Factory\InvalidEngineException;
 use Itsmattch\Nexus\Resource\Component\Address;
 use Itsmattch\Nexus\Resource\Component\Engine;
 use Itsmattch\Nexus\Resource\Engine\HttpEngine;
