@@ -19,7 +19,6 @@ final class ReaderFactory
     /**
      * Associates an engine class with a scheme.
      *
-     * todo
      * @throws InvalidReaderException
      */
     public static function set(string $type, string $reader): void
@@ -34,7 +33,6 @@ final class ReaderFactory
      * Constructs an Engine based on a scheme of an
      * Address instance.
      *
-     * todo
      * @throws ReaderNotFoundException
      */
     public static function from(Response $response): Reader

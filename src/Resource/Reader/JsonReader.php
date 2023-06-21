@@ -4,7 +4,7 @@ namespace Itsmattch\Nexus\Resource\Reader;
 
 use Itsmattch\Nexus\Resource\Component\Reader;
 
-/** todo */
+/** The Reader class responsible for reading JSON data. */
 class JsonReader extends Reader
 {
     protected array $interpreted = [];

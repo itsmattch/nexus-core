@@ -2,7 +2,10 @@
 
 namespace Itsmattch\Nexus\Resource\Component\Engine;
 
-/** todo */
+/**
+ * A simple encapsulation of the most important
+ * information received by an Engine.
+ */
 class Response
 {
     protected readonly ?string $type;
