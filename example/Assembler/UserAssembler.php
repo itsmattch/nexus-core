@@ -11,7 +11,7 @@ class UserAssembler extends Assembler
 {
     protected string $model = UserModel::class;
 
-    protected array $resources = [UserResource::class];
+    protected string|array $resource = UserResource::class;
 
-    protected string $blueprint = UserBlueprint::class;
+    protected string|array $blueprint = UserBlueprint::class;
 }

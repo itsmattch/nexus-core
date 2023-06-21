@@ -2,7 +2,7 @@
 
 namespace Itsmattch\Nexus\Resource\Factory;
 
-use Itsmattch\Nexus\Exceptions\Stream\Factory\NotAReaderException;
+use Itsmattch\Nexus\Exceptions\Stream\Factory\InvalidReaderException;
 use Itsmattch\Nexus\Exceptions\Stream\Factory\ReaderNotFoundException;
 use Itsmattch\Nexus\Resource\Component\Engine\Response;
 use Itsmattch\Nexus\Resource\Component\Reader;
@@ -20,12 +20,12 @@ final class ReaderFactory
      * Associates an engine class with a scheme.
      *
      * todo
-     * @throws NotAReaderException
+     * @throws InvalidReaderException
      */
     public static function set(string $type, string $reader): void
     {
         if (!is_subclass_of($reader, Reader::class)) {
-            throw new NotAReaderException($reader);
+            throw new InvalidReaderException($reader);
         }
         self::$registry[$type] = $reader;
     }

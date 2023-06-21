@@ -4,7 +4,7 @@ namespace Itsmattch\Nexus\Exceptions\Stream\Factory;
 
 use Exception;
 
-class NotAReaderException extends Exception
+class InvalidReaderException extends Exception
 {
     public function __construct(string $reader)
     {

@@ -4,7 +4,7 @@ namespace Itsmattch\Nexus\Exceptions\Stream\Factory;
 
 use Exception;
 
-class NotAnEngineException extends Exception
+class InvalidEngineException extends Exception
 {
     public function __construct(string $engine)
     {
