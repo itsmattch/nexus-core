@@ -16,9 +16,17 @@ class HttpEngine extends Engine
     /** Stores the cURL handle for HTTP communication. */
     private CurlHandle $handle;
 
+    /** todo */
+    private array $headers = [];
+
     public function getHandle(): CurlHandle
     {
         return $this->handle;
+    }
+
+    public function setHeaders(array $headers): void
+    {
+        $this->headers = array_merge($this->headers, $headers);
     }
 
     public function setMethod(HttpMethod $method): void
@@ -29,7 +37,7 @@ class HttpEngine extends Engine
     public function setBody(Request $request): void
     {
         curl_setopt($this->handle, CURLOPT_POSTFIELDS, $request->getBody());
-        curl_setopt($this->handle, CURLOPT_HTTPHEADER, [
+        $this->setHeaders([
             'Content-Type: ' . $request->getType(),
             'Content-Length: ' . strlen($request->getBody())
         ]);
@@ -66,6 +74,10 @@ class HttpEngine extends Engine
      */
     protected function execute(): bool
     {
+        curl_setopt($this->handle, CURLOPT_HTTPHEADER, array_map(function ($key, $value) {
+            return "$key: $value";
+        }, array_keys($this->headers), array_values($this->headers)));
+
         $responseBody = curl_exec($this->handle);
         $responseType = $this->getContentType();
 
