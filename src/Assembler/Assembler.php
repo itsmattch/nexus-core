@@ -10,7 +10,7 @@ use Itsmattch\Nexus\Exceptions\Assembler\InvalidArrayFormatException;
 use Itsmattch\Nexus\Exceptions\Assembler\InvalidBlueprintException;
 use Itsmattch\Nexus\Exceptions\Assembler\InvalidModelException;
 use Itsmattch\Nexus\Exceptions\Assembler\InvalidResourceException;
-use Itsmattch\Nexus\Resource\Resource;
+use Itsmattch\Nexus\Stream\Stream;
 
 /**
  * The Assembler class is responsible for assembling data
@@ -139,7 +139,7 @@ abstract class Assembler
         // Resources list must not contain any values other than
         // strings representing subclasses of Resource class.
         $filteredResources = array_filter($this->resource, function ($resourceCandidate) {
-            return is_subclass_of($resourceCandidate, Resource::class);
+            return is_subclass_of($resourceCandidate, Stream::class);
         });
         if (count($filteredResources) !== count($this->resource)) {
             throw new InvalidResourceException();
@@ -165,7 +165,7 @@ abstract class Assembler
      */
     public function access(): bool
     {
-        /** @var Resource $resource */
+        /** @var Stream $resource */
         foreach ($this->resource as $i => $resource) {
             $resourceInstance = $resource::load($this->resourceParameters);
             if ($resourceInstance === null && !($this instanceof Asynchronous)) {
@@ -183,7 +183,7 @@ abstract class Assembler
      */
     public function read(): bool
     {
-        /** @var Resource $resource */
+        /** @var Stream $resource */
         foreach ($this->resourcesInstance as $i => $resource) {
             if (count($this->blueprintsInstance) === 1) {
                 // blueprint[0] on $resource->get();

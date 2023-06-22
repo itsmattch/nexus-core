@@ -5,7 +5,7 @@ namespace Itsmattch\Nexus\Repository;
 use Itsmattch\Nexus\Common\Blueprint;
 use Itsmattch\Nexus\Common\Collection;
 use Itsmattch\Nexus\Common\Model;
-use Itsmattch\Nexus\Resource\Resource;
+use Itsmattch\Nexus\Stream\Stream;
 
 class Repository
 {
@@ -41,9 +41,9 @@ class Repository
     /** todo read resources */
     public function access(): bool
     {
-        /** @var Resource $resource */
+        /** @var Stream $resource */
         foreach ($this->resources as $resource) {
-            if (!is_subclass_of($resource, Resource::class)) {
+            if (!is_subclass_of($resource, Stream::class)) {
                 throw new \Exception();
             }
             $this->resourcesInstances[] = $resource::load();
