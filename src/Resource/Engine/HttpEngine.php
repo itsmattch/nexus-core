@@ -4,6 +4,8 @@ namespace Itsmattch\Nexus\Resource\Engine;
 
 use CurlHandle;
 use Itsmattch\Nexus\Resource\Component\Engine;
+use Itsmattch\Nexus\Resource\Component\Engine\Request;
+use Itsmattch\Nexus\Resource\Engine\Enum\HttpMethod;
 
 /**
  * The HttpEngine is a very simple implementation of the
@@ -13,6 +15,25 @@ class HttpEngine extends Engine
 {
     /** Stores the cURL handle for HTTP communication. */
     private CurlHandle $handle;
+
+    public function getHandle(): CurlHandle
+    {
+        return $this->handle;
+    }
+
+    public function setMethod(HttpMethod $method): void
+    {
+        curl_setopt($this->handle, CURLOPT_CUSTOMREQUEST, $method->name);
+    }
+
+    public function setBody(Request $request): void
+    {
+        curl_setopt($this->handle, CURLOPT_POSTFIELDS, $request->getBody());
+        curl_setopt($this->handle, CURLOPT_HTTPHEADER, [
+            'Content-Type: ' . $request->getType(),
+            'Content-Length: ' . strlen($request->getBody())
+        ]);
+    }
 
     /**
      * Initializes the cURL session and sets the necessary options.

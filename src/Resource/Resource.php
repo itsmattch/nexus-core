@@ -8,6 +8,7 @@ use Itsmattch\Nexus\Exceptions\Resource\Factory\ReaderNotFoundException;
 use Itsmattch\Nexus\Resource\Component\Address;
 use Itsmattch\Nexus\Resource\Component\Engine;
 use Itsmattch\Nexus\Resource\Component\Reader;
+use Itsmattch\Nexus\Resource\Component\Writer;
 use Itsmattch\Nexus\Resource\Factory\AddressFactory;
 use Itsmattch\Nexus\Resource\Factory\EngineFactory;
 use Itsmattch\Nexus\Resource\Factory\ReaderFactory;
@@ -54,6 +55,16 @@ abstract class Resource
     protected string $reader = Reader::class;
 
     /**
+     * The writer property specifies the strategy that the
+     * Resource will use to prepare and format the data to
+     * be sent to the resource.
+     *
+     * This property is required for resources that aim to
+     * attach requests.
+     */
+    protected string $writer = Writer::class;
+
+    /**
      * Stores instance of the Address class that is created
      * based on the value of the $address property.
      */
@@ -76,7 +87,7 @@ abstract class Resource
     /**
      * A list of parameters passed with a Resource constructor.
      */
-    private array $addressParameters;
+    private array $parameters;
 
     /**
      * A constructor accepting a list of address parameters.
@@ -85,7 +96,13 @@ abstract class Resource
      */
     public function __construct(array $parameters = [])
     {
-        $this->addressParameters = $parameters;
+        $this->parameters = $parameters;
+    }
+
+    /** todo */
+    protected function parameter(string $parameter, mixed $default = null): mixed
+    {
+        return $this->parameters[$parameter] ?? $default;
     }
 
     /**
@@ -191,11 +208,11 @@ abstract class Resource
     private function internallyBootAddress(): bool
     {
         if (is_subclass_of($this->address, Address::class)) {
-            $this->addressInstance = new $this->address($this->addressParameters);
+            $this->addressInstance = new $this->address($this->parameters);
             return $this->bootAddress($this->addressInstance);
         }
         if (str_contains($this->address, '://')) {
-            $this->addressInstance = AddressFactory::from($this->address, $this->addressParameters);
+            $this->addressInstance = AddressFactory::from($this->address, $this->parameters);
             return $this->bootAddress($this->addressInstance);
         }
         return false;

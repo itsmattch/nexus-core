@@ -73,6 +73,9 @@ abstract class Engine
         if (!$this->internallyBootResponse()) {
             return false;
         }
+        if (!$this->prepare()) {
+            return false;
+        }
         return true;
     }
 
@@ -84,9 +87,6 @@ abstract class Engine
      */
     public function access(): bool
     {
-        if (!$this->prepare()) {
-            return false;
-        }
         if (!$this->execute()) {
             $this->close();
             return false;

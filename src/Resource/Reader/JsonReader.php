@@ -7,14 +7,14 @@ use Itsmattch\Nexus\Resource\Component\Reader;
 /** The Reader class responsible for reading JSON data. */
 class JsonReader extends Reader
 {
-    protected array $interpreted = [];
+    protected array $jsonArray = [];
 
     public function read(): bool
     {
-        $array = json_decode($this->response->getBody(), true);
+        $jsonArray = json_decode($this->response->getBody(), true);
 
-        if (is_array($array)) {
-            $this->interpreted = $array;
+        if (is_array($jsonArray)) {
+            $this->jsonArray = $jsonArray;
             return true;
         }
 
@@ -23,6 +23,6 @@ class JsonReader extends Reader
 
     public function get(): array
     {
-        return $this->interpreted;
+        return $this->jsonArray;
     }
 }
