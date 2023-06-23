@@ -2,7 +2,7 @@
 
 namespace Itsmattch\Nexus\Stream\Component;
 
-use Itsmattch\Nexus\Stream\Component\Engine\Request;
+use Itsmattch\Nexus\Stream\Component\Engine\Message;
 
 /** todo the opposite of reader. */
 abstract class Writer
@@ -15,6 +15,6 @@ abstract class Writer
     }
 
     public abstract function write(): bool;
-    public abstract function get(): Request;
+    public abstract function get(): Message;
 
 }

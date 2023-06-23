@@ -6,8 +6,8 @@ use Itsmattch\Nexus\Common\Blueprint;
 use Itsmattch\Nexus\Common\Model;
 use Itsmattch\Nexus\Exceptions\Assembler\InvalidArrayFormatException;
 use Itsmattch\Nexus\Exceptions\Assembler\InvalidBlueprintException;
-use Itsmattch\Nexus\Exceptions\Assembler\InvalidModelException;
 use Itsmattch\Nexus\Exceptions\Assembler\InvalidResourceException;
+use Itsmattch\Nexus\Exceptions\Common\InvalidModelException;
 use Itsmattch\Nexus\Stream\Stream;
 
 class Repository

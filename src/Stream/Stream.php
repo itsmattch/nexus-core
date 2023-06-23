@@ -2,7 +2,15 @@
 
 namespace Itsmattch\Nexus\Stream;
 
+use Exception;
 use Itsmattch\Nexus\Common\Traits\ArrayHelpers;
+use Itsmattch\Nexus\Contract\Common\Bootable;
+use Itsmattch\Nexus\Contract\Common\Validatable;
+use Itsmattch\Nexus\Contract\Stream as StreamContract;
+use Itsmattch\Nexus\Exceptions\Common\InvalidAddressException;
+use Itsmattch\Nexus\Exceptions\Common\InvalidEngineException;
+use Itsmattch\Nexus\Exceptions\Common\InvalidReaderException;
+use Itsmattch\Nexus\Exceptions\Common\InvalidWriterException;
 use Itsmattch\Nexus\Exceptions\Stream\Factory\EngineNotFoundException;
 use Itsmattch\Nexus\Exceptions\Stream\Factory\ReaderNotFoundException;
 use Itsmattch\Nexus\Stream\Component\Address;
@@ -13,17 +21,17 @@ use Itsmattch\Nexus\Stream\Factory\AddressFactory;
 use Itsmattch\Nexus\Stream\Factory\EngineFactory;
 use Itsmattch\Nexus\Stream\Factory\ReaderFactory;
 
-/**
- * The Stream class represents a single access point of data
- * within the Nexus system. It acts as an encapsulation of
- * all information necessary to access, read and interpret
- * a stream.
- *
- * @link https://nexus.itsmattch.com/streams/overview Streams Documentation
- */
-abstract class Stream
+abstract class Stream implements StreamContract, Bootable, Validatable
 {
     use ArrayHelpers;
+
+    /**
+     * Groups are used to cluster together different streams
+     * that operate on the same data. By default, this is
+     * set to the Stream's namespace, implying all Streams
+     * under the same namespace are in the same group.
+     */
+    protected string $group;
 
     /**
      * Represents the location of the stream. It must be
@@ -85,24 +93,24 @@ abstract class Stream
     private Reader $readerInstance;
 
     /**
-     * A list of parameters passed with a Stream constructor.
+     * The writerInstance property is used to store the
+     * instance of the Writer class that is instantiated
+     * based on the value of the $writer property.
      */
-    private array $parameters;
+    private Writer $writerInstance;
+
+    /** A list of addressParameters passed with a Stream constructor. */
+    private array $addressParameters;
 
     /**
-     * A constructor accepting a list of address parameters.
+     * A constructor accepting a list of address addressParameters.
      *
-     * @param array $parameters A list of address parameters.
+     * @param array $addressParameters A list of address addressParameters.
      */
-    public function __construct(array $parameters = [])
+    public function __construct(array $addressParameters = [])
     {
-        $this->parameters = $parameters;
-    }
-
-    /** todo */
-    protected function parameter(string $parameter, mixed $default = null): mixed
-    {
-        return $this->parameters[$parameter] ?? $default;
+        $this->addressParameters = $addressParameters;
+        $this->prepare();
     }
 
     /**
@@ -115,36 +123,25 @@ abstract class Stream
      * specified key or the entire data array. Returns null
      * if the specified key does not exist.
      */
-    public function get(?string $key = null): mixed
+    public final function get(?string $key = null): mixed
     {
         $array = $this->readerInstance->get();
 
-        if ($key === null) {
-            return $array;
-        }
-        return $this->getDotKey($key, $array);
+        return empty($key) ? $array : $this->traverseDotArray($key, $array);
     }
 
     /**
      * This method creates, boots, and retrieves a Stream
-     * instance and passes a set of parameters to its
+     * instance and passes a set of addressParameters to its
      * Address component.
      *
-     * @param array $parameters An array of parameters for an Address component.
+     * @param array $addressParameters An array of addressParameters for an Address component.
      * @return Stream|null Returns Stream instance if accessed successfully, null otherwise.
      */
-    public final static function load(array $parameters = []): ?Stream
+    public final static function load(array $addressParameters = []): ?Stream
     {
-        $instance = new static($parameters);
-
-        if (!$instance->access()) {
-            return null;
-        }
-        if (!$instance->read()) {
-            return null;
-        }
-
-        return $instance;
+        $instance = new static($addressParameters);
+        return $instance->boot() ? $instance : null;
     }
 
     /**
@@ -160,19 +157,68 @@ abstract class Stream
         if (empty($identifier) || empty($parameterName)) {
             return self::load();
         }
-        $parameter = [$parameterName => $identifier];
+        return static::load([$parameterName => $identifier]);
+    }
 
-        return static::load($parameter);
+    /** todo */
+    public final function boot(): bool
+    {
+        try {
+            $this->validate();
+            return $this->access()
+                && $this->read();
+
+        } catch (Exception) {
+            return false;
+        }
+    }
+
+    /** todo */
+    public final function prepare(): void
+    {
+        if (empty($this->group)) {
+            $this->group = strtolower((new \ReflectionClass($this))->getNamespaceName());
+        }
+    }
+
+    /**
+     * @throws InvalidReaderException
+     * @throws InvalidAddressException
+     * @throws InvalidWriterException
+     * @throws InvalidEngineException
+     */
+    public final function validate(): void
+    {
+        if (!is_a($this->addressInstance, Address::class, true) || !str_contains($this->address, '://')) {
+            throw new InvalidAddressException($this->engine);
+        }
+
+        if (!is_a($this->engine, Engine::class, true)) {
+            throw new InvalidEngineException($this->engine);
+        }
+
+        if (!is_a($this->reader, Reader::class, true)) {
+            throw new InvalidReaderException($this->reader);
+        }
+
+        if (!is_a($this->writer, Writer::class, true)) {
+            throw new InvalidWriterException($this->writer);
+        }
     }
 
     /**
      * Boots the address and the engine by calling their
      * respective internal boot methods, and then attempts
      * to access the stream.
+     *
+     * @throws EngineNotFoundException
      */
     public final function access(): bool
     {
         if (!$this->internallyBootAddress()) {
+            return false;
+        }
+        if (!$this->internallyBootWriter()) {
             return false;
         }
         if (!$this->internallyBootEngine()) {
@@ -188,6 +234,8 @@ abstract class Stream
      * Boots the reader by calling its respective internal
      * boot method, and then attempts to read the accessed
      * stream.
+     *
+     * @throws ReaderNotFoundException
      */
     public final function read(): bool
     {
@@ -208,11 +256,11 @@ abstract class Stream
     private function internallyBootAddress(): bool
     {
         if (is_subclass_of($this->address, Address::class)) {
-            $this->addressInstance = new $this->address($this->parameters);
+            $this->addressInstance = new $this->address($this->addressParameters);
             return $this->bootAddress($this->addressInstance);
         }
         if (str_contains($this->address, '://')) {
-            $this->addressInstance = AddressFactory::from($this->address, $this->parameters);
+            $this->addressInstance = AddressFactory::from($this->address, $this->addressParameters);
             return $this->bootAddress($this->addressInstance);
         }
         return false;
@@ -222,17 +270,14 @@ abstract class Stream
      * Initializes the engine instance and boots it up. It
      * either instantiates a subclass of Engine or uses an
      * EngineFactory to do so based on the address.
+     *
+     * @throws EngineNotFoundException
      */
-    protected final function internallyBootEngine(): bool
+    private function internallyBootEngine(): bool
     {
-        try {
-            $this->engineInstance = is_subclass_of($this->engine, Engine::class)
-                ? new $this->engine($this->addressInstance)
-                : EngineFactory::from($this->addressInstance);
-
-        } catch (EngineNotFoundException) {
-            return false;
-        }
+        $this->engineInstance = is_subclass_of($this->engine, Engine::class)
+            ? new $this->engine($this->addressInstance)
+            : EngineFactory::from($this->addressInstance);
 
         $this->engineInstance->boot();
 
@@ -243,19 +288,23 @@ abstract class Stream
      * Initializes the reader instance and boots it up. It
      * either instantiates a subclass of Reader or uses a
      * ReaderFactory to do so based on the response.
+     *
+     * @throws ReaderNotFoundException
      */
     private function internallyBootReader(): bool
     {
-        try {
-            $this->readerInstance = is_subclass_of($this->reader, Reader::class)
-                ? new $this->reader($this->engineInstance->getResponse())
-                : ReaderFactory::from($this->engineInstance->getResponse());
-
-        } catch (ReaderNotFoundException) {
-            return false;
-        }
+        $this->readerInstance = is_subclass_of($this->reader, Reader::class)
+            ? new $this->reader($this->engineInstance->getResponse())
+            : ReaderFactory::from($this->engineInstance->getResponse());
 
         return $this->bootReader($this->readerInstance);
+    }
+
+    /** todo */
+    private function internallyBootWriter(): bool
+    {
+        $this->writerInstance = new $this->writer();
+        return true;
     }
 
     /**
@@ -281,4 +330,22 @@ abstract class Stream
      * @return bool The result of booting.
      */
     protected function bootReader(Reader $reader): bool { return true; }
+
+    /**
+     * This method allows you to modify created Writer instance.
+     *
+     * @param Writer $writer Created Writer instance.
+     * @return bool The result of booting.
+     */
+    protected function bootWriter(Writer $writer): bool { return true; }
+
+    /**
+     * Returns the stream group.
+     *
+     * @return string
+     */
+    public function getGroupName(): string
+    {
+        return $this->group;
+    }
 }

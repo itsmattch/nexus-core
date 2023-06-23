@@ -4,7 +4,7 @@ namespace Itsmattch\Nexus\Stream\Engine;
 
 use CurlHandle;
 use Itsmattch\Nexus\Stream\Component\Engine;
-use Itsmattch\Nexus\Stream\Component\Engine\Request;
+use Itsmattch\Nexus\Stream\Component\Engine\Message;
 use Itsmattch\Nexus\Stream\Engine\Enum\HttpMethod;
 
 /**
@@ -34,7 +34,7 @@ class HttpEngine extends Engine
         curl_setopt($this->handle, CURLOPT_CUSTOMREQUEST, $method->name);
     }
 
-    public function setBody(Request $request): void
+    public function setBody(Message $request): void
     {
         curl_setopt($this->handle, CURLOPT_POSTFIELDS, $request->getBody());
         $this->setHeaders([
@@ -48,7 +48,7 @@ class HttpEngine extends Engine
      *
      * @return bool Returns true if the cURL handle is successfully initialized, false otherwise.
      */
-    protected function prepare(): bool
+    public function init(): bool
     {
         $options = [
             CURLOPT_URL => $this->address(),
@@ -72,7 +72,7 @@ class HttpEngine extends Engine
      *
      * @return bool Returns true if the request is successfully executed, false otherwise.
      */
-    protected function execute(): bool
+    public function execute(): bool
     {
         curl_setopt($this->handle, CURLOPT_HTTPHEADER, array_map(function ($key, $value) {
             return "$key: $value";
@@ -118,7 +118,7 @@ class HttpEngine extends Engine
     /**
      * Closes the cURL handle to release resources.
      */
-    protected function close(): void
+    public function close(): void
     {
         curl_close($this->handle);
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Exceptions\Stream\Factory;
+namespace Itsmattch\Nexus\Exceptions\Common;
 
 use Exception;
 

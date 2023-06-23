@@ -2,15 +2,13 @@
 
 namespace Itsmattch\Nexus\Stream\Component;
 
+use Exception;
+use Itsmattch\Nexus\Contract\Common\Bootable;
+use Itsmattch\Nexus\Contract\Common\Validatable;
+use Itsmattch\Nexus\Contract\Stream\Engine as EngineContract;
 use Itsmattch\Nexus\Stream\Component\Engine\Message;
 
-/**
- * The Engine class encapsulates the logic responsible for
- * handling the connection and reading of a resource.
- *
- * @link https://nexus.itsmattch.com/resources/engines Engines Documentation
- */
-abstract class Engine
+abstract class Engine implements EngineContract, Bootable, Validatable
 {
     /**
      * Represents the Response class that should be used
@@ -35,48 +33,17 @@ abstract class Engine
         $this->address = $address;
     }
 
-    /**
-     * A method for preparing to access the resource.
-     * This could involve setting up a connection,
-     * authenticating, or other setup tasks.
-     *
-     * The specific implementation depends on the subclass.
-     *
-     * @return bool True on successful preparation, false otherwise.
-     */
-    protected abstract function prepare(): bool;
-
-    /**
-     * A method for executing the access to the resource.
-     * This could involve sending a request, receiving a
-     * response, or other execution tasks.
-     *
-     * The specific implementation depends on the subclass.
-     *
-     * @return bool True on successful execution, false otherwise.
-     */
-    protected abstract function execute(): bool;
-
-    /**
-     * A method for cleaning up after the execution of
-     * resource access. This could involve closing a
-     * connection, deallocating resources, or other
-     * cleanup tasks.
-     *
-     * The specific implementation depends on the subclass.
-     */
-    protected abstract function close(): void;
-
     /** Boots the engine. */
     public final function boot(): bool
     {
-        if (!$this->internallyBootResponse()) {
+        try {
+            $this->validate();
+            return $this->internallyBootResponse()
+                && $this->init();
+
+        } catch (Exception) {
             return false;
         }
-        if (!$this->prepare()) {
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -122,5 +89,10 @@ abstract class Engine
     protected final function address(): string
     {
         return (string)$this->address;
+    }
+
+    public function validate(): void
+    {
+        // TODO: Implement validate() method.
     }
 }
