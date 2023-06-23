@@ -2,7 +2,7 @@
 
 namespace Itsmattch\Nexus\Stream;
 
-use Itsmattch\Nexus\Common\Traits\GetDot;
+use Itsmattch\Nexus\Common\Traits\ArrayHelpers;
 use Itsmattch\Nexus\Exceptions\Stream\Factory\EngineNotFoundException;
 use Itsmattch\Nexus\Exceptions\Stream\Factory\ReaderNotFoundException;
 use Itsmattch\Nexus\Stream\Component\Address;
@@ -23,7 +23,7 @@ use Itsmattch\Nexus\Stream\Factory\ReaderFactory;
  */
 abstract class Stream
 {
-    use GetDot;
+    use ArrayHelpers;
 
     /**
      * Represents the location of the stream. It must be
@@ -122,7 +122,7 @@ abstract class Stream
         if ($key === null) {
             return $array;
         }
-        return $this->dotKey($key, $array);
+        return $this->getDotKey($key, $array);
     }
 
     /**

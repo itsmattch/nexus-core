@@ -2,9 +2,9 @@
 
 namespace Itsmattch\Nexus\Common\Traits;
 
-trait GetDot
+trait ArrayHelpers
 {
-    protected function dotKey($path, $array) {
+    protected function getDotKey($path, $array) {
         $keys = explode('.', $path);
 
         $traverseArray = function ($array, $keys) use (&$traverseArray) {

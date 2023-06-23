@@ -3,60 +3,110 @@
 namespace Itsmattch\Nexus\Repository;
 
 use Itsmattch\Nexus\Common\Blueprint;
-use Itsmattch\Nexus\Common\Collection;
 use Itsmattch\Nexus\Common\Model;
+use Itsmattch\Nexus\Exceptions\Assembler\InvalidArrayFormatException;
+use Itsmattch\Nexus\Exceptions\Assembler\InvalidBlueprintException;
+use Itsmattch\Nexus\Exceptions\Assembler\InvalidModelException;
+use Itsmattch\Nexus\Exceptions\Assembler\InvalidResourceException;
 use Itsmattch\Nexus\Stream\Stream;
 
 class Repository
 {
-    /** A class defining the model. */
+    /** todo */
     protected string $model = Model::class;
 
-    protected string $collection = Collection::class;
+    /** todo */
+    protected string|array $stream = [];
 
-    /** A list of all resources containing pieces of the model. */
-    protected array $resources = [];
+    /** todo */
+    protected string $blueprint;
 
-    /** @var array todo */
-    private array $resourcesInstances = [];
+    /** todo */
+    private array $streamsInstances = [];
 
-    /** A blueprint mapping resource to model fields. */
-    protected string $blueprint = Blueprint::class;
+    /** todo */
+    private Blueprint $blueprintInstance;
 
-    /** todo load identities */
-    public final static function load(): ?Repository
+    /** todo */
+    public static function load(): ?Repository
     {
-        $instance = new static();
+        try {
+            $instance = new static();
 
-        if (!$instance->access()) {
+            $instance->prepare();
+            // $instance->validate(); // todo needs checked
+
+            if (!$instance->access()) {
+                return null;
+            }
+            if (!$instance->read()) {
+                return null;
+            }
+
+            return $instance;
+
+        } catch (\Exception) {
             return null;
         }
-        if (!$instance->read()) {
-            return null;
-        }
-
-        return $instance;
     }
 
-    /** todo read resources */
+    /** todo */
+    public function prepare(): void
+    {
+        if (!is_array($this->stream)) {
+            $this->stream = [$this->stream];
+        }
+    }
+
+    /** todo */
+    public function validate(): void
+    {
+        // Model must represent a subclass of Model.
+        if (!is_subclass_of($this->model, Model::class)) {
+            throw new InvalidModelException($this->model);
+        }
+
+        // Streams array should be a list.
+        if (!array_is_list($this->stream)) {
+            throw new InvalidArrayFormatException();
+        }
+
+        // Resources list must not contain any values other than
+        // strings representing subclasses of Resource class.
+        $filteredResources = array_filter($this->stream, function ($streamCandidate) {
+            return is_subclass_of($streamCandidate, Stream::class);
+        });
+        if (count($filteredResources) !== count($this->stream)) {
+            throw new InvalidResourceException();
+        }
+
+        // Blueprint must be a string representing subclasses of Blueprint class.
+        if (is_subclass_of($this->blueprint, Blueprint::class)) {
+            throw new InvalidBlueprintException();
+        }
+    }
+
+    /** todo */
     public function access(): bool
     {
-        /** @var Stream $resource */
-        foreach ($this->resources as $resource) {
-            if (!is_subclass_of($resource, Stream::class)) {
-                throw new \Exception();
+        $streamsInstances = [];
+        /** @var Stream $stream */
+        foreach ($this->stream as $i => $stream) {
+            $streamInstance = $stream::load();
+            if ($streamInstance === null) {
+                return false;
             }
-            $this->resourcesInstances[] = $resource::load();
+            $streamsInstances[$i] = $streamInstance;
         }
-        return true;
+        $this->streamsInstances = $streamsInstances;
+        return count(array_filter($this->streamsInstances)) > 0;
     }
 
+    /** todo */
     public function read(): bool
     {
-        $blueprint = new $this->blueprint($this->model);
-        $collection = $blueprint->getCollection(... $this->resourcesInstances);
-
-        var_dump($collection);
-        exit;
+        $this->blueprintInstance = new $this->blueprint(...$this->streamsInstances);
+        var_dump($this->blueprintInstance);
+        return true;
     }
 }
