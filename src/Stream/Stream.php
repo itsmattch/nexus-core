@@ -27,19 +27,19 @@ abstract class Stream implements StreamContract, Bootable, Validatable
 
     /**
      * Groups are used to cluster together different streams
-     * that operate on the same data. By default, this is
-     * set to the Stream's namespace, implying all Streams
-     * under the same namespace are in the same group.
+     * that utilize the same set of identifiers.
+     *
+     * By default, this is set to the Stream's namespace,
+     * which implies that all Streams under the same
+     * namespace are part of the same group.
      */
     protected string $group;
 
     /**
      * Represents the location of the stream. It must be
      * either a string that points to an instance of the
-     * Address class, or a URI-style string, which directly
-     * represents the location of the stream. The latter
-     * can include placeholders to allow for dynamic
-     * parameterization of the address.
+     * Address class, or a URL-style string, which directly
+     * represents the location of the stream.
      *
      * This property is required.
      */
@@ -47,7 +47,7 @@ abstract class Stream implements StreamContract, Bootable, Validatable
 
     /**
      * The engine property represents the strategy that the
-     * Stream will use to connect to the stream. This
+     * Stream will use to connect to the resource. This
      * property should be set with the fully qualified class
      * name of a class that extends the Engine class.
      */
@@ -58,7 +58,7 @@ abstract class Stream implements StreamContract, Bootable, Validatable
      * Stream will use to read and interpret the retrieved
      * data. If this property is not explicitly set, Nexus
      * will attempt to automatically select an appropriate
-     * Reader based on the type of the retrieved response.
+     * Reader based on the type of the retrieved data.
      */
     protected string $reader = Reader::class;
 
@@ -67,45 +67,48 @@ abstract class Stream implements StreamContract, Bootable, Validatable
      * Stream will use to prepare and format the data to
      * be sent to the stream.
      *
-     * This property is required for streams that aim to
-     * attach requests.
+     * This property is required for streams that attach
+     * messages, such as http request body or file input.
      */
     protected string $writer = Writer::class;
 
     /**
-     * Stores instance of the Address class that is created
-     * based on the value of the $address property.
+     * Stores an instance of the Address class that is
+     * created based on the value of the $address property.
      */
     private Address $addressInstance;
 
     /**
-     * The engineInstance property is used to store the
-     * instance of the Engine class that is instantiated
-     * based on the value of the $engine property.
+     * Stores an instance of the Engine class that is
+     * created based on the value of the $engine property.
      */
     private Engine $engineInstance;
 
     /**
-     * The readerInstance property is used to store the
-     * instance of the Reader class that is instantiated
-     * based on the value of the $reader property.
+     * Stores an instance of the Reader class that is
+     * created based on the value of the $reader property.
      */
     private Reader $readerInstance;
 
     /**
-     * The writerInstance property is used to store the
-     * instance of the Writer class that is instantiated
-     * based on the value of the $writer property.
+     * Stores an instance of the Writer class that is
+     * created based on the value of the $writer property.
      */
     private Writer $writerInstance;
 
-    /** A list of addressParameters passed with a Stream constructor. */
+    /**
+     * A list of address parameters. These values are
+     * intended to be used to fill the parameters in the
+     * Address instance.
+     */
     private array $addressParameters;
 
     /**
-     * A constructor accepting a list of address addressParameters.
+     * A constructor accepting a list of address parameters.
+     * Automatically prepares Stream parameters.
      *
-     * @param array $addressParameters A list of address addressParameters.
+     * @param array $addressParameters A list of address
+     * addressParameters.
      */
     public function __construct(array $addressParameters = [])
     {
@@ -114,29 +117,34 @@ abstract class Stream implements StreamContract, Bootable, Validatable
     }
 
     /**
-     * Retrieves data based on a dot notation path or
-     * returns the whole data array.
+     * Retrieves data of the resource using a dot notation
+     * path or returns the whole data array when path is
+     * not specified.
      *
-     * @param ?string $key The dot notation key or null to
+     * @param ?string $path The dot notation path or null to
      * retrieve the whole array.
+     *
      * @return mixed The value from the data array at the
      * specified key or the entire data array. Returns null
      * if the specified key does not exist.
      */
-    public final function get(?string $key = null): mixed
+    public final function get(?string $path = null): mixed
     {
         $array = $this->readerInstance->get();
 
-        return empty($key) ? $array : $this->traverseDotArray($key, $array);
+        return empty($path) ? $array
+            : $this->traverseDotArray($path, $array);
     }
 
     /**
      * This method creates, boots, and retrieves a Stream
-     * instance and passes a set of addressParameters to its
-     * Address component.
+     * instance and passes a set of address parameters.
      *
-     * @param array $addressParameters An array of addressParameters for an Address component.
-     * @return Stream|null Returns Stream instance if accessed successfully, null otherwise.
+     * @param array $addressParameters An array of
+     * parameters for an Address component.
+     *
+     * @return ?Stream Returns Stream instance if booted
+     * successfully, null otherwise.
      */
     public final static function load(array $addressParameters = []): ?Stream
     {
@@ -145,22 +153,34 @@ abstract class Stream implements StreamContract, Bootable, Validatable
     }
 
     /**
-     * This method creates, boots, and retrieves a Stream
-     * instance based on a given unique identifier.
+     * This shorthand method creates, boots, and retrieves a
+     * Stream instance, and passes an id parameter for an
+     * Address component.
      *
      * @param string $identifier A unique identifier value.
-     * @param string $parameterName An alternative identifier parameter name.
-     * @return Stream|null Returns Stream instance if accessed successfully, null otherwise.
+     * @param string $parameterName An alternative
+     * identifier parameter name.
+     *
+     * @return ?Stream Returns Stream instance if booted
+     * successfully, null otherwise.
      */
     public final static function find(string $identifier, string $parameterName = 'id'): ?Stream
     {
-        if (empty($identifier) || empty($parameterName)) {
-            return self::load();
-        }
-        return static::load([$parameterName => $identifier]);
+        $idParameter = empty($identifier) || empty($parameterName)
+            ? [] : [$parameterName => $identifier];
+
+        return static::load($idParameter);
     }
 
-    /** todo */
+    /**
+     * Attempts to initialize the stream in a fail-safe
+     * manner. This includes validation, accessing the
+     * resource, and reading the resource data. If each of
+     * these steps is successful, the method returns true.
+     *
+     * @return bool Returns true if booted successfully,
+     * false otherwise
+     */
     public final function boot(): bool
     {
         try {
@@ -173,7 +193,7 @@ abstract class Stream implements StreamContract, Bootable, Validatable
         }
     }
 
-    /** todo */
+    /** Prepares the instance upon construction. */
     public final function prepare(): void
     {
         if (empty($this->group)) {
@@ -207,45 +227,38 @@ abstract class Stream implements StreamContract, Bootable, Validatable
     }
 
     /**
-     * Boots the address and the engine by calling their
-     * respective internal boot methods, and then attempts
-     * to access the stream.
+     * Boots the components required to access the resource,
+     * and then accesses it.
+     *
+     * @return bool Returns true if all components were
+     * successfully booted and the resource was successfully
+     * accessed, false otherwise.
      *
      * @throws EngineNotFoundException
      */
     public final function access(): bool
     {
-        if (!$this->internallyBootAddress()) {
-            return false;
-        }
-        if (!$this->internallyBootWriter()) {
-            return false;
-        }
-        if (!$this->internallyBootEngine()) {
-            return false;
-        }
-        if (!$this->engineInstance->access()) {
-            return false;
-        }
-        return true;
+        return $this->internallyBootAddress()
+            && $this->internallyBootWriter()
+            && $this->internallyBootEngine()
+            && $this->engineInstance->access();
     }
 
     /**
      * Boots the reader by calling its respective internal
      * boot method, and then attempts to read the accessed
-     * stream.
+     * resource.
+     *
+     * @return bool Returns true if the reader was
+     * successfully booted and the resource was successfully
+     * read, false otherwise.
      *
      * @throws ReaderNotFoundException
      */
     public final function read(): bool
     {
-        if (!$this->internallyBootReader()) {
-            return false;
-        }
-        if (!$this->readerInstance->read()) {
-            return false;
-        }
-        return true;
+        return $this->internallyBootReader()
+            && $this->readerInstance->read();
     }
 
     /**
@@ -300,7 +313,7 @@ abstract class Stream implements StreamContract, Bootable, Validatable
         return $this->bootReader($this->readerInstance);
     }
 
-    /** todo */
+    /** Initializes the Writer instance and boots it up. */
     private function internallyBootWriter(): bool
     {
         $this->writerInstance = new $this->writer();
@@ -308,42 +321,45 @@ abstract class Stream implements StreamContract, Bootable, Validatable
     }
 
     /**
-     * This method allows you to modify created Address instance.
+     * This method allows you to modify created Address
+     * instance.
      *
      * @param Address $address Created Address instance.
+     *
      * @return bool The result of booting.
      */
     protected function bootAddress(Address $address): bool { return true; }
 
     /**
-     * This method allows you to modify created Engine instance.
+     * This method allows you to modify created Engine
+     * instance.
      *
      * @param Engine $engine Created Engine instance.
+     *
      * @return bool The result of booting.
      */
     protected function bootEngine(Engine $engine): bool { return true; }
 
     /**
-     * This method allows you to modify created Reader instance.
+     * This method allows you to modify created Reader
+     * instance.
      *
      * @param Reader $reader Created Reader instance.
+     *
      * @return bool The result of booting.
      */
     protected function bootReader(Reader $reader): bool { return true; }
 
     /**
-     * This method allows you to modify created Writer instance.
+     * This method allows you to modify created Writer
+     * instance.
      *
      * @param Writer $writer Created Writer instance.
+     *
      * @return bool The result of booting.
      */
     protected function bootWriter(Writer $writer): bool { return true; }
 
-    /**
-     * Returns the stream group.
-     *
-     * @return string
-     */
     public function getGroupName(): string
     {
         return $this->group;
