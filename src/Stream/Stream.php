@@ -133,7 +133,7 @@ abstract class Stream
      * @param array $parameters An array of parameters for an Address component.
      * @return Stream|null Returns Stream instance if accessed successfully, null otherwise.
      */
-    public static function load(array $parameters = []): ?Stream
+    public final static function load(array $parameters = []): ?Stream
     {
         $instance = new static($parameters);
 
@@ -155,7 +155,7 @@ abstract class Stream
      * @param string $parameterName An alternative identifier parameter name.
      * @return Stream|null Returns Stream instance if accessed successfully, null otherwise.
      */
-    public static function find(string $identifier, string $parameterName = 'id'): ?Stream
+    public final static function find(string $identifier, string $parameterName = 'id'): ?Stream
     {
         if (empty($identifier) || empty($parameterName)) {
             return self::load();

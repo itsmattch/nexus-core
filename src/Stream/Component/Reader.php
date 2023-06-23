@@ -2,7 +2,7 @@
 
 namespace Itsmattch\Nexus\Stream\Component;
 
-use Itsmattch\Nexus\Stream\Component\Engine\Response;
+use Itsmattch\Nexus\Stream\Component\Engine\Message;
 
 /**
  * The Reader class is responsible for reading raw content
@@ -13,9 +13,9 @@ use Itsmattch\Nexus\Stream\Component\Engine\Response;
 abstract class Reader
 {
     /** Instance of the Response class containing received raw content. */
-    protected Response $response;
+    protected Message $response;
 
-    public final function __construct(Response $response)
+    public final function __construct(Message $response)
     {
         $this->response = $response;
     }

@@ -4,7 +4,7 @@ namespace Itsmattch\Nexus\Stream\Factory;
 
 use Itsmattch\Nexus\Exceptions\Stream\Factory\InvalidReaderException;
 use Itsmattch\Nexus\Exceptions\Stream\Factory\ReaderNotFoundException;
-use Itsmattch\Nexus\Stream\Component\Engine\Response;
+use Itsmattch\Nexus\Stream\Component\Engine\Message;
 use Itsmattch\Nexus\Stream\Component\Reader;
 use Itsmattch\Nexus\Stream\Reader\JsonReader;
 
@@ -35,7 +35,7 @@ final class ReaderFactory
      *
      * @throws ReaderNotFoundException
      */
-    public static function from(Response $response): Reader
+    public static function from(Message $response): Reader
     {
         $type = $response->getType();
 

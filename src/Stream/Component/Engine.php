@@ -2,7 +2,7 @@
 
 namespace Itsmattch\Nexus\Stream\Component;
 
-use Itsmattch\Nexus\Stream\Component\Engine\Response;
+use Itsmattch\Nexus\Stream\Component\Engine\Message;
 
 /**
  * The Engine class encapsulates the logic responsible for
@@ -16,13 +16,13 @@ abstract class Engine
      * Represents the Response class that should be used
      * for handling the response from accessing the resource.
      */
-    protected string $response = Response::class;
+    protected string $response = Message::class;
 
     /**
      * Stores the instance of the Response class that is
      * created during booting.
      */
-    private Response $responseInstance;
+    private Message $responseInstance;
 
     /**
      * Represents the location of the resource that the
@@ -109,12 +109,12 @@ abstract class Engine
     /**
      * This method allows you to modify created Response instance.
      *
-     * @param Response $response Created Response instance.
+     * @param Message $response Created Response instance.
      * @return bool The result of booting.
      */
-    protected function bootResponse(Response $response): bool { return true; }
+    protected function bootResponse(Message $response): bool { return true; }
 
-    public function getResponse(): Response
+    public function getResponse(): Message
     {
         return $this->responseInstance;
     }

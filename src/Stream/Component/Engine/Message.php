@@ -2,8 +2,11 @@
 
 namespace Itsmattch\Nexus\Stream\Component\Engine;
 
-/** A simple encapsulation of a request. */
-class Request
+/**
+ * A simple encapsulation of the most important
+ * information received by an Engine.
+ */
+class Message
 {
     protected readonly ?string $type;
     protected readonly string $body;
