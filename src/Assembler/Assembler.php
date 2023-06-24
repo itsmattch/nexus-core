@@ -3,13 +3,13 @@
 namespace Itsmattch\Nexus\Assembler;
 
 use Itsmattch\Nexus\Assembler\Contract\Asynchronous;
+use Itsmattch\Nexus\Assembler\Exception\BlueprintCountException;
+use Itsmattch\Nexus\Assembler\Exception\InvalidArrayFormatException;
+use Itsmattch\Nexus\Assembler\Exception\InvalidBlueprintException;
+use Itsmattch\Nexus\Assembler\Exception\InvalidResourceException;
 use Itsmattch\Nexus\Common\Blueprint;
+use Itsmattch\Nexus\Common\Exception\InvalidModelException;
 use Itsmattch\Nexus\Common\Model;
-use Itsmattch\Nexus\Exceptions\Assembler\BlueprintCountException;
-use Itsmattch\Nexus\Exceptions\Assembler\InvalidArrayFormatException;
-use Itsmattch\Nexus\Exceptions\Assembler\InvalidBlueprintException;
-use Itsmattch\Nexus\Exceptions\Assembler\InvalidResourceException;
-use Itsmattch\Nexus\Exceptions\Common\InvalidModelException;
 use Itsmattch\Nexus\Stream\Stream;
 
 /**

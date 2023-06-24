@@ -2,6 +2,8 @@
 
 namespace Itsmattch\Nexus\Contract;
 
+use Itsmattch\Nexus\Common\Message;
+
 /**
  * The Engine class encapsulates the logic responsible for
  * handling the connection and reading of a resource.
@@ -11,34 +13,22 @@ namespace Itsmattch\Nexus\Contract;
 interface Engine
 {
     /**
-     * A method for preparing to access the resource.
-     * This could involve setting up a connection,
-     * authenticating, or other setup tasks.
+     * Prepares a connection handler.
      *
-     * The specific implementation depends on the subclass.
-     *
-     * @return bool True on successful preparation, false otherwise.
+     * @return bool True on success, false otherwise.
      */
     public function init(): bool;
 
     /**
-     * A method for executing the access to the resource.
-     * This could involve sending a request, receiving a
-     * response, or other execution tasks.
+     * Executes the connection and reads the response.
      *
-     * The specific implementation depends on the subclass.
-     *
-     * @return bool True on successful execution, false otherwise.
+     * @return bool True on success, false otherwise.
      */
     public function execute(): bool;
 
-    /**
-     * A method for cleaning up after the execution of
-     * resource access. This could involve closing a
-     * connection, deallocating resources, or other
-     * cleanup tasks.
-     *
-     * The specific implementation depends on the subclass.
-     */
+    /** Closes the connection after the execution. */
     public function close(): void;
+
+    /** Returns the response as Message instance. */
+    public function getResponse(): Message;
 }

@@ -2,11 +2,11 @@
 
 namespace Itsmattch\Nexus\Reader\Factory;
 
+use Itsmattch\Nexus\Common\Exception\InvalidReaderException;
 use Itsmattch\Nexus\Common\Message;
-use Itsmattch\Nexus\Exceptions\Common\InvalidReaderException;
-use Itsmattch\Nexus\Exceptions\Stream\Factory\ReaderNotFoundException;
+use Itsmattch\Nexus\Contract\Reader;
 use Itsmattch\Nexus\Reader\Concrete\JsonReader;
-use Itsmattch\Nexus\Reader\Reader;
+use Itsmattch\Nexus\Reader\Exception\ReaderNotFoundException;
 
 /** Static factory class for creating Reader instances. */
 final class ReaderFactory

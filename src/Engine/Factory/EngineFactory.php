@@ -2,11 +2,11 @@
 
 namespace Itsmattch\Nexus\Engine\Factory;
 
-use Itsmattch\Nexus\Address\Address;
+use Itsmattch\Nexus\Common\Exception\InvalidEngineException;
+use Itsmattch\Nexus\Contract\Address;
+use Itsmattch\Nexus\Contract\Engine;
 use Itsmattch\Nexus\Engine\Concrete\HttpEngine;
-use Itsmattch\Nexus\Engine\Engine;
-use Itsmattch\Nexus\Exceptions\Common\InvalidEngineException;
-use Itsmattch\Nexus\Exceptions\Stream\Factory\EngineNotFoundException;
+use Itsmattch\Nexus\Engine\Exception\EngineNotFoundException;
 
 /** Static factory class for creating Engine instances. */
 final class EngineFactory

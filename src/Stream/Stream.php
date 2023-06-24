@@ -3,23 +3,24 @@
 namespace Itsmattch\Nexus\Stream;
 
 use Exception;
-use Itsmattch\Nexus\Address\Address;
 use Itsmattch\Nexus\Address\Factory\AddressFactory;
+use Itsmattch\Nexus\Common\Exception\InvalidAddressException;
+use Itsmattch\Nexus\Common\Exception\InvalidEngineException;
+use Itsmattch\Nexus\Common\Exception\InvalidReaderException;
+use Itsmattch\Nexus\Common\Exception\InvalidWriterException;
 use Itsmattch\Nexus\Common\Traits\ArrayHelpers;
+use Itsmattch\Nexus\Contract\Address;
 use Itsmattch\Nexus\Contract\Common\Bootable;
 use Itsmattch\Nexus\Contract\Common\Validatable;
+use Itsmattch\Nexus\Contract\Engine as EngineContract;
+use Itsmattch\Nexus\Contract\Reader;
 use Itsmattch\Nexus\Contract\Stream as StreamContract;
-use Itsmattch\Nexus\Engine\Engine;
+use Itsmattch\Nexus\Contract\Writer;
+use Itsmattch\Nexus\Engine\Exception\EngineNotFoundException;
 use Itsmattch\Nexus\Engine\Factory\EngineFactory;
-use Itsmattch\Nexus\Exceptions\Common\InvalidAddressException;
-use Itsmattch\Nexus\Exceptions\Common\InvalidEngineException;
-use Itsmattch\Nexus\Exceptions\Common\InvalidReaderException;
-use Itsmattch\Nexus\Exceptions\Common\InvalidWriterException;
-use Itsmattch\Nexus\Exceptions\Stream\Factory\EngineNotFoundException;
-use Itsmattch\Nexus\Exceptions\Stream\Factory\ReaderNotFoundException;
+use Itsmattch\Nexus\Reader\Exception\ReaderNotFoundException;
 use Itsmattch\Nexus\Reader\Factory\ReaderFactory;
-use Itsmattch\Nexus\Reader\Reader;
-use Itsmattch\Nexus\Writer\Writer;
+use ReflectionClass;
 
 abstract class Stream implements StreamContract, Bootable, Validatable
 {
@@ -38,7 +39,7 @@ abstract class Stream implements StreamContract, Bootable, Validatable
     /**
      * Represents the location of the stream. It must be
      * either a string that points to an instance of the
-     * Address class, or a URL-style string, which directly
+     * Address class, or a URI-style string, which directly
      * represents the location of the stream.
      *
      * This property is required.
@@ -51,7 +52,7 @@ abstract class Stream implements StreamContract, Bootable, Validatable
      * property should be set with the fully qualified class
      * name of a class that extends the Engine class.
      */
-    protected string $engine = Engine::class;
+    protected string $engine = EngineContract::class;
 
     /**
      * The reader property represents the strategy that the
@@ -82,7 +83,7 @@ abstract class Stream implements StreamContract, Bootable, Validatable
      * Stores an instance of the Engine class that is
      * created based on the value of the $engine property.
      */
-    private Engine $engineInstance;
+    private EngineContract $engineInstance;
 
     /**
      * Stores an instance of the Reader class that is
@@ -194,10 +195,11 @@ abstract class Stream implements StreamContract, Bootable, Validatable
     }
 
     /** Prepares the instance upon construction. */
-    public final function prepare(): void
+    protected final function prepare(): void
     {
         if (empty($this->group)) {
-            $this->group = strtolower((new \ReflectionClass($this))->getNamespaceName());
+            $reflection = new ReflectionClass($this);
+            $this->group = strtolower($reflection->getNamespaceName());
         }
     }
 
@@ -209,11 +211,11 @@ abstract class Stream implements StreamContract, Bootable, Validatable
      */
     public final function validate(): void
     {
-        if (!is_a($this->addressInstance, Address::class, true) || !str_contains($this->address, '://')) {
+        if (!is_subclass_of($this->address, Address::class) || !str_contains($this->address, '://')) {
             throw new InvalidAddressException($this->engine);
         }
 
-        if (!is_a($this->engine, Engine::class, true)) {
+        if (!is_a($this->engine, EngineContract::class, true)) {
             throw new InvalidEngineException($this->engine);
         }
 
@@ -241,7 +243,8 @@ abstract class Stream implements StreamContract, Bootable, Validatable
         return $this->internallyBootAddress()
             && $this->internallyBootWriter()
             && $this->internallyBootEngine()
-            && $this->engineInstance->access();
+            && $this->engineInstance->init()
+            && $this->engineInstance->execute();
     }
 
     /**
@@ -288,11 +291,13 @@ abstract class Stream implements StreamContract, Bootable, Validatable
      */
     private function internallyBootEngine(): bool
     {
-        $this->engineInstance = is_subclass_of($this->engine, Engine::class)
+        $this->engineInstance = is_subclass_of($this->engine, EngineContract::class)
             ? new $this->engine($this->addressInstance)
             : EngineFactory::from($this->addressInstance);
 
-        $this->engineInstance->boot();
+        if ($this->engineInstance instanceof Bootable) {
+            $this->engineInstance->boot();
+        }
 
         return $this->bootEngine($this->engineInstance);
     }
@@ -334,11 +339,11 @@ abstract class Stream implements StreamContract, Bootable, Validatable
      * This method allows you to modify created Engine
      * instance.
      *
-     * @param Engine $engine Created Engine instance.
+     * @param EngineContract $engine Created Engine instance.
      *
      * @return bool The result of booting.
      */
-    protected function bootEngine(Engine $engine): bool { return true; }
+    protected function bootEngine(EngineContract $engine): bool { return true; }
 
     /**
      * This method allows you to modify created Reader

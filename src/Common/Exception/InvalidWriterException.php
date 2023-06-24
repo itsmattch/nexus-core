@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Exceptions\Common;
+namespace Itsmattch\Nexus\Common\Exception;
 
 use Exception;
 

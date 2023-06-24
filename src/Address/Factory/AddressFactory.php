@@ -5,7 +5,7 @@ namespace Itsmattch\Nexus\Address\Factory;
 use Itsmattch\Nexus\Address\Address;
 
 /** Static factory class for Address. */
-final class AddressFactory
+class AddressFactory
 {
     /**
      * Constructs an Address based on a passed string and

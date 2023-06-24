@@ -13,22 +13,16 @@ namespace Itsmattch\Nexus\Contract;
 interface Stream
 {
     /**
-     * Accesses the raw resource. This could mea
-     * establishing a connection, opening a file, or some
-     * other form of accessing the raw data.
+     * Accesses the resource.
      *
-     * @return bool True if the raw resource was
-     * successfully accessed, false otherwise.
+     * @return bool True on success, false otherwise.
      */
     public function access(): bool;
 
     /**
-     * Converts the raw content into a PHP array. This could
-     * involve parsing a file, decoding a data stream, or
-     * otherwise interpreting the raw data.
+     * Converts the content of the resource into an array.
      *
-     * @return bool True if the content was successfully
-     * read and converted, false otherwise.
+     * @return bool True on success, false otherwise.
      */
     public function read(): bool;
 

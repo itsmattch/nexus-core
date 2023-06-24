@@ -12,10 +12,9 @@ namespace Itsmattch\Nexus\Contract;
  */
 interface Address
 {
-    public function isValid(): bool;
-
     public function getAddress(): string;
 
     public function getScheme(): string;
 
+    public function isValid(): bool;
 }

@@ -9,7 +9,7 @@ use Stringable;
  * A parameter is an entity that holds a value that is
  * either set explicitly or derived from a default value.
  */
-class Parameter implements ParameterContract, Stringable
+class RequiredParameter implements ParameterContract, Stringable
 {
     /**
      * The full name of the parameter matched with regex,

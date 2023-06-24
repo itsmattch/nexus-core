@@ -2,14 +2,17 @@
 
 namespace Itsmattch\Nexus\Address;
 
-use Itsmattch\Nexus\Address\Factory\ParametersCollectionFactory;
-use Itsmattch\Nexus\Address\Parameter\Collection\ParametersCollection;
+use Itsmattch\Nexus\Address\Contract\Parameter as ParameterContract;
+use Itsmattch\Nexus\Address\Exception\InvalidSchemeException;
+use Itsmattch\Nexus\Address\Parameter\NullParameter;
+use Itsmattch\Nexus\Address\Parameter\OptionalParameter;
+use Itsmattch\Nexus\Address\Parameter\ParameterProxy;
+use Itsmattch\Nexus\Address\Parameter\RequiredParameter;
 use Itsmattch\Nexus\Contract\Address as AddressContract;
-use Itsmattch\Nexus\Exceptions\Stream\Address\DynamicMethodMissingValueException;
-use Itsmattch\Nexus\Exceptions\Stream\Address\UncaughtDynamicMethodException;
+use Itsmattch\Nexus\Contract\Common\Validatable;
 use Stringable;
 
-abstract class Address implements AddressContract, Stringable
+abstract class Address implements AddressContract, Stringable, Validatable
 {
     /** Address template allowing parameters. */
     protected string $template = '';
@@ -18,7 +21,9 @@ abstract class Address implements AddressContract, Stringable
     protected array $defaults = [];
 
     /** Collection of all parameter definitions. */
-    private ParametersCollection $parametersCollection;
+    private array $parameters;
+
+    protected static string $parametersTemplate = '/(?<literal>{(?<optional>@)?(?<name>[a-z0-9_]+)})/';
 
     /**
      * Constructs a new Address instance. It processes the
@@ -30,53 +35,50 @@ abstract class Address implements AddressContract, Stringable
      */
     public function __construct(array $parameters = [])
     {
-        $this->parametersCollection = ParametersCollectionFactory::from($this->template, $this->defaults, $this);
+        preg_match_all(self::$parametersTemplate, $this->template, $parameters, PREG_SET_ORDER);
+
+        foreach ($parameters as $parameter) {
+            $name = $parameter['name'];
+            $literal = $parameter['literal'];
+            $default = $this->defaults[$name] ?? '';
+            $optional = (bool)$parameter['optional'];
+            $camelName = str_replace('_', '', ucwords($name, '_'));
+
+            $parameterObject = $optional
+                ? new OptionalParameter($literal, $name, $default)
+                : new RequiredParameter($literal, $name, $default);
+
+            $this->parameters[$parameterObject->getName()] = new ParameterProxy(
+                $parameterObject,
+                [$this, "capture$camelName"],
+                [$this, "release$camelName"],
+            );
+        }
 
         foreach ($parameters as $name => $value) {
-            $this->with($name, $value);
+            $this->set($name, $value);
         }
     }
 
     /**
-     * Sets the value of a specific parameter.
+     * Retrieves the final, valid address. If the address
+     * is not valid, it returns an empty string.
      *
-     * @param string $parameter The name of the parameter.
-     * @param mixed $value The value to be set.
-     *
-     * @return Address The current instance.
+     * @return string The final address or an empty string.
      */
-    public function with(string $parameter, mixed $value): Address
+    public function getAddress(): string
     {
-        $this->parametersCollection->get($parameter)->setValue($value);
-        return $this;
+        return $this->isValid() ? $this->getCurrentState() : '';
     }
 
     /**
-     * Magic method for handling dynamic methods starting
-     * with "with" or "is".
+     * Retrieves the scheme of the address
      *
-     * @return Address The current instance.
-     *
-     * @throws UncaughtDynamicMethodException
-     * @throws DynamicMethodMissingValueException
+     * @return string Scheme part of the address
      */
-    public function __call(string $method, array $arguments)
+    public function getScheme(): string
     {
-        if (sizeof($arguments) < 1) {
-            throw new DynamicMethodMissingValueException($method);
-        }
-
-        $prefixes = ['with' => 4, 'is' => 2];
-
-        foreach ($prefixes as $prefix => $length) {
-            if (str_starts_with($method, $prefix) && strlen($method) > $length) {
-                $substring = substr($method, $length);
-                $replacement = preg_replace('/(?<!^)[A-Z]/', '_$0', $substring);
-                $parameter = strtolower($replacement);
-                return $this->with($parameter, $arguments[0]);
-            }
-        }
-        throw new UncaughtDynamicMethodException($method);
+        return strtolower(strstr($this->getAddress(), '://', true));
     }
 
     /**
@@ -87,7 +89,39 @@ abstract class Address implements AddressContract, Stringable
      */
     public function isValid(): bool
     {
-        return $this->parametersCollection->isValid();
+        foreach ($this->parameters as $parameter) {
+            if (!$parameter->isValid()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns value of a specific parameter.
+     *
+     * @param string $parameter The name of the parameter.
+     *
+     * @return ?string The parameter value, or empty string
+     * if the parameter does not exist.
+     */
+    public function get(string $parameter): ?string
+    {
+        return $this->getParameter($parameter)->getValue();
+    }
+
+    /**
+     * Sets the value of a specific parameter.
+     *
+     * @param string $parameter The name of the parameter.
+     * @param mixed $value The value to be set.
+     *
+     * @return Address The current instance.
+     */
+    public function set(string $parameter, mixed $value): Address
+    {
+        $this->getParameter($parameter)->setValue($value);
+        return $this;
     }
 
     /**
@@ -104,7 +138,35 @@ abstract class Address implements AddressContract, Stringable
      */
     public function has(string ...$names): bool
     {
-        return $this->parametersCollection->has(... $names);
+        foreach ($names as $name) {
+            if (!isset($this->parameters[$name])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Checks if the collection contains parameters with
+     * the given names and validates them. This method
+     * accepts an arbitrary number of arguments, each of
+     * which should be a string representing a parameter
+     * name.
+     *
+     * @param string ...$names The names of the parameters
+     * to check for.
+     *
+     * @return bool Returns true if all parameters are
+     * found, false otherwise.
+     */
+    public function hasValid(string ...$names): bool
+    {
+        foreach ($names as $name) {
+            if (!isset($this->parameters[$name]) || !$this->parameters[$name]->isValid()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -126,7 +188,7 @@ abstract class Address implements AddressContract, Stringable
     public function getCurrentState(): string
     {
         $address = $this->template;
-        foreach ($this->parametersCollection as $parameter) {
+        foreach ($this->parameters as $parameter) {
             if (!$parameter->isValid()) {
                 continue;
             }
@@ -136,29 +198,29 @@ abstract class Address implements AddressContract, Stringable
         return $address;
     }
 
-    /**
-     * Retrieves the final, valid address. If the address
-     * is not valid, it returns an empty string.
-     *
-     * @return string The final address or an empty string.
-     */
-    public function getAddress(): string
-    {
-        return $this->isValid() ? $this->getCurrentState() : '';
-    }
-
-    public function getParameterValue(string $name): string
-    {
-        return $this->parametersCollection->get($name)->getValue();
-    }
-
-    public function getScheme(): string
-    {
-        return strstr($this->getAddress(), '://', true);
-    }
-
     public function __toString(): string
     {
         return $this->getAddress();
+    }
+
+    /**
+     * Get parameter by its name. Returns singleton instance
+     * of null parameter if the name is not found.
+     *
+     * @param string $name Parameter name.
+     *
+     * @return ParameterContract Found parameter, or null.
+     */
+    private function getParameter(string $name): ParameterContract
+    {
+        return $this->parameters[$name] ?? NullParameter::getInstance();
+    }
+
+    /** @throws InvalidSchemeException */
+    public function validate(): void
+    {
+        if (!preg_match('/^[a-z][a-z0-9+\-.]*$/', $this->getScheme())) {
+            throw new InvalidSchemeException($this->getScheme());
+        }
     }
 }
