@@ -3,6 +3,7 @@
 namespace Itsmattch\Nexus\Stream\Component;
 
 use Exception;
+use Itsmattch\Nexus\Address\Address;
 use Itsmattch\Nexus\Contract\Common\Bootable;
 use Itsmattch\Nexus\Contract\Common\Validatable;
 use Itsmattch\Nexus\Contract\Stream\Engine as EngineContract;

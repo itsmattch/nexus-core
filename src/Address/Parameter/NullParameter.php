@@ -1,21 +1,21 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Component\Address;
+namespace Itsmattch\Nexus\Address\Parameter;
 
-use Itsmattch\Nexus\Stream\Component\Address\Contract\ParameterInterface;
+use Itsmattch\Nexus\Address\Contract\Parameter as ParameterContract;
 
 /**
  * This class represents a singleton Null Object extending
  * Parameter. It doesn't hold any meaningful value and is
  * considered invalid.
  */
-class NullParameter implements ParameterInterface
+class NullParameter implements ParameterContract
 {
     /** The only instance of the NullParameter. */
     protected static NullParameter $instance;
 
     /**
-     * Returns the singleton instance of the NullParameter class.
+     * Returns the singleton instance of the NullParameter.
      *
      * @return NullParameter The singleton instance.
      */

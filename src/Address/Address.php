@@ -1,30 +1,23 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Component;
+namespace Itsmattch\Nexus\Address;
 
+use Itsmattch\Nexus\Address\Factory\ParametersCollectionFactory;
+use Itsmattch\Nexus\Address\Parameter\Collection\ParametersCollection;
+use Itsmattch\Nexus\Contract\Address as AddressContract;
 use Itsmattch\Nexus\Exceptions\Stream\Address\DynamicMethodMissingValueException;
 use Itsmattch\Nexus\Exceptions\Stream\Address\UncaughtDynamicMethodException;
-use Itsmattch\Nexus\Stream\Component\Address\Collection\ParametersCollection;
-use Itsmattch\Nexus\Stream\Factory\ParametersCollectionFactory;
 use Stringable;
 
-/**
- * The Address class encapsulates an address to a resource,
- * providing a suite of methods for parametrizing it. It
- * uses a template-based approach, allowing for
- * mustache-styled parameters to define flexible addresses.
- *
- * @link https://nexus.itsmattch.com/resources/addresses Addresses Documentation
- */
-abstract class Address implements Stringable
+abstract class Address implements AddressContract, Stringable
 {
-    /** Address template allowing for mustache-styled parameters. */
-    protected string $template;
+    /** Address template allowing parameters. */
+    protected string $template = '';
 
-    /** Default values for parameters within the address template. */
+    /** Default values for parameters within the template. */
     protected array $defaults = [];
 
-    /** Generated collection of all parameter definitions. */
+    /** Collection of all parameter definitions. */
     private ParametersCollection $parametersCollection;
 
     /**
@@ -47,13 +40,14 @@ abstract class Address implements Stringable
     /**
      * Sets the value of a specific parameter.
      *
-     * @param string $parameterName The name of the parameter.
+     * @param string $parameter The name of the parameter.
      * @param mixed $value The value to be set.
-     * @return Address The current instance, allowing for method chaining.
+     *
+     * @return Address The current instance.
      */
-    public function with(string $parameterName, mixed $value): Address
+    public function with(string $parameter, mixed $value): Address
     {
-        $this->parametersCollection->get($parameterName)->setValue($value);
+        $this->parametersCollection->get($parameter)->setValue($value);
         return $this;
     }
 
@@ -61,9 +55,8 @@ abstract class Address implements Stringable
      * Magic method for handling dynamic methods starting
      * with "with" or "is".
      *
-     * @param string $method The name of the method.
-     * @param array $arguments The arguments passed to the method.
-     * @return Address The current instance, allowing for method chaining.
+     * @return Address The current instance.
+     *
      * @throws UncaughtDynamicMethodException
      * @throws DynamicMethodMissingValueException
      */
@@ -89,7 +82,8 @@ abstract class Address implements Stringable
     /**
      * Checks if all required parameters are set.
      *
-     * @return bool True if the address is valid, false otherwise
+     * @return bool True if the address is valid,
+     * false otherwise
      */
     public function isValid(): bool
     {
@@ -102,8 +96,11 @@ abstract class Address implements Stringable
      * number of arguments, each of which should be a string
      * representing a parameter name.
      *
-     * @param string ...$names The names of the parameters to check for.
-     * @return bool Returns true if all parameters are found, false otherwise.
+     * @param string ...$names The names of the parameters
+     * to check for.
+     *
+     * @return bool Returns true if all parameters are
+     * found, false otherwise.
      */
     public function has(string ...$names): bool
     {
@@ -140,27 +137,6 @@ abstract class Address implements Stringable
     }
 
     /**
-     * Returns value of a single parameter.
-     *
-     * @param string $name
-     * @return string
-     */
-    public function getParameterValue(string $name): string
-    {
-        return $this->parametersCollection->get($name)->getValue();
-    }
-
-    /**
-     * Returns a scheme name.
-     *
-     * @return string A scheme name.
-     */
-    public function getScheme(): string
-    {
-        return strstr($this->getAddress(), '://', true);
-    }
-
-    /**
      * Retrieves the final, valid address. If the address
      * is not valid, it returns an empty string.
      *
@@ -168,11 +144,17 @@ abstract class Address implements Stringable
      */
     public function getAddress(): string
     {
-        if (!$this->isValid()) {
-            return '';
-        }
+        return $this->isValid() ? $this->getCurrentState() : '';
+    }
 
-        return $this->getCurrentState();
+    public function getParameterValue(string $name): string
+    {
+        return $this->parametersCollection->get($name)->getValue();
+    }
+
+    public function getScheme(): string
+    {
+        return strstr($this->getAddress(), '://', true);
     }
 
     public function __toString(): string

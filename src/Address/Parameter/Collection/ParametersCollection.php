@@ -1,15 +1,13 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Component\Address\Collection;
+namespace Itsmattch\Nexus\Address\Parameter\Collection;
 
 use Countable;
 use Iterator;
-use Itsmattch\Nexus\Stream\Component\Address\Contract\ParameterInterface;
-use Itsmattch\Nexus\Stream\Component\Address\NullParameter;
+use Itsmattch\Nexus\Address\Contract\Parameter as ParameterContract;
+use Itsmattch\Nexus\Address\Parameter\NullParameter;
 
-/**
- * This class is a collection of Parameter objects.
- */
+/** A collection of Parameter objects. */
 class ParametersCollection implements Iterator, Countable
 {
     /** A collection of parameters */
@@ -23,9 +21,9 @@ class ParametersCollection implements Iterator, Countable
      * Parameters are recognized by their name, and it must
      * be unique within collection.
      *
-     * @param ParameterInterface $parameter Parameter to be added.
+     * @param ParameterContract $parameter Parameter to add.
      */
-    public function set(ParameterInterface $parameter): void
+    public function set(ParameterContract $parameter): void
     {
         $this->parameters[$parameter->getName()] = $parameter;
     }
@@ -34,10 +32,11 @@ class ParametersCollection implements Iterator, Countable
      * Get parameter by its name. Returns singleton instance
      * of null parameter if the name is not found.
      *
-     * @param string $name
-     * @return ParameterInterface
+     * @param string $name Parameter name.
+     *
+     * @return ParameterContract Found parameter, or null.
      */
-    public function get(string $name): ParameterInterface
+    public function get(string $name): ParameterContract
     {
         return $this->parameters[$name] ?? NullParameter::getInstance();
     }
@@ -48,8 +47,11 @@ class ParametersCollection implements Iterator, Countable
      * number of arguments, each of which should be a string
      * representing a parameter name.
      *
-     * @param string ...$names The names of the parameters to check for.
-     * @return bool Returns true if all parameters are found, false otherwise.
+     * @param string ...$names The names of the parameters
+     * to check for.
+     *
+     * @return bool Returns true if all parameters are
+     * found, false otherwise.
      */
     public function has(string ...$names): bool
     {
@@ -68,8 +70,11 @@ class ParametersCollection implements Iterator, Countable
      * which should be a string representing a parameter
      * name.
      *
-     * @param string ...$names The names of the parameters to check for.
-     * @return bool Returns true if all parameters are found, false otherwise.
+     * @param string ...$names The names of the parameters
+     * to check for.
+     *
+     * @return bool Returns true if all parameters are
+     * found, false otherwise.
      */
     public function hasValid(string ...$names): bool
     {
@@ -82,9 +87,10 @@ class ParametersCollection implements Iterator, Countable
     }
 
     /**
-     * Checks if all the parameters in the collection are valid.
+     * Checks if all parameters in the collection are valid.
      *
-     * @return bool Returns true if all parameters are valid, false otherwise.
+     * @return bool Returns true if all parameters are
+     * valid, false otherwise.
      */
     public function isValid(): bool
     {
@@ -96,7 +102,7 @@ class ParametersCollection implements Iterator, Countable
         return true;
     }
 
-    public final function current(): ParameterInterface
+    public final function current(): ParameterContract
     {
         return $this->parameters[array_keys($this->parameters)[$this->position]];
     }

@@ -1,17 +1,21 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Factory;
+namespace Itsmattch\Nexus\Address\Factory;
 
-use Itsmattch\Nexus\Stream\Component\Address;
+use Itsmattch\Nexus\Address\Address;
 
-/** Static factory class for creating Address instances. */
+/** Static factory class for Address. */
 final class AddressFactory
 {
     /**
-     * Constructs an Address based on a string and optional parameters.
+     * Constructs an Address based on a passed string and
+     * optional list of parameters.
      *
-     * @param string $address The address string to create an Address for.
-     * @param array $parameters Optional parameters for the address.
+     * @param string $address The address string to create
+     * an Address instance for.
+     * @param array $parameters Optional parameters passed
+     * with the constructor.
+     *
      * @return Address The Address instance.
      */
     public static function from(string $address, array $parameters = []): Address

@@ -1,12 +1,12 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Component\Address\Contract;
+namespace Itsmattch\Nexus\Address\Contract;
 
 /**
  * Represents a parameter in an address template
  * that can be replaced with a value.
  */
-interface ParameterInterface
+interface Parameter
 {
     /**
      * Returns the full name of the parameter matched with
@@ -34,15 +34,16 @@ interface ParameterInterface
     /**
      * Sets the explicit value of the parameter.
      *
-     * @param mixed $value The explicit value of the parameter
-     * @return void
+     * @param mixed $value The explicit value of the
+     * parameter.
      */
     public function setValue(mixed $value): void;
 
     /**
      * Checks whether the parameter has any valid value.
      *
-     * @return bool Returns true if the parameter is valid, false otherwise.
+     * @return bool Returns true if the parameter is valid,
+     * false otherwise.
      */
     public function isValid(): bool;
 }

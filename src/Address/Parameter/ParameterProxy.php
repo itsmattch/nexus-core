@@ -1,18 +1,18 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Component\Address;
+namespace Itsmattch\Nexus\Address\Parameter;
 
-use Itsmattch\Nexus\Stream\Component\Address\Contract\ParameterInterface;
+use Itsmattch\Nexus\Address\Contract\Parameter as ParameterContract;
 
 /**
  * ParameterProxy is responsible for wrapping Parameters
  * and altering their values with capture and release
  * callbacks.
  */
-class ParameterProxy implements ParameterInterface
+class ParameterProxy implements ParameterContract
 {
     /** The original parameter. */
-    protected Parameter $parameter;
+    protected ParameterContract $parameter;
 
     /** The callback called upon setting value. */
     protected array $captureCallback;
@@ -23,11 +23,14 @@ class ParameterProxy implements ParameterInterface
     /**
      * ParameterProxy constructor.
      *
-     * @param Parameter $parameter The original parameter.
-     * @param array $captureCallback The callback called upon setting value.
-     * @param array $releaseCallback The callback called upon getting value.
+     * @param ParameterContract $parameter The original
+     * parameter.
+     * @param array $captureCallback The callback called
+     * upon setting value.
+     * @param array $releaseCallback The callback called
+     * upon getting value.
      */
-    public function __construct(Parameter $parameter, array $captureCallback, array $releaseCallback)
+    public function __construct(ParameterContract $parameter, array $captureCallback, array $releaseCallback)
     {
         $this->parameter = $parameter;
 
@@ -59,7 +62,6 @@ class ParameterProxy implements ParameterInterface
      * the capture callback if available.
      *
      * @param mixed $value
-     * @return void
      */
     public function setValue(mixed $value): void
     {

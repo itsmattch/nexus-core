@@ -2,9 +2,9 @@
 
 namespace Itsmattch\Nexus\Stream\Factory;
 
+use Itsmattch\Nexus\Address\Address;
 use Itsmattch\Nexus\Exceptions\Common\InvalidEngineException;
 use Itsmattch\Nexus\Exceptions\Stream\Factory\EngineNotFoundException;
-use Itsmattch\Nexus\Stream\Component\Address;
 use Itsmattch\Nexus\Stream\Component\Engine;
 use Itsmattch\Nexus\Stream\Engine\HttpEngine;
 

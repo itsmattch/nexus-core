@@ -1,16 +1,19 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Factory;
+namespace Itsmattch\Nexus\Address\Factory;
 
-use Itsmattch\Nexus\Stream\Component\Address\Collection\ParametersCollection;
-use Itsmattch\Nexus\Stream\Component\Address\OptionalParameter;
-use Itsmattch\Nexus\Stream\Component\Address\Parameter;
-use Itsmattch\Nexus\Stream\Component\Address\ParameterProxy;
+use Itsmattch\Nexus\Address\Parameter\Collection\ParametersCollection;
+use Itsmattch\Nexus\Address\Parameter\OptionalParameter;
+use Itsmattch\Nexus\Address\Parameter\Parameter;
+use Itsmattch\Nexus\Address\Parameter\ParameterProxy;
 
-/** Static factory class for creating ParametersCollection instances. */
-class ParametersCollectionFactory
+/** Static factory class for ParametersCollection. */
+final class ParametersCollectionFactory
 {
-    /** Regular expression for finding parameters in a string. */
+    /**
+     * Regular expression for finding mustache-styled
+     * parameters in a string.
+     */
     protected static string $parametersTemplate = '/(?<literal>{(?<optional>@)?(?<name>[a-z0-9_]+)})/';
 
     /**
@@ -19,7 +22,9 @@ class ParametersCollectionFactory
      * of created parameters.
      *
      * @param string $template String containing parameters.
-     * @param array $defaults Default values of the parameters.
+     * @param array $defaults Default values of the
+     * parameters.
+     *
      * @return ParametersCollection Created collection.
      */
     public static function from(string $template, array $defaults = [], ?object $callbackSubject = null): ParametersCollection
@@ -59,7 +64,7 @@ class ParametersCollectionFactory
      * @param string $name
      * @return string
      */
-    protected static function snakeToCamel(string $name): string
+    private static function snakeToCamel(string $name): string
     {
         return str_replace('_', '', ucwords($name, '_'));
     }

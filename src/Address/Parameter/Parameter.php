@@ -1,17 +1,20 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Component\Address;
+namespace Itsmattch\Nexus\Address\Parameter;
 
-use Itsmattch\Nexus\Stream\Component\Address\Contract\ParameterInterface;
+use Itsmattch\Nexus\Address\Contract\Parameter as ParameterContract;
 use Stringable;
 
 /**
  * A parameter is an entity that holds a value that is
  * either set explicitly or derived from a default value.
  */
-class Parameter implements ParameterInterface, Stringable
+class Parameter implements ParameterContract, Stringable
 {
-    /** The full name of the parameter matched with regex, including braces. */
+    /**
+     * The full name of the parameter matched with regex,
+     * including braces.
+     */
     protected string $literal;
 
     /** The name of the parameter. */
@@ -27,7 +30,8 @@ class Parameter implements ParameterInterface, Stringable
      * The constructor for the Parameter class.
      *
      * @param string $name The name of the parameter.
-     * @param string $default The default value of the parameter.
+     * @param string $default The default value of the
+     * parameter, optional.
      */
     public function __construct(string $literal, string $name, string $default = '')
     {

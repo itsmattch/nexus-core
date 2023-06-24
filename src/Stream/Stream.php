@@ -3,6 +3,8 @@
 namespace Itsmattch\Nexus\Stream;
 
 use Exception;
+use Itsmattch\Nexus\Address\Address;
+use Itsmattch\Nexus\Address\Factory\AddressFactory;
 use Itsmattch\Nexus\Common\Traits\ArrayHelpers;
 use Itsmattch\Nexus\Contract\Common\Bootable;
 use Itsmattch\Nexus\Contract\Common\Validatable;
@@ -13,11 +15,9 @@ use Itsmattch\Nexus\Exceptions\Common\InvalidReaderException;
 use Itsmattch\Nexus\Exceptions\Common\InvalidWriterException;
 use Itsmattch\Nexus\Exceptions\Stream\Factory\EngineNotFoundException;
 use Itsmattch\Nexus\Exceptions\Stream\Factory\ReaderNotFoundException;
-use Itsmattch\Nexus\Stream\Component\Address;
 use Itsmattch\Nexus\Stream\Component\Engine;
 use Itsmattch\Nexus\Stream\Component\Reader;
 use Itsmattch\Nexus\Stream\Component\Writer;
-use Itsmattch\Nexus\Stream\Factory\AddressFactory;
 use Itsmattch\Nexus\Stream\Factory\EngineFactory;
 use Itsmattch\Nexus\Stream\Factory\ReaderFactory;
 

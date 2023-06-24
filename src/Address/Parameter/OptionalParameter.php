@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Component\Address;
+namespace Itsmattch\Nexus\Address\Parameter;
 
 /** An optional parameter that is always considered valid. */
 class OptionalParameter extends Parameter
