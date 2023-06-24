@@ -21,7 +21,7 @@ abstract class Address implements AddressContract, Stringable, Validatable
     protected array $defaults = [];
 
     /** Collection of all parameter definitions. */
-    private array $parameters;
+    private array $parameters = [];
 
     protected static string $parametersTemplate = '/(?<literal>{(?<optional>@)?(?<name>[a-z0-9_]+)})/';
 
@@ -35,14 +35,23 @@ abstract class Address implements AddressContract, Stringable, Validatable
      */
     public function __construct(array $parameters = [])
     {
-        preg_match_all(self::$parametersTemplate, $this->template, $parameters, PREG_SET_ORDER);
+        preg_match_all(self::$parametersTemplate, $this->template, $matchedParameters, PREG_SET_ORDER);
 
-        foreach ($parameters as $parameter) {
+        $requiredParameters = [];
+        foreach ($matchedParameters as $parameter) {
+            if (in_array($parameter['name'], $requiredParameters)) {
+                continue;
+            }
+
             $name = $parameter['name'];
+            $optional = (bool)$parameter['optional'];
             $literal = $parameter['literal'];
             $default = $this->defaults[$name] ?? '';
-            $optional = (bool)$parameter['optional'];
             $camelName = str_replace('_', '', ucwords($name, '_'));
+
+            if (!$optional) {
+                $requiredParameters[] = $name;
+            }
 
             $parameterObject = $optional
                 ? new OptionalParameter($literal, $name, $default)
@@ -55,8 +64,8 @@ abstract class Address implements AddressContract, Stringable, Validatable
             );
         }
 
-        foreach ($parameters as $name => $value) {
-            $this->set($name, $value);
+        foreach ($parameters as $parameter => $value) {
+            $this->set($parameter, $value);
         }
     }
 
@@ -78,7 +87,7 @@ abstract class Address implements AddressContract, Stringable, Validatable
      */
     public function getScheme(): string
     {
-        return strtolower(strstr($this->getAddress(), '://', true));
+        return strtolower(strstr($this->getCurrentState(), '://', true));
     }
 
     /**
