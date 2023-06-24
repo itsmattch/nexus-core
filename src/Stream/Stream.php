@@ -9,16 +9,16 @@ use Itsmattch\Nexus\Common\Traits\ArrayHelpers;
 use Itsmattch\Nexus\Contract\Common\Bootable;
 use Itsmattch\Nexus\Contract\Common\Validatable;
 use Itsmattch\Nexus\Contract\Stream as StreamContract;
+use Itsmattch\Nexus\Engine\Engine;
+use Itsmattch\Nexus\Engine\Factory\EngineFactory;
 use Itsmattch\Nexus\Exceptions\Common\InvalidAddressException;
 use Itsmattch\Nexus\Exceptions\Common\InvalidEngineException;
 use Itsmattch\Nexus\Exceptions\Common\InvalidReaderException;
 use Itsmattch\Nexus\Exceptions\Common\InvalidWriterException;
 use Itsmattch\Nexus\Exceptions\Stream\Factory\EngineNotFoundException;
 use Itsmattch\Nexus\Exceptions\Stream\Factory\ReaderNotFoundException;
-use Itsmattch\Nexus\Stream\Component\Engine;
 use Itsmattch\Nexus\Stream\Component\Reader;
 use Itsmattch\Nexus\Stream\Component\Writer;
-use Itsmattch\Nexus\Stream\Factory\EngineFactory;
 use Itsmattch\Nexus\Stream\Factory\ReaderFactory;
 
 abstract class Stream implements StreamContract, Bootable, Validatable

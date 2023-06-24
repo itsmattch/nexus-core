@@ -2,7 +2,7 @@
 
 namespace Itsmattch\Nexus\Stream\Component;
 
-use Itsmattch\Nexus\Stream\Component\Engine\Message;
+use Itsmattch\Nexus\Common\Message;
 
 /** todo the opposite of reader. */
 abstract class Writer

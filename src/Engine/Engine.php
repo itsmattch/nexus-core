@@ -1,13 +1,13 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Component;
+namespace Itsmattch\Nexus\Engine;
 
 use Exception;
 use Itsmattch\Nexus\Address\Address;
+use Itsmattch\Nexus\Common\Message;
 use Itsmattch\Nexus\Contract\Common\Bootable;
 use Itsmattch\Nexus\Contract\Common\Validatable;
-use Itsmattch\Nexus\Contract\Stream\Engine as EngineContract;
-use Itsmattch\Nexus\Stream\Component\Engine\Message;
+use Itsmattch\Nexus\Contract\Engine as EngineContract;
 
 abstract class Engine implements EngineContract, Bootable, Validatable
 {
@@ -51,7 +51,8 @@ abstract class Engine implements EngineContract, Bootable, Validatable
      * A method for executing the entire process of
      * accessing a resource.
      *
-     * @return bool True on successful access, false otherwise.
+     * @return bool True on successful access,
+     * false otherwise.
      */
     public function access(): bool
     {
@@ -75,9 +76,11 @@ abstract class Engine implements EngineContract, Bootable, Validatable
     }
 
     /**
-     * This method allows you to modify created Response instance.
+     * This method allows you to modify created Response
+     * instance.
      *
      * @param Message $response Created Response instance.
+     *
      * @return bool The result of booting.
      */
     protected function bootResponse(Message $response): bool { return true; }

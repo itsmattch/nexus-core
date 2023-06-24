@@ -2,7 +2,7 @@
 
 namespace Itsmattch\Nexus\Stream\Component;
 
-use Itsmattch\Nexus\Stream\Component\Engine\Message;
+use Itsmattch\Nexus\Common\Message;
 
 /**
  * The Reader class is responsible for reading raw content

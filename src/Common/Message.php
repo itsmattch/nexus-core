@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Component\Engine;
+namespace Itsmattch\Nexus\Common;
 
 /**
  * A simple encapsulation of the most important

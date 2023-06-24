@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Engine\Enum;
+namespace Itsmattch\Nexus\Engine\Enum;
 
 enum HttpMethod
 {

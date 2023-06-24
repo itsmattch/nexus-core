@@ -1,11 +1,11 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Engine;
+namespace Itsmattch\Nexus\Engine\Concrete;
 
 use CurlHandle;
-use Itsmattch\Nexus\Stream\Component\Engine;
-use Itsmattch\Nexus\Stream\Component\Engine\Message;
-use Itsmattch\Nexus\Stream\Engine\Enum\HttpMethod;
+use Itsmattch\Nexus\Common\Message;
+use Itsmattch\Nexus\Engine\Engine;
+use Itsmattch\Nexus\Engine\Enum\HttpMethod;
 
 /**
  * The HttpEngine is a very simple implementation of the
@@ -16,7 +16,7 @@ class HttpEngine extends Engine
     /** Stores the cURL handle for HTTP communication. */
     private CurlHandle $handle;
 
-    /** todo */
+    /** A list of added HTTP headers. */
     private array $headers = [];
 
     public function getHandle(): CurlHandle

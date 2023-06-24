@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Contract\Stream;
+namespace Itsmattch\Nexus\Contract;
 
 /**
  * The Engine class encapsulates the logic responsible for
