@@ -1,5 +1,6 @@
 <?php
 
+// __construct()
 it('builds a collection of parameters', function () {
     //
 });
@@ -12,6 +13,7 @@ it('allows setting parameter values upon construction', function () {
     //
 });
 
+// getAddress()
 it('returns valid address', function () {
     //
 });
@@ -21,42 +23,75 @@ it('does not return address without all required parameters set', function () {
 });
 
 // getScheme()
-// - returns scheme
-// - returns empty string if scheme is not present
 it('returns scheme', function () {
     //
 });
 
+it('returns empty string if scheme is not present', function () {
+    //
+});
+
 // isValid()
-// - returns valid if all required parameters are set
-// - returns invalid otherwise
+it('is valid if all required parameters are set', function () {
+    //
+});
+
+it('is invalid otherwise', function () {
+    //
+});
 
 // get()
-// - returns value of a parameter
-// - returns default value of a parameter
-// - returns empty string if a parameter has no value (no explicit nor default)
-// - returns empty string if a parameter of given name does not exist
+it('returns explicit value of a parameter', function () {
+    //
+});
+
+it('returns default value of a parameter', function () {
+    //
+});
+
+it('returns empty string if a parameter has no value', function () {
+    //
+});
+
+it('returns empty string if parameter of given name does not exist', function () {
+    //
+});
 
 // set()
-// - sets the explicit value of a parameter
-// - does not work if parameter of given name does not exist
+it('sets the explicit value of a parameter', function () {
+    //
+});
+
+it('does not work if parameter of given name does not exist', function () {
+    //
+});
 
 // has()
-// - returns true if parameters exist in collection, even without values
+it('returns true if parameters exist in collection, even without values', function () {
+    //
+});
 
 // hasValid()
-// - returns true only if parameters exist in collection and have values
+it('returns true only if parameters exist in collection and have explicit or default values', function () {
+    //
+});
 
 // getTemplate()
-// - returns template without any modifications
+it('returns the template without any modifications', function () {
+    //
+});
 
 // getCurrentState()
-// - returns current state of Address, which can contain parameter declarations
-
-// call()
-// - allows isParam(true) eg Address->isSecure(true)
-// - allows setParam(true) eg Address->setSecure(true)
-// - allows withParam(true) eg Address->withSecure(true)
+it('returns incomplete address', function () {
+    //
+});
 
 // toString()
-// - emulates getAddress
+it('emulates getAddress method', function () {
+    //
+});
+
+// validate()
+it('throws exception if the scheme violates RFC 3986', function () {
+    //
+});
