@@ -1,21 +1,21 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Writer;
+namespace Itsmattch\Nexus\Writer\Concrete;
 
-use Itsmattch\Nexus\Stream\Component\Engine\Request;
-use Itsmattch\Nexus\Stream\Component\Writer;
+use Itsmattch\Nexus\Common\Message;
+use Itsmattch\Nexus\Writer\Writer;
 
 /** The Writer class responsible for writing JSON data. */
 class JsonWriter extends Writer
 {
-    protected Request $jsonRequest;
+    protected Message $jsonRequest;
 
     public function write(): bool
     {
         $jsonString = json_encode($this->body, true);
 
         if (is_string($jsonString)) {
-            $this->jsonRequest = new Request();
+            $this->jsonRequest = new Message();
             $this->jsonRequest->setBody($jsonString);
             $this->jsonRequest->setType('application/json');
 
@@ -25,7 +25,7 @@ class JsonWriter extends Writer
         return false;
     }
 
-    public function get(): Request
+    public function get(): Message
     {
         return $this->jsonRequest;
     }

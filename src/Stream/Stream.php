@@ -17,9 +17,9 @@ use Itsmattch\Nexus\Exceptions\Common\InvalidReaderException;
 use Itsmattch\Nexus\Exceptions\Common\InvalidWriterException;
 use Itsmattch\Nexus\Exceptions\Stream\Factory\EngineNotFoundException;
 use Itsmattch\Nexus\Exceptions\Stream\Factory\ReaderNotFoundException;
-use Itsmattch\Nexus\Stream\Component\Reader;
-use Itsmattch\Nexus\Stream\Component\Writer;
-use Itsmattch\Nexus\Stream\Factory\ReaderFactory;
+use Itsmattch\Nexus\Reader\Factory\ReaderFactory;
+use Itsmattch\Nexus\Reader\Reader;
+use Itsmattch\Nexus\Writer\Writer;
 
 abstract class Stream implements StreamContract, Bootable, Validatable
 {

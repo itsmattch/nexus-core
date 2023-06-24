@@ -1,12 +1,12 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Factory;
+namespace Itsmattch\Nexus\Reader\Factory;
 
 use Itsmattch\Nexus\Common\Message;
 use Itsmattch\Nexus\Exceptions\Common\InvalidReaderException;
 use Itsmattch\Nexus\Exceptions\Stream\Factory\ReaderNotFoundException;
-use Itsmattch\Nexus\Stream\Component\Reader;
-use Itsmattch\Nexus\Stream\Reader\JsonReader;
+use Itsmattch\Nexus\Reader\Concrete\JsonReader;
+use Itsmattch\Nexus\Reader\Reader;
 
 /** Static factory class for creating Reader instances. */
 final class ReaderFactory

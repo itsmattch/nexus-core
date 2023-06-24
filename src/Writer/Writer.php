@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Component;
+namespace Itsmattch\Nexus\Writer;
 
 use Itsmattch\Nexus\Common\Message;
 

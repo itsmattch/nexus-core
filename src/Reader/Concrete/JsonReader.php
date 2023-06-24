@@ -1,8 +1,8 @@
 <?php
 
-namespace Itsmattch\Nexus\Stream\Reader;
+namespace Itsmattch\Nexus\Reader\Concrete;
 
-use Itsmattch\Nexus\Stream\Component\Reader;
+use Itsmattch\Nexus\Reader\Reader;
 
 /** The Reader class responsible for reading JSON data. */
 class JsonReader extends Reader
