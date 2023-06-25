@@ -100,6 +100,12 @@ class HttpEngine extends Engine
         }
     }
 
+    /** Sets Authorization: Bearer header. */
+    public function withToken(string $token): void
+    {
+        $this->setHeaders(['Authorization' => 'Bearer ' . $token]);
+    }
+
     /** Sets HTTP method */
     public function setMethod(HttpMethod $method): void
     {
