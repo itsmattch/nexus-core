@@ -211,8 +211,8 @@ abstract class Stream implements StreamContract, Bootable, Validatable
      */
     public final function validate(): void
     {
-        if (!is_subclass_of($this->address, Address::class) || !str_contains($this->address, '://')) {
-            throw new InvalidAddressException($this->engine);
+        if (!is_subclass_of($this->address, Address::class) && !str_contains($this->address, '://')) {
+            throw new InvalidAddressException($this->address);
         }
 
         if (!is_a($this->engine, EngineContract::class, true)) {
@@ -321,7 +321,8 @@ abstract class Stream implements StreamContract, Bootable, Validatable
     /** Initializes the Writer instance and boots it up. */
     private function internallyBootWriter(): bool
     {
-        $this->writerInstance = new $this->writer();
+        // $this->writerInstance = new $this->writer();
+        // return $this->bootWriter($this->writerInstance);
         return true;
     }
 
