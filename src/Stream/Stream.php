@@ -10,9 +10,8 @@ use Itsmattch\Nexus\Common\Exception\InvalidReaderException;
 use Itsmattch\Nexus\Common\Exception\InvalidWriterException;
 use Itsmattch\Nexus\Common\Traits\ArrayHelpers;
 use Itsmattch\Nexus\Contract\Address;
-use Itsmattch\Nexus\Contract\Common\Bootable;
 use Itsmattch\Nexus\Contract\Common\Validatable;
-use Itsmattch\Nexus\Contract\Engine as EngineContract;
+use Itsmattch\Nexus\Contract\Engine;
 use Itsmattch\Nexus\Contract\Reader;
 use Itsmattch\Nexus\Contract\Stream as StreamContract;
 use Itsmattch\Nexus\Contract\Writer;
@@ -22,7 +21,7 @@ use Itsmattch\Nexus\Reader\Exception\ReaderNotFoundException;
 use Itsmattch\Nexus\Reader\Factory\ReaderFactory;
 use ReflectionClass;
 
-abstract class Stream implements StreamContract, Bootable, Validatable
+abstract class Stream implements StreamContract, Validatable
 {
     use ArrayHelpers;
 
@@ -52,7 +51,7 @@ abstract class Stream implements StreamContract, Bootable, Validatable
      * property should be set with the fully qualified class
      * name of a class that extends the Engine class.
      */
-    protected string $engine = EngineContract::class;
+    protected string $engine = Engine::class;
 
     /**
      * The reader property represents the strategy that the
@@ -83,7 +82,7 @@ abstract class Stream implements StreamContract, Bootable, Validatable
      * Stores an instance of the Engine class that is
      * created based on the value of the $engine property.
      */
-    private EngineContract $engineInstance;
+    private Engine $engineInstance;
 
     /**
      * Stores an instance of the Reader class that is
@@ -114,27 +113,11 @@ abstract class Stream implements StreamContract, Bootable, Validatable
     public function __construct(array $addressParameters = [])
     {
         $this->addressParameters = $addressParameters;
-        $this->prepare();
-    }
 
-    /**
-     * Retrieves data of the resource using a dot notation
-     * path or returns the whole data array when path is
-     * not specified.
-     *
-     * @param ?string $path The dot notation path or null to
-     * retrieve the whole array.
-     *
-     * @return mixed The value from the data array at the
-     * specified key or the entire data array. Returns null
-     * if the specified key does not exist.
-     */
-    public final function get(?string $path = null): mixed
-    {
-        $array = $this->readerInstance->get();
-
-        return empty($path) ? $array
-            : $this->traverseDotArray($path, $array);
+        if (empty($this->group)) {
+            $reflection = new ReflectionClass($this);
+            $this->group = strtolower($reflection->getNamespaceName());
+        }
     }
 
     /**
@@ -147,7 +130,7 @@ abstract class Stream implements StreamContract, Bootable, Validatable
      * @return ?Stream Returns Stream instance if booted
      * successfully, null otherwise.
      */
-    public final static function load(array $addressParameters = []): ?Stream
+    final public static function load(array $addressParameters = []): ?Stream
     {
         $instance = new static($addressParameters);
         return $instance->boot() ? $instance : null;
@@ -165,7 +148,7 @@ abstract class Stream implements StreamContract, Bootable, Validatable
      * @return ?Stream Returns Stream instance if booted
      * successfully, null otherwise.
      */
-    public final static function find(string $identifier, string $parameterName = 'id'): ?Stream
+    final public static function find(string $identifier, string $parameterName = 'id'): ?Stream
     {
         $idParameter = empty($identifier) || empty($parameterName)
             ? [] : [$parameterName => $identifier];
@@ -182,7 +165,7 @@ abstract class Stream implements StreamContract, Bootable, Validatable
      * @return bool Returns true if booted successfully,
      * false otherwise
      */
-    public final function boot(): bool
+    final public function boot(): bool
     {
         try {
             $this->validate();
@@ -194,28 +177,19 @@ abstract class Stream implements StreamContract, Bootable, Validatable
         }
     }
 
-    /** Prepares the instance upon construction. */
-    protected final function prepare(): void
-    {
-        if (empty($this->group)) {
-            $reflection = new ReflectionClass($this);
-            $this->group = strtolower($reflection->getNamespaceName());
-        }
-    }
-
     /**
      * @throws InvalidReaderException
      * @throws InvalidAddressException
      * @throws InvalidWriterException
      * @throws InvalidEngineException
      */
-    public final function validate(): void
+    final public function validate(): void
     {
         if (!is_subclass_of($this->address, Address::class) && !str_contains($this->address, '://')) {
             throw new InvalidAddressException($this->address);
         }
 
-        if (!is_a($this->engine, EngineContract::class, true)) {
+        if (!is_a($this->engine, Engine::class, true)) {
             throw new InvalidEngineException($this->engine);
         }
 
@@ -238,7 +212,7 @@ abstract class Stream implements StreamContract, Bootable, Validatable
      *
      * @throws EngineNotFoundException
      */
-    public final function access(): bool
+    final public function access(): bool
     {
         return $this->internallyBootAddress()
             && $this->internallyBootWriter()
@@ -258,10 +232,33 @@ abstract class Stream implements StreamContract, Bootable, Validatable
      *
      * @throws ReaderNotFoundException
      */
-    public final function read(): bool
+    final public function read(): bool
     {
         return $this->internallyBootReader()
             && $this->readerInstance->read();
+    }
+
+    final public function getResponse(): array
+    {
+        return $this->readerInstance->get();
+    }
+
+    /**
+     * Retrieves data of the resource using a dot notation
+     * path or returns the whole data array when path is
+     * not specified.
+     *
+     * @param ?string $path The dot notation path or null to
+     * retrieve the whole array.
+     *
+     * @return mixed The value from the data array at the
+     * specified key or the entire data array. Returns null
+     * if the specified key does not exist.
+     */
+    final public function get(?string $path = null): mixed
+    {
+        return empty($path) ? $this->getResponse()
+            : $this->traverseDotArray($path, $this->getResponse());
     }
 
     /**
@@ -291,14 +288,11 @@ abstract class Stream implements StreamContract, Bootable, Validatable
      */
     private function internallyBootEngine(): bool
     {
-        $this->engineInstance = is_subclass_of($this->engine, EngineContract::class)
+        $this->engineInstance = is_subclass_of($this->engine, Engine::class)
             ? new $this->engine($this->addressInstance)
             : EngineFactory::from($this->addressInstance);
 
-        if ($this->engineInstance instanceof Bootable) {
-            $this->engineInstance->boot();
-        }
-
+        $this->engineInstance->boot();
         return $this->bootEngine($this->engineInstance);
     }
 
@@ -340,11 +334,11 @@ abstract class Stream implements StreamContract, Bootable, Validatable
      * This method allows you to modify created Engine
      * instance.
      *
-     * @param EngineContract $engine Created Engine instance.
+     * @param Engine $engine Created Engine instance.
      *
      * @return bool The result of booting.
      */
-    protected function bootEngine(EngineContract $engine): bool { return true; }
+    protected function bootEngine(Engine $engine): bool { return true; }
 
     /**
      * This method allows you to modify created Reader

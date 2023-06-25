@@ -2,7 +2,7 @@
 
 namespace Itsmattch\Nexus\Address\Parameter;
 
-use Itsmattch\Nexus\Address\Contract\Parameter as ParameterContract;
+use Itsmattch\Nexus\Contract\Address\Parameter as ParameterContract;
 use Stringable;
 
 /**

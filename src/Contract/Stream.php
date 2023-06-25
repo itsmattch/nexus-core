@@ -2,6 +2,8 @@
 
 namespace Itsmattch\Nexus\Contract;
 
+use Itsmattch\Nexus\Contract\Common\Bootable;
+
 /**
  * The Stream class represents a single access point of data
  * within the Nexus system. It acts as an encapsulation of
@@ -10,7 +12,7 @@ namespace Itsmattch\Nexus\Contract;
  *
  * @link https://nexus.itsmattch.com/streams/overview Streams Documentation
  */
-interface Stream
+interface Stream extends Bootable
 {
     /**
      * Accesses the resource.
@@ -27,6 +29,13 @@ interface Stream
     public function read(): bool;
 
     /**
+     * Returns converted content of the resource.
+     *
+     * @return array Converted content of the resource.
+     */
+    public function getResponse(): array;
+
+    /**
      * Returns the name of the group that the stream belongs
      * to. Groups are used to cluster together different
      * streams that utilize the same set of identifiers.
@@ -34,5 +43,5 @@ interface Stream
      * @return string The name of the group the stream
      * belongs to.
      */
-    public function getGroupName(): string;
+    public function accessorName(): string;
 }

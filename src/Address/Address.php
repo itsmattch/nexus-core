@@ -2,13 +2,13 @@
 
 namespace Itsmattch\Nexus\Address;
 
-use Itsmattch\Nexus\Address\Contract\Parameter as ParameterContract;
 use Itsmattch\Nexus\Address\Exception\InvalidSchemeException;
 use Itsmattch\Nexus\Address\Parameter\NullParameter;
 use Itsmattch\Nexus\Address\Parameter\OptionalParameter;
 use Itsmattch\Nexus\Address\Parameter\ParameterProxy;
 use Itsmattch\Nexus\Address\Parameter\RequiredParameter;
 use Itsmattch\Nexus\Contract\Address as AddressContract;
+use Itsmattch\Nexus\Contract\Address\Parameter as ParameterContract;
 use Itsmattch\Nexus\Contract\Common\Validatable;
 use Stringable;
 

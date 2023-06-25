@@ -5,11 +5,10 @@ namespace Itsmattch\Nexus\Engine;
 use Exception;
 use Itsmattch\Nexus\Address\Address;
 use Itsmattch\Nexus\Common\Message;
-use Itsmattch\Nexus\Contract\Common\Bootable;
 use Itsmattch\Nexus\Contract\Common\Validatable;
 use Itsmattch\Nexus\Contract\Engine as EngineContract;
 
-abstract class Engine implements EngineContract, Bootable, Validatable
+abstract class Engine implements EngineContract, Validatable
 {
     /**
      * Represents the location of the resource that the
@@ -17,13 +16,13 @@ abstract class Engine implements EngineContract, Bootable, Validatable
      */
     private Address $address;
 
-    public final function __construct(Address $address)
+    final public function __construct(Address $address)
     {
         $this->address = $address;
     }
 
     /** Boots the engine in a fail-safe manner. */
-    public final function boot(): bool
+    final public function boot(): bool
     {
         try {
             $this->validate();

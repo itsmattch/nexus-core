@@ -2,111 +2,98 @@
 
 namespace Itsmattch\Nexus\Repository;
 
-use Itsmattch\Nexus\Assembler\Exception\InvalidArrayFormatException;
-use Itsmattch\Nexus\Assembler\Exception\InvalidBlueprintException;
-use Itsmattch\Nexus\Assembler\Exception\InvalidResourceException;
-use Itsmattch\Nexus\Common\Blueprint;
+use Exception;
+use Itsmattch\Nexus\Blueprint\Blueprint;
 use Itsmattch\Nexus\Common\Exception\InvalidModelException;
-use Itsmattch\Nexus\Common\Model;
-use Itsmattch\Nexus\Stream\Stream;
+use Itsmattch\Nexus\Contract\Common\Validatable;
+use Itsmattch\Nexus\Contract\Repository as RepositoryContract;
+use Itsmattch\Nexus\Contract\Stream;
+use Itsmattch\Nexus\Model\Collection;
+use Itsmattch\Nexus\Model\Model;
 
-class Repository
+abstract class Repository implements RepositoryContract, Validatable
 {
-    /** todo */
+    /** A model that this repository discovers. */
     protected string $model = Model::class;
 
-    /** todo */
-    protected string|array $stream = [];
+    /** Streams this repository uses to discover models. */
+    protected string|array $streams = [];
 
-    /** todo */
-    protected string $blueprint;
+    /** Blueprint that interprets the streams responses. */
+    protected string $blueprint = Blueprint::class;
 
-    /** todo */
-    private array $streamsInstances = [];
+    protected array $ids = [];
 
-    /** todo */
-    private Blueprint $blueprintInstance;
+    /** Collected data from repositories */
+    private array $input = [];
 
-    /** todo */
-    public static function load(): ?Repository
+    private Collection $collection;
+
+    public function __construct()
+    {
+        if (!is_array($this->streams)) {
+            $this->streams = [$this->streams];
+        }
+    }
+
+    final public static function load(): ?RepositoryContract
+    {
+        $instance = new static();
+        return $instance->boot() ? $instance : null;
+    }
+
+    public function boot(): bool
     {
         try {
-            $instance = new static();
+            $this->validate();
+            return $this->access()
+                && $this->read();
 
-            $instance->prepare();
-            // $instance->validate(); // todo needs checked
-
-            if (!$instance->access()) {
-                return null;
-            }
-            if (!$instance->read()) {
-                return null;
-            }
-
-            return $instance;
-
-        } catch (\Exception) {
-            return null;
+        } catch (Exception) {
+            return false;
         }
     }
 
-    /** todo */
-    public function prepare(): void
+    public function access(): bool
     {
-        if (!is_array($this->stream)) {
-            $this->stream = [$this->stream];
+        $input = [];
+
+        /** @var Stream $stream */
+        foreach ($this->streams as $key => $stream) {
+            $streamInstance = new $stream;
+            if (!$streamInstance->boot()) {
+                return false;
+            }
+            $input[$key] = $streamInstance->getResponse();
         }
+        $this->input = $input;
+        return true;
     }
 
-    /** todo */
+    public function read(): bool
+    {
+        /** @var Blueprint $blueprintInstance */
+        $blueprintInstance = new $this->blueprint($this->input);
+        $blueprintInstance->process();
+
+        foreach ($blueprintInstance->getResult() as $model) {
+            // todo
+        }
+        return true;
+    }
+
+    public function getCollection(): Collection
+    {
+        return $this->collection;
+    }
+
+    /**
+     * @throws InvalidModelException
+     */
     public function validate(): void
     {
-        // Model must represent a subclass of Model.
         if (!is_subclass_of($this->model, Model::class)) {
             throw new InvalidModelException($this->model);
         }
-
-        // Streams array should be a list.
-        if (!array_is_list($this->stream)) {
-            throw new InvalidArrayFormatException();
-        }
-
-        // Resources list must not contain any values other than
-        // strings representing subclasses of Resource class.
-        $filteredResources = array_filter($this->stream, function ($streamCandidate) {
-            return is_subclass_of($streamCandidate, Stream::class);
-        });
-        if (count($filteredResources) !== count($this->stream)) {
-            throw new InvalidResourceException();
-        }
-
-        // Blueprint must be a string representing subclasses of Blueprint class.
-        if (is_subclass_of($this->blueprint, Blueprint::class)) {
-            throw new InvalidBlueprintException();
-        }
-    }
-
-    /** todo */
-    public function access(): bool
-    {
-        $streamsInstances = [];
-        /** @var Stream $stream */
-        foreach ($this->stream as $i => $stream) {
-            $streamInstance = $stream::load();
-            if ($streamInstance === null) {
-                return false;
-            }
-            $streamsInstances[$i] = $streamInstance;
-        }
-        $this->streamsInstances = $streamsInstances;
-        return count(array_filter($this->streamsInstances)) > 0;
-    }
-
-    /** todo */
-    public function read(): bool
-    {
-        $this->blueprintInstance = new $this->blueprint(...$this->streamsInstances);
-        var_dump($this->blueprintInstance);
-        return true;
     }
 }

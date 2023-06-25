@@ -16,7 +16,7 @@ abstract class Reader implements ReaderContract
     /** Instance of the Response class containing received raw content. */
     protected Message $response;
 
-    public final function __construct(Message $response)
+    final public function __construct(Message $response)
     {
         $this->response = $response;
     }

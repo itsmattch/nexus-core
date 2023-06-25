@@ -7,9 +7,9 @@ use Itsmattch\Nexus\Assembler\Exception\BlueprintCountException;
 use Itsmattch\Nexus\Assembler\Exception\InvalidArrayFormatException;
 use Itsmattch\Nexus\Assembler\Exception\InvalidBlueprintException;
 use Itsmattch\Nexus\Assembler\Exception\InvalidResourceException;
-use Itsmattch\Nexus\Common\Blueprint;
+use Itsmattch\Nexus\Blueprint\Blueprint;
 use Itsmattch\Nexus\Common\Exception\InvalidModelException;
-use Itsmattch\Nexus\Common\Model;
+use Itsmattch\Nexus\Model\Model;
 use Itsmattch\Nexus\Stream\Stream;
 
 /**

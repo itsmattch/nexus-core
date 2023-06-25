@@ -9,7 +9,7 @@ abstract class Writer
 {
     protected array $body;
 
-    public final function __construct(array $body)
+    final public function __construct(array $body)
     {
         $this->body = $body;
     }

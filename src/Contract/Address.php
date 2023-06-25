@@ -3,9 +3,9 @@
 namespace Itsmattch\Nexus\Contract;
 
 /**
- * The Address class encapsulates an address to a resource,
- * providing a suite of methods for parametrizing it. It
- * uses a template-based approach, allowing for
+ * The Address class defines an address of a remote or local
+ * resource, providing a suite of methods for parametrizing
+ * it. It uses a template-based approach, allowing for
  * mustache-styled parameters to define flexible addresses.
  *
  * @link https://nexus.itsmattch.com/resources/addresses Addresses Documentation

@@ -37,7 +37,7 @@ final class ReaderFactory
      */
     public static function from(Message $response): Reader
     {
-        $type = $response->getType();
+        $type = $response->type;
 
         if (!isset(self::$registry[$type])) {
             throw new ReaderNotFoundException($type);

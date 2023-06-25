@@ -17,11 +17,13 @@
   "require-dev": {
     "phpunit/phpunit": "^10.2",
     "pestphp/pest": "^2.6",
-    "mockery/mockery": "^1.6"
+    "mockery/mockery": "^1.6",
+    "nunomaduro/phpinsights": "^2.8"
   },
   "config": {
     "allow-plugins": {
-      "pestphp/pest-plugin": true
+      "pestphp/pest-plugin": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
     }
   },
   "require": {

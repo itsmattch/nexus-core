@@ -3,6 +3,7 @@
 namespace Itsmattch\Nexus\Contract;
 
 use Itsmattch\Nexus\Common\Message;
+use Itsmattch\Nexus\Contract\Common\Bootable;
 
 /**
  * The Engine class encapsulates the logic responsible for
@@ -10,7 +11,7 @@ use Itsmattch\Nexus\Common\Message;
  *
  * @link https://nexus.itsmattch.com/resources/engines Engines Documentation
  */
-interface Engine
+interface Engine extends Bootable
 {
     /**
      * Prepares a connection handler.

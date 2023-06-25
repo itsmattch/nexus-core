@@ -26,5 +26,6 @@ interface Reader
      */
     public function get(): array;
 
-    public function getCounterpart(): Writer;
+    // todo
+    // public function getCounterpart(): Writer;
 }
