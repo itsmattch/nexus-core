@@ -8,8 +8,8 @@ use Itsmattch\Nexus\Engine\Engine;
 use Itsmattch\Nexus\Engine\Enum\HttpMethod;
 
 /**
- * The HttpEngine is a very simple implementation of the
- * Engine using cURL functionality to manage HTTP requests.
+ * The HttpEngine is a simple implementation of the Engine
+ * using cURL functionality to manage HTTP requests.
  */
 class HttpEngine extends Engine
 {
@@ -19,34 +19,11 @@ class HttpEngine extends Engine
     /** A list of added HTTP headers. */
     private array $headers = [];
 
-    public function getHandle(): CurlHandle
-    {
-        return $this->handle;
-    }
-
-    public function setHeaders(array $headers): void
-    {
-        $this->headers = array_merge($this->headers, $headers);
-    }
-
-    public function setMethod(HttpMethod $method): void
-    {
-        curl_setopt($this->handle, CURLOPT_CUSTOMREQUEST, $method->name);
-    }
-
-    public function setBody(Message $request): void
-    {
-        curl_setopt($this->handle, CURLOPT_POSTFIELDS, $request->getBody());
-        $this->setHeaders([
-            'Content-Type: ' . $request->getType(),
-            'Content-Length: ' . strlen($request->getBody())
-        ]);
-    }
-
     /**
-     * Initializes the cURL session and sets the necessary options.
+     * Initializes the cURL session.
      *
-     * @return bool Returns true if the cURL handle is successfully initialized, false otherwise.
+     * @return bool Returns true if the cURL handle is
+     * successfully initialized, false otherwise.
      */
     public function init(): bool
     {
@@ -67,16 +44,15 @@ class HttpEngine extends Engine
     }
 
     /**
+     * Executes the HTTP request and populates the response
+     * object.
      *
-     * Executes the HTTP request and populates the response object.
-     *
-     * @return bool Returns true if the request is successfully executed, false otherwise.
+     * @return bool Returns true if the request is
+     * successfully executed, false otherwise.
      */
     public function execute(): bool
     {
-        curl_setopt($this->handle, CURLOPT_HTTPHEADER, array_map(function ($key, $value) {
-            return "$key: $value";
-        }, array_keys($this->headers), array_values($this->headers)));
+        $this->setRequestHeaders();
 
         $responseBody = curl_exec($this->handle);
         $responseType = $this->getContentType();
@@ -91,19 +67,74 @@ class HttpEngine extends Engine
         return true;
     }
 
+    /** Closes the cURL handle. */
+    public function close(): void
+    {
+        curl_close($this->handle);
+    }
+
+    /** Wraps curl_setopt on active handle. */
+    public function setOpt(int $option, $value): bool
+    {
+        return curl_setopt($this->handle, $option, $value);
+    }
+
     /**
-     * Retrieves the content type of the HTTP response. If
-     * the content type is not available, the method will
-     * return null.
+     * Updates or inserts new headers into the current set
+     * of headers.
      *
-     * @return ?string The content type of the HTTP response.
+     * The provided array should be an associative array
+     * where keys are the header names and values are the
+     * corresponding header values.
+     *
+     * This method treats header names in a case-insensitive
+     * manner. For instance, 'Content-Type' and
+     * 'content-type' are considered the same header.
+     *
+     * @param array $headers
      */
-    private function getContentType(): ?string
+    public function setHeaders(array $headers): void
+    {
+        foreach ($headers as $name => $value) {
+            $this->headers[strtolower($name)] = $value;
+        }
+    }
+
+    /** Sets HTTP method */
+    public function setMethod(HttpMethod $method): void
+    {
+        curl_setopt($this->handle, CURLOPT_CUSTOMREQUEST, $method->name);
+    }
+
+    /** Sets request body */
+    public function setBody(Message $request): void
+    {
+        curl_setopt($this->handle, CURLOPT_POSTFIELDS, $request->getBody());
+        $this->setHeaders([
+            'Content-Type' => $request->getType(),
+            'Content-Length' => strlen($request->getBody()),
+        ]);
+    }
+
+    /** Sets current state of $headers array. */
+    private function setRequestHeaders(): void
+    {
+        curl_setopt($this->handle, CURLOPT_HTTPHEADER, array_map(function ($key, $value) {
+            return "$key: $value";
+        }, array_keys($this->headers), array_values($this->headers)));
+    }
+
+    /**
+     * Retrieves the content type of the HTTP response.
+     *
+     * @return string The content type of the HTTP response.
+     */
+    private function getContentType(): string
     {
         $contentType = curl_getinfo($this->handle, CURLINFO_CONTENT_TYPE);
 
         if ($contentType === null) {
-            return null;
+            return '';
         }
 
         $endPosition = strpos($contentType, ';');
@@ -112,14 +143,6 @@ class HttpEngine extends Engine
             return $contentType;
         }
 
-        return substr($contentType, 0, $endPosition);
-    }
-
-    /**
-     * Closes the cURL handle to release resources.
-     */
-    public function close(): void
-    {
-        curl_close($this->handle);
+        return substr($contentType, 0, $endPosition) ?? '';
     }
 }

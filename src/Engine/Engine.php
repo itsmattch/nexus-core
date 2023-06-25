@@ -12,16 +12,16 @@ use Itsmattch\Nexus\Contract\Engine as EngineContract;
 abstract class Engine implements EngineContract, Bootable, Validatable
 {
     /**
-     * Represents the Response class that should be used
-     * for handling the response from accessing the resource.
+     * Represents the Message class that should be used
+     * to encapsulate the accessed raw content.
      */
-    protected string $response = Message::class;
+    protected string $content = Message::class;
 
     /**
-     * Stores the instance of the Response class that is
-     * created during booting.
+     * Stores an instance of the Message class that is
+     * created based on the value of the $content property.
      */
-    private Message $responseInstance;
+    private Message $contentInstance;
 
     /**
      * Represents the location of the resource that the
@@ -34,13 +34,13 @@ abstract class Engine implements EngineContract, Bootable, Validatable
         $this->address = $address;
     }
 
-    /** Boots the engine. */
+    /** Boots the engine in a fail-safe manner. */
     public final function boot(): bool
     {
         try {
             $this->validate();
-            return $this->internallyBootResponse()
-                && $this->init();
+            return $this->internallyBootContent()
+                && $this->access();
 
         } catch (Exception) {
             return false;
@@ -56,38 +56,40 @@ abstract class Engine implements EngineContract, Bootable, Validatable
      */
     public function access(): bool
     {
-        if (!$this->execute()) {
-            $this->close();
+        if (!$this->init()) {
             return false;
         }
+        $successful = $this->execute();
         $this->close();
-        return true;
+
+        return $successful;
     }
 
     /**
      * A method for internally booting the Response
      * instance. It creates a new instance of the Response
-     * subclass specified in the $response property.
+     * subclass specified in the $content property.
      */
-    private function internallyBootResponse(): bool
+    private function internallyBootContent(): bool
     {
-        $this->responseInstance = new $this->response;
-        return $this->bootResponse($this->responseInstance);
+        $this->contentInstance = new $this->content;
+        return $this->bootContent($this->contentInstance);
     }
 
     /**
-     * This method allows you to modify created Response
-     * instance.
+     * This method allows you to modify created Message
+     * instance for encapsulating raw content of the
+     * accessed resource.
      *
-     * @param Message $response Created Response instance.
+     * @param Message $content Created Response instance.
      *
      * @return bool The result of booting.
      */
-    protected function bootResponse(Message $response): bool { return true; }
+    protected function bootContent(Message $content): bool { return true; }
 
     public function getResponse(): Message
     {
-        return $this->responseInstance;
+        return $this->contentInstance;
     }
 
     protected final function address(): string
@@ -97,6 +99,6 @@ abstract class Engine implements EngineContract, Bootable, Validatable
 
     public function validate(): void
     {
-        // TODO: Implement validate() method.
+        // todo validate $content
     }
 }

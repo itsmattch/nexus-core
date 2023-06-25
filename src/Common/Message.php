@@ -4,7 +4,7 @@ namespace Itsmattch\Nexus\Common;
 
 /**
  * A simple encapsulation of the most important
- * information received by an Engine.
+ * information send to and received by an Engine.
  */
 class Message
 {
