@@ -29,6 +29,9 @@ interface Engine
     /** Closes the connection after the execution. */
     public function close(): void;
 
+    /** todo */
+    public function setRequest(Message $message): void;
+
     /** Returns the response as Message instance. */
     public function getResponse(): Message;
 }
