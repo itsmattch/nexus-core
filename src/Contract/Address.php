@@ -12,9 +12,25 @@ namespace Itsmattch\Nexus\Contract;
  */
 interface Address
 {
+    /**
+     * Returns the final, valid address.
+     *
+     * @return string The final, valid address.
+     */
     public function getAddress(): string;
 
+    /**
+     * Returns the scheme of the address
+     *
+     * @return string Scheme part of the address
+     */
     public function getScheme(): string;
 
+    /**
+     * Checks address validity.
+     *
+     * @return bool True if the address is valid,
+     * false otherwise
+     */
     public function isValid(): bool;
 }

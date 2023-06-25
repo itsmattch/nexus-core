@@ -12,18 +12,6 @@ use Itsmattch\Nexus\Contract\Engine as EngineContract;
 abstract class Engine implements EngineContract, Bootable, Validatable
 {
     /**
-     * Represents the Message class that should be used
-     * to encapsulate the accessed raw content.
-     */
-    protected string $content = Message::class;
-
-    /**
-     * Stores an instance of the Message class that is
-     * created based on the value of the $content property.
-     */
-    private Message $contentInstance;
-
-    /**
      * Represents the location of the resource that the
      * Engine should access.
      */
@@ -39,41 +27,17 @@ abstract class Engine implements EngineContract, Bootable, Validatable
     {
         try {
             $this->validate();
-            return $this->internallyBootContent()
-                && $this->access();
+            if (!$this->init()) {
+                return false;
+            }
+            $successful = $this->execute();
+            $this->close();
+
+            return $successful;
 
         } catch (Exception) {
             return false;
         }
-    }
-
-    /**
-     * A method for executing the entire process of
-     * accessing a resource.
-     *
-     * @return bool True on successful access,
-     * false otherwise.
-     */
-    public function access(): bool
-    {
-        if (!$this->init()) {
-            return false;
-        }
-        $successful = $this->execute();
-        $this->close();
-
-        return $successful;
-    }
-
-    /**
-     * A method for internally booting the Response
-     * instance. It creates a new instance of the Response
-     * subclass specified in the $content property.
-     */
-    private function internallyBootContent(): bool
-    {
-        $this->contentInstance = new $this->content;
-        return $this->bootContent($this->contentInstance);
     }
 
     /**
@@ -86,11 +50,6 @@ abstract class Engine implements EngineContract, Bootable, Validatable
      * @return bool The result of booting.
      */
     protected function bootContent(Message $content): bool { return true; }
-
-    public function getResponse(): Message
-    {
-        return $this->contentInstance;
-    }
 
     protected final function address(): string
     {

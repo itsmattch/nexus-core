@@ -70,7 +70,7 @@ abstract class Address implements AddressContract, Stringable, Validatable
     }
 
     /**
-     * Retrieves the final, valid address. If the address
+     * Returns the final, valid address. If the address
      * is not valid, it returns an empty string.
      *
      * @return string The final address or an empty string.
@@ -81,7 +81,7 @@ abstract class Address implements AddressContract, Stringable, Validatable
     }
 
     /**
-     * Retrieves the scheme of the address
+     * Returns the scheme of the address
      *
      * @return string Scheme part of the address
      */
@@ -179,7 +179,7 @@ abstract class Address implements AddressContract, Stringable, Validatable
     }
 
     /**
-     * Retrieves the raw address template.
+     * Returns the raw address template.
      *
      * @return string The address template.
      */
@@ -189,7 +189,7 @@ abstract class Address implements AddressContract, Stringable, Validatable
     }
 
     /**
-     * Retrieves the address in its current state,
+     * Returns the address in its current state,
      * irrespective of its validity.
      *
      * @return string The address in its current state.

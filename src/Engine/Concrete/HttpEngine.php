@@ -16,6 +16,9 @@ class HttpEngine extends Engine
     /** Stores the cURL handle for HTTP communication. */
     private CurlHandle $handle;
 
+    /** Stores the response message. */
+    private Message $response;
+
     /** A list of added HTTP headers. */
     private array $headers = [];
 
@@ -61,8 +64,10 @@ class HttpEngine extends Engine
             return false;
         }
 
-        $this->getResponse()->setBody($responseBody);
-        $this->getResponse()->setType($responseType);
+        $this->response = new Message(
+            body: $responseBody,
+            type: $responseType,
+        );
 
         return true;
     }
@@ -71,6 +76,18 @@ class HttpEngine extends Engine
     public function close(): void
     {
         curl_close($this->handle);
+    }
+
+    /** todo */
+    public function setRequest(Message $message): void
+    {
+        $this->setBody($message);
+    }
+
+    /** todo */
+    public function getResponse(): Message
+    {
+        return $this->response;
     }
 
     /** Wraps curl_setopt on active handle. */
@@ -115,10 +132,10 @@ class HttpEngine extends Engine
     /** Sets request body */
     public function setBody(Message $request): void
     {
-        curl_setopt($this->handle, CURLOPT_POSTFIELDS, $request->getBody());
+        curl_setopt($this->handle, CURLOPT_POSTFIELDS, $request->body);
         $this->setHeaders([
-            'Content-Type' => $request->getType(),
-            'Content-Length' => strlen($request->getBody()),
+            'Content-Type' => $request->type,
+            'Content-Length' => strlen($request->body),
         ]);
     }
 

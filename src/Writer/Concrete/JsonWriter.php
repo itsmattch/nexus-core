@@ -15,9 +15,10 @@ class JsonWriter extends Writer
         $jsonString = json_encode($this->body, true);
 
         if (is_string($jsonString)) {
-            $this->jsonRequest = new Message();
-            $this->jsonRequest->setBody($jsonString);
-            $this->jsonRequest->setType('application/json');
+            $this->jsonRequest = new Message(
+                body: $jsonString,
+                type: 'application/json'
+            );
 
             return true;
         }
