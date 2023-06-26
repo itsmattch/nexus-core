@@ -6,7 +6,7 @@ use Itsmattch\Nexus\Contract\Model\Badge as BadgeContract;
 
 class Badge implements BadgeContract
 {
-    protected readonly string $name;
+    protected string $name;
     protected array $keys = [];
 
     public function getName(): string
