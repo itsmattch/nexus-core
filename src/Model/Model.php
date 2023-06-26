@@ -3,8 +3,8 @@
 namespace Itsmattch\Nexus\Model;
 
 use Itsmattch\Nexus\Contract\Model as ModelContract;
-use Itsmattch\Nexus\Contract\Model\Identity as IdentityContract;
-use Itsmattch\Nexus\Model\Exception\DuplicateIdentityException;
+use Itsmattch\Nexus\Contract\Model\Badge as BadgeContract;
+use Itsmattch\Nexus\Model\Exception\DuplicateBadgeException;
 use ReflectionClass;
 
 class Model implements ModelContract
@@ -13,12 +13,15 @@ class Model implements ModelContract
 
     protected string $genericName;
 
+    // todo boot it
+    protected array $badges = [];
+
     /**
      * A list of accepted identities
      *
-     * @var IdentityContract[]
+     * @var BadgeContract[]
      */
-    private array $identitiesList = [];
+    private array $badgesList = [];
 
     public function __construct()
     {
@@ -48,26 +51,40 @@ class Model implements ModelContract
         $this->name = $name;
     }
 
-    public function getIdentities(): array
+    public function getBadges(): array
     {
-        return $this->identitiesList;
+        return $this->badgesList;
+    }
+
+    public function getBadge(string $name): ?BadgeContract
+    {
+        foreach ($this->badgesList as $badge) {
+            if ($badge->getName() === $name) {
+                return $badge;
+            }
+        }
+        return null;
     }
 
     /**
-     * @throws DuplicateIdentityException
+     * @throws DuplicateBadgeException
      */
-    public function addIdentity(IdentityContract $identity): void
+    public function addBadge(BadgeContract $badge): void
     {
-        foreach ($this->identitiesList as $existingIdentity) {
-            if ($existingIdentity->getBadge()->equals($identity->getBadge())) {
-                throw new DuplicateIdentityException($this->getName(), $identity->getBadge()->getName());
-            }
+        if ($this->hasBadge($badge->getName())) {
+            throw new DuplicateBadgeException($badge->getName(), $this->getName());
         }
-        $this->identitiesList[] = $identity;
+        $this->badgesList[] = $badge;
     }
 
-    public function hasIdentity(IdentityContract $identity): bool
+    public function hasBadge(string $name): bool
     {
-        return in_array($identity, $this->identitiesList);
+        return $this->getBadge($name) !== null;
+    }
+
+    public function identifiesWith(string $badge, array $values): bool
+    {
+        // todo
+        return true;
     }
 }

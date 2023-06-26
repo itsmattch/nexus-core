@@ -2,37 +2,36 @@
 
 namespace Itsmattch\Nexus\Model;
 
-use Itsmattch\Nexus\Contract\Model\Badge;
 use Itsmattch\Nexus\Contract\Model\Identity as IdentityContract;
 
 class Identity implements IdentityContract
 {
-    protected readonly Badge $badge;
-
+    protected array $keys = [];
     protected array $values = [];
 
-    public function __construct(Badge $badge)
+    public function getValues(): array
     {
-        $this->setBadge($badge);
-    }
-
-    public function setBadge(Badge $badge): void
-    {
-        $this->badge = $badge;
-    }
-
-    public function getBadge(): Badge
-    {
-        return $this->badge;
-    }
-
-    public function setValue(string $key, string $value): void
-    {
-        $this->values[$key] = $value;
+        return $this->values;
     }
 
     public function getValue(string $key): ?string
     {
         return $this->values[$key] ?? null;
+    }
+
+    public function setValue(string $key, string $value): void
+    {
+        $this->keys[] = $key;
+        $this->values[$key] = $value;
+    }
+
+    public function hasKey(string $key): bool
+    {
+        return in_array($key, $this->keys);
+    }
+
+    public function getKeys(): array
+    {
+        return $this->keys;
     }
 }

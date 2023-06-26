@@ -2,7 +2,6 @@
 
 namespace Itsmattch\Nexus\Contract\Model;
 
-/** Represents a set of data that the model can identify with */
 interface Badge
 {
     public function getName(): string;
@@ -16,4 +15,8 @@ interface Badge
     public function hasKey(string $name): bool;
 
     public function equals(Badge $badge): bool;
+
+    public function setIdentity(Identity $identity): void;
+
+    public function getIdentity(): ?Identity;
 }

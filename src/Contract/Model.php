@@ -2,7 +2,7 @@
 
 namespace Itsmattch\Nexus\Contract;
 
-use Itsmattch\Nexus\Model\Identity;
+use Itsmattch\Nexus\Contract\Model\Badge;
 
 interface Model
 {
@@ -10,9 +10,13 @@ interface Model
 
     public function setName(string $name): void;
 
-    public function getIdentities(): array;
+    public function getBadges(): array;
 
-    public function addIdentity(Identity $identity): void;
+    public function getBadge(string $name): ?Badge;
 
-    public function hasIdentity(Identity $identity): bool;
+    public function addBadge(Badge $badge): void;
+
+    public function hasBadge(string $name): bool;
+
+    public function identifiesWith(string $badge, array $values): bool;
 }

@@ -1,8 +1,7 @@
 <?php
 
 use Itsmattch\Nexus\Contract\Model\Badge;
-use Itsmattch\Nexus\Contract\Model\Identity;
-use Itsmattch\Nexus\Model\Exception\DuplicateIdentityException;
+use Itsmattch\Nexus\Model\Exception\DuplicateBadgeException;
 use Itsmattch\Nexus\Model\Model;
 
 // getName()
@@ -29,52 +28,52 @@ it('returns generic name if name is empty', function () {
     expect($model->getName())->toBe($model->getGenericName());
 });
 
-// addIdentity($identity)
-it('does not accept identities with duplicate badges', function () {
-    $badge = Mockery::mock(Badge::class);
-    $badge->shouldReceive('equals')->andReturn(true);
-    $badge->shouldReceive('getName')->andReturn('name');
-
-    $identityOne = Mockery::mock(Identity::class);
-    $identityOne->shouldReceive('getBadge')->andReturn($badge);
-
-    $identityTwo = Mockery::mock(Identity::class);
-    $identityTwo->shouldReceive('getBadge')->andReturn($badge);
-
-    $model = new class extends Model { };
-
-    $model->addIdentity($identityOne);
-    $model->addIdentity($identityTwo);
-})->expectException(DuplicateIdentityException::class);
-
-// hasIdentity($identity)
-it('accepts identities', function () {
-    $identity = Mockery::mock(Identity::class);
-
-    $model = new class extends Model { };
-    $model->addIdentity($identity);
-
-    expect($model->hasIdentity($identity))->toBe(true);
-});
-
-// getIdentities()
-it('returns all identities', function () {
+//addBadge()
+//getBadges()
+it('accepts multiple unique badges', function () {
     $badgeOne = Mockery::mock(Badge::class);
-    $badgeOne->shouldReceive('equals')->andReturn(false);
-
-    $identityOne = Mockery::mock(Identity::class);
-    $identityOne->shouldReceive('getBadge')->andReturn($badgeOne);
+    $badgeOne->shouldReceive('getName')->andReturn('one');
 
     $badgeTwo = Mockery::mock(Badge::class);
-
-    $identityTwo = Mockery::mock(Identity::class);
-    $identityTwo->shouldReceive('getBadge')->andReturn($badgeTwo);
+    $badgeTwo->shouldReceive('getName')->andReturn('two');
 
     $model = new class extends Model { };
-    $model->addIdentity($identityOne);
-    $model->addIdentity($identityTwo);
+    $model->addBadge($badgeOne);
+    $model->addBadge($badgeTwo);
 
-    expect($model->getIdentities())->toBeArray();
-    expect($model->getIdentities())->toHaveCount(2);
-    expect($model->getIdentities())->each()->toBeInstanceOf(Identity::class);
+    expect($model->getBadges())->toBeArray();
+    expect($model->getBadges())->toHaveCount(2);
+    expect($model->getBadges())->each()->toBeInstanceOf(Badge::class);
 });
+
+it('rejects badges with duplicate names', function () {
+    $badgeOne = Mockery::mock(Badge::class);
+    $badgeOne->shouldReceive('getName')->andReturn('badge');
+
+    $badgeTwo = Mockery::mock(Badge::class);
+    $badgeTwo->shouldReceive('getName')->andReturn('badge');
+
+    $model = new class extends Model { };
+    $model->addBadge($badgeOne);
+    $model->addBadge($badgeTwo);
+
+    expect($model->getBadges())->toBeArray();
+    expect($model->getBadges())->toHaveCount(2);
+    expect($model->getBadges())->each()->toBeInstanceOf(Badge::class);
+})->expectException(DuplicateBadgeException::class);
+
+//getBadge()
+//hasBadge()
+it('retrieves badge by its name', function () {
+    $badge = Mockery::mock(Badge::class);
+    $badge->shouldReceive('getName')->andReturn('badge');
+
+    $model = new class extends Model { };
+    $model->addBadge($badge);
+
+    expect($model->hasBadge('badge'))->toBeTrue();
+    expect($model->getBadge('badge'))->toBe($badge);
+});
+
+//identifiesWith()
+// todo
