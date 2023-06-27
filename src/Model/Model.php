@@ -2,7 +2,7 @@
 
 namespace Itsmattch\Nexus\Model;
 
-use Exception;
+use Itsmattch\Nexus\Common\Traits\BootsOnce;
 use Itsmattch\Nexus\Contract\Common\Bootable;
 use Itsmattch\Nexus\Contract\Model as ModelContract;
 use Itsmattch\Nexus\Contract\Model\Badge as BadgeContract;
@@ -11,6 +11,8 @@ use ReflectionClass;
 /** todo */
 class Model implements ModelContract, Bootable
 {
+    use BootsOnce;
+
     /** The explicit name of the model. */
     protected string $name;
 
@@ -20,66 +22,16 @@ class Model implements ModelContract, Bootable
     /** A preset definition of badges. */
     protected array $badges = [];
 
-    /** The model's bootOnce status. */
-    private bool $bootedOnce = false;
-
-    /** The model's booting result. */
-    private bool $bootingResult = false;
-
     /** @var BadgeContract[] a list of Badges */
     private array $badgesList = [];
 
-    /**
-     * Executes the booting process once. Returns false on
-     * subsequent attempts.
-     *
-     * @return bool True if the booting was successful,
-     * false if the booting was already attempted or if
-     * it failed.
-     */
-    public function bootOnce(): bool
+    protected function safeBoot(): bool
     {
-        if ($this->bootedOnce) {
-            return false;
-        }
+        $this->loadGenericName();
+        $this->normalizeBadges();
+        $this->loadBadges();
 
-        $this->bootedOnce = true;
-        return $this->boot();
-    }
-
-    /**
-     * Attempts to boot the model. Any exception encountered
-     * during booting causes this method to return false.
-     *
-     * @return bool True if the booting was successful,
-     * false if an exception was encountered.
-     */
-    public function boot(): bool
-    {
-        try {
-            $this->loadGenericName();
-            $this->normalizeBadges();
-            $this->loadBadges();
-
-            $this->bootingResult = true;
-
-        } catch (Exception) {
-            $this->bootingResult = false;
-
-        } finally {
-            return $this->bootingResult;
-        }
-    }
-
-    /**
-     * Checks if the model has been successfully booted.
-     *
-     * @return bool True if the model has been successfully
-     * booted, false otherwise.
-     */
-    public function isBooted(): bool
-    {
-        return $this->bootingResult;
+        return true;
     }
 
     /**

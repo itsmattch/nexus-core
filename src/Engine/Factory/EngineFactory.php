@@ -2,11 +2,8 @@
 
 namespace Itsmattch\Nexus\Engine\Factory;
 
-use Itsmattch\Nexus\Common\Exception\InvalidEngineException;
-use Itsmattch\Nexus\Contract\Address;
 use Itsmattch\Nexus\Contract\Engine;
 use Itsmattch\Nexus\Engine\Concrete\HttpEngine;
-use Itsmattch\Nexus\Engine\Exception\EngineNotFoundException;
 
 /** Static factory class for creating Engine instances. */
 final class EngineFactory
@@ -20,35 +17,30 @@ final class EngineFactory
     /**
      * Associates an engine class with a scheme.
      *
-     * @param string $scheme The scheme to associate the engine with.
-     * @param string $engine The class name of the engine.
-     * @throws InvalidEngineException
+     * @param string $scheme The scheme.
+     * @param string $engine A fully qualified class name
+     * of a class extending Engine contract.
      */
     public static function set(string $scheme, string $engine): void
     {
-        if (!is_subclass_of($engine, Engine::class)) {
-            throw new InvalidEngineException($engine);
+        if (is_subclass_of($engine, Engine::class)) {
+            self::$registry[$scheme] = $engine;
         }
-        self::$registry[$scheme] = $engine;
     }
 
     /**
-     * Constructs an Engine based on a scheme of an
-     * Address instance.
+     * Creates an Engine based on a scheme.
      *
-     * @param Address $address The address instance to create an engine for.
-     * @return Engine The engine instance.
-     * @throws EngineNotFoundException
+     * @param string $scheme The scheme.
+     *
+     * @return ?Engine The engine instance.
      */
-    public static function from(Address $address): Engine
+    public static function from(string $scheme): ?Engine
     {
-        $scheme = $address->getScheme();
-
-        if (!isset(self::$registry[$scheme])) {
-            throw new EngineNotFoundException($scheme);
+        if (isset(self::$registry[$scheme])) {
+            return new self::$registry[$scheme]();
         }
-
-        return new self::$registry[$scheme]($address);
+        return null;
     }
 
     /** Disallows instantiation of the factory. */

@@ -13,18 +13,15 @@ class AddressFactory
      *
      * @param string $address The address string to create
      * an Address instance for.
-     * @param array $parameters Optional parameters passed
-     * with the constructor.
      *
      * @return Address The Address instance.
      */
-    public static function from(string $address, array $parameters = []): Address
+    public static function from(string $address): Address
     {
-        return new class($address, $parameters) extends Address {
-            public function __construct(string $template, array $parameters = [])
+        return new class($address) extends Address {
+            public function __construct(string $template)
             {
                 $this->template = $template;
-                parent::__construct($parameters);
             }
         };
     }
