@@ -1,7 +1,6 @@
 <?php
 
 use Itsmattch\Nexus\Contract\Model\Badge;
-use Itsmattch\Nexus\Model\Exception\DuplicateBadgeException;
 use Itsmattch\Nexus\Model\Model;
 
 // getName()
@@ -16,6 +15,7 @@ it('returns declared name', function () {
 // setName()
 it('returns set name', function () {
     $model = new class extends Model { };
+    $model->bootOnce();
     $model->setName('name');
 
     expect($model->getName())->toBe('name');
@@ -24,6 +24,7 @@ it('returns set name', function () {
 // getGenericName()
 it('returns generic name if name is empty', function () {
     $model = new class extends Model { };
+    $model->bootOnce();
 
     expect($model->getName())->toBe($model->getGenericName());
 });
@@ -38,6 +39,7 @@ it('accepts multiple unique badges', function () {
     $badgeTwo->shouldReceive('getName')->andReturn('two');
 
     $model = new class extends Model { };
+    $model->bootOnce();
     $model->addBadge($badgeOne);
     $model->addBadge($badgeTwo);
 
@@ -54,13 +56,14 @@ it('rejects badges with duplicate names', function () {
     $badgeTwo->shouldReceive('getName')->andReturn('badge');
 
     $model = new class extends Model { };
+    $model->bootOnce();
     $model->addBadge($badgeOne);
     $model->addBadge($badgeTwo);
 
     expect($model->getBadges())->toBeArray();
-    expect($model->getBadges())->toHaveCount(2);
+    expect($model->getBadges())->toHaveCount(1);
     expect($model->getBadges())->each()->toBeInstanceOf(Badge::class);
-})->expectException(DuplicateBadgeException::class);
+});
 
 // getBadge()
 // hasBadge()
@@ -69,6 +72,7 @@ it('retrieves badge by its name', function () {
     $badge->shouldReceive('getName')->andReturn('badge');
 
     $model = new class extends Model { };
+    $model->bootOnce();
     $model->addBadge($badge);
 
     expect($model->hasBadge('badge'))->toBeTrue();
@@ -85,7 +89,7 @@ it('loads badges defined with $badges property', function () {
             'badge' => ['key', 'example']
         ];
     };
-    $model->boot();
+    $model->bootOnce();
 
     expect($model->getBadges())->toBeArray();
     expect($model->getBadges())->toHaveCount(1);
