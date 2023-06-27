@@ -19,7 +19,9 @@ class Badge implements BadgeContract
 
     public function setName(string $name): void
     {
-        $this->name = $name;
+        if (!empty($name)) {
+            $this->name = $name;
+        }
     }
 
     public function getKeys(): array
@@ -27,10 +29,12 @@ class Badge implements BadgeContract
         return $this->keys;
     }
 
-    public function addKey(string $name): void
+    public function addKeys(string ...$names): void
     {
-        if (!in_array($name, $this->keys)) {
-            $this->keys[] = $name;
+        foreach ($names as $name) {
+            if (!empty($name) && !in_array($name, $this->keys)) {
+                $this->keys[] = $name;
+            }
         }
     }
 

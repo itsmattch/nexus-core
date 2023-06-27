@@ -10,7 +10,7 @@ interface Badge
 
     public function getKeys(): array;
 
-    public function addKey(string $name): void;
+    public function addKeys(string ...$names): void;
 
     public function hasKey(string $name): bool;
 

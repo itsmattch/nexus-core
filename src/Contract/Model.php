@@ -14,7 +14,7 @@ interface Model
 
     public function getBadge(string $name): ?Badge;
 
-    public function addBadge(Badge $badge): void;
+    public function addBadge(Badge $badge): bool;
 
     public function hasBadge(string $name): bool;
 

@@ -28,8 +28,8 @@ it('returns generic name if name is empty', function () {
     expect($model->getName())->toBe($model->getGenericName());
 });
 
-//addBadge()
-//getBadges()
+// addBadge()
+// getBadges()
 it('accepts multiple unique badges', function () {
     $badgeOne = Mockery::mock(Badge::class);
     $badgeOne->shouldReceive('getName')->andReturn('one');
@@ -62,8 +62,8 @@ it('rejects badges with duplicate names', function () {
     expect($model->getBadges())->each()->toBeInstanceOf(Badge::class);
 })->expectException(DuplicateBadgeException::class);
 
-//getBadge()
-//hasBadge()
+// getBadge()
+// hasBadge()
 it('retrieves badge by its name', function () {
     $badge = Mockery::mock(Badge::class);
     $badge->shouldReceive('getName')->andReturn('badge');
@@ -75,5 +75,19 @@ it('retrieves badge by its name', function () {
     expect($model->getBadge('badge'))->toBe($badge);
 });
 
-//identifiesWith()
+// identifiesWith()
 // todo
+
+// $badge
+it('loads badges defined with $badges property', function () {
+    $model = new class extends Model {
+        protected array $badges = [
+            'badge' => ['key', 'example']
+        ];
+    };
+    $model->boot();
+
+    expect($model->getBadges())->toBeArray();
+    expect($model->getBadges())->toHaveCount(1);
+    expect($model->getBadges())->each()->toBeInstanceOf(Badge::class);
+});

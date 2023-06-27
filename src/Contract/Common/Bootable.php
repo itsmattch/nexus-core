@@ -2,6 +2,8 @@
 
 namespace Itsmattch\Nexus\Contract\Common;
 
+use Itsmattch\Nexus\Contract\Common\Bootable\ValidationErrorCollection;
+
 /**
  * Represents an object that can be booted up.
  * Implementations should return false if the booting
@@ -12,14 +14,40 @@ namespace Itsmattch\Nexus\Contract\Common;
 interface Bootable
 {
     /**
+     * Boots up this object once.
+     *
+     * This method should attempt to get this object up and
+     * running once. If it is impossible, or the object is
+     * already booted, it should return false.
+     *
+     * This operation should be fail-safe, meaning it should
+     * not throw an exception.
+     *
+     * @return bool True if the object was successfully
+     * booted up, false otherwise.
+     */
+    public function bootOnce(): bool;
+
+    /**
      * Boots up this object.
      *
      * This method should attempt to get this object up and
      * running. If it is impossible, it should return false.
-     * This operation should be fail-safe.
+     *
+     * This operation should be fail-safe, meaning it should
+     * not throw an exception.
      *
      * @return bool True if the object was successfully
      * booted up, false otherwise.
      */
     public function boot(): bool;
+
+    /**
+     * Returns the booting status. Objects that are not
+     * booted might be faulty and should not be used.
+     *
+     * @return bool True if the object is successfully
+     * booted, false otherwise.
+     */
+    public function isBooted(): bool;
 }
