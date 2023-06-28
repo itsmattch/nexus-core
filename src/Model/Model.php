@@ -9,19 +9,29 @@ use ReflectionClass;
 /** todo */
 class Model implements ModelContract
 {
-    /** The explicit name of the model. */
+    /**
+     * The explicit name of the model.
+     */
     protected string $name;
 
-    /** The internal state of the model name. */
-    protected readonly string $internalName;
-
-    /** The generic name of the model. */
-    protected readonly string $genericName;
-
-    /** A preset definition of badges. */
+    /**
+     * A preset definition of badges.
+     */
     protected array $badges = [];
 
-    /** @var BadgeContract[] a list of Badges */
+    /**
+     * The internal state of the model name.
+     */
+    private readonly string $internalName;
+
+    /**
+     * The generic name of the model.
+     */
+    private readonly string $genericName;
+
+    /**
+     * @var BadgeContract[] a list of Badges
+     */
     private array $badgesList = [];
 
     public function __construct()
@@ -32,8 +42,11 @@ class Model implements ModelContract
         $this->loadBadges();
     }
 
-    /** todo */
-    protected function loadInternalName(): void
+    /**
+     * Sets the name of the model using the explicitly
+     * declared model name.
+     */
+    private function loadInternalName(): void
     {
         if (isset($this->name) && !isset($this->internalName)) {
             $this->setName($this->name);
@@ -50,7 +63,7 @@ class Model implements ModelContract
      * Important: The generic names of anonymous classes are
      * not reliable as the MD5 hash can vary across servers.
      */
-    protected function loadGenericName(): void
+    private function loadGenericName(): void
     {
         $reflectionClass = new ReflectionClass($this);
         $this->genericName = $reflectionClass->isAnonymous()
@@ -62,7 +75,7 @@ class Model implements ModelContract
      * Normalizes the badges by ensuring that all keys are
      * strings and all values are arrays.
      */
-    protected function normalizeBadges(): void
+    private function normalizeBadges(): void
     {
         $fixedBadges = [];
         foreach ($this->badges as $name => $keysDefinition) {
@@ -75,7 +88,7 @@ class Model implements ModelContract
      * Loads the badges. The method expects keys to be
      * non-empty strings and values to be arrays of strings.
      */
-    protected function loadBadges(): void
+    private function loadBadges(): void
     {
         foreach ($this->badges as $name => $keys) {
             $identity = new Identity();
@@ -92,7 +105,7 @@ class Model implements ModelContract
     /**
      * @return string The generic name of the model.
      */
-    public function getGenericName(): string
+    final public function getGenericName(): string
     {
         return $this->genericName;
     }
