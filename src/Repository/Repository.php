@@ -2,98 +2,132 @@
 
 namespace Itsmattch\Nexus\Repository;
 
-use Exception;
-use Itsmattch\Nexus\Blueprint\Blueprint;
-use Itsmattch\Nexus\Common\Exception\InvalidModelException;
-use Itsmattch\Nexus\Contract\Common\Validatable;
+use Itsmattch\Nexus\Contract\Action;
+use Itsmattch\Nexus\Contract\Blueprint;
+use Itsmattch\Nexus\Contract\Model;
+use Itsmattch\Nexus\Contract\Model\Collection as CollectionContract;
 use Itsmattch\Nexus\Contract\Repository as RepositoryContract;
-use Itsmattch\Nexus\Contract\Stream;
 use Itsmattch\Nexus\Model\Collection;
-use Itsmattch\Nexus\Model\Model;
 
-abstract class Repository implements RepositoryContract, Validatable
+/** todo */
+class Repository implements RepositoryContract
 {
-    /** A model that this repository discovers. */
+    /**
+     * A model that this repository discovers.
+     */
     protected string $model = Model::class;
 
-    /** Streams this repository uses to discover models. */
-    protected string|array $streams = [];
+    /**
+     * Actions this repository uses to discover models.
+     */
+    protected string|array $actions = [];
 
-    /** Blueprint that interprets the streams responses. */
+    /**
+     * Blueprint that interprets the actions responses.
+     */
     protected string $blueprint = Blueprint::class;
 
-    protected array $ids = [];
+    /**
+     * Internal array or action instances.
+     */
+    private array $internalActions = [];
 
-    /** Collected data from repositories */
-    private array $input = [];
+    /**
+     * The internal model FQCN.
+     */
+    private readonly string $internalModel;
 
-    private Collection $collection;
+    /**
+     * Internal instance of Blueprint.
+     */
+    private readonly Blueprint $internalBlueprint;
+
+    /**
+     * Internal instance of Collection.
+     */
+    private readonly CollectionContract $internalCollection;
+
+    /** todo */
+    private bool $collected = false;
 
     public function __construct()
     {
-        if (!is_array($this->streams)) {
-            $this->streams = [$this->streams];
+        $this->internalCollection = new Collection();
+
+        $this->loadModel();
+        $this->loadBlueprint();
+        $this->prepareActions();
+        $this->loadActions();
+    }
+
+    /** todo */
+    private function loadModel(): void
+    {
+        $this->setModel($this->model);
+    }
+
+    /** todo */
+    private function loadBlueprint(): void
+    {
+        $this->setBlueprint(new $this->blueprint);
+    }
+
+    /** todo */
+    private function prepareActions(): void
+    {
+        if (!is_array($this->actions)) {
+            $this->actions = [$this->actions];
         }
     }
 
-    final public static function load(): ?RepositoryContract
+    /** todo */
+    private function loadActions(): void
     {
-        $instance = new static();
-        return $instance->boot() ? $instance : null;
+        // todo
     }
 
-    public function boot(): bool
+    public function setAction(string $name, Action $action): void
     {
-        try {
-            $this->validate();
-            return $this->access()
-                && $this->read();
+        $this->internalActions[$name] = $action;
+    }
 
-        } catch (Exception) {
-            return false;
+    public function setBlueprint(Blueprint $blueprint): void
+    {
+        $this->internalBlueprint = $blueprint;
+    }
+
+    public function setModel(string $class): void
+    {
+        if (is_subclass_of($class, Model::class)) {
+            $this->internalModel = $class;
         }
     }
 
-    public function access(): bool
+    public function collect(): bool
     {
-        $input = [];
-
-        /** @var Stream $stream */
-        foreach ($this->streams as $key => $stream) {
-            $streamInstance = new $stream;
-            if (!$streamInstance->boot()) {
-                return false;
-            }
-            $input[$key] = $streamInstance->getResponse();
-        }
-        $this->input = $input;
+        // $inputArray = $this->buildInputArray();
+        //
+        // $this->internalBlueprint->setInput($inputArray);
+        // $this->internalBlueprint->process();
+        // $outputModels = $this->internalBlueprint->getOutput();
+        //
+        // foreach ($outputModels as $model) {
+        //     $modelInstance = new $this->internalModel();
+        //     $this->internalCollection->addModel($modelInstance);
+        // }
+        //
         return true;
     }
 
-    public function read(): bool
+    protected function buildInputArray(): array
     {
-        /** @var Blueprint $blueprintInstance */
-        $blueprintInstance = new $this->blueprint($this->input);
-        $blueprintInstance->process();
-
-        foreach ($blueprintInstance->getResult() as $model) {
-            // todo
-        }
-        return true;
+        return array_map(function ($action) {
+            return $action->getContent();
+        }, $this->internalActions);
     }
 
-    public function getCollection(): Collection
+    public function getCollection(): CollectionContract
     {
-        return $this->collection;
-    }
-
-    /**
-     * @throws InvalidModelException
-     */
-    public function validate(): void
-    {
-        if (!is_subclass_of($this->model, Model::class)) {
-            throw new InvalidModelException($this->model);
-        }
+        return $this->internalCollection;
     }
 }

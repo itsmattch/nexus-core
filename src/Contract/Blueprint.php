@@ -4,7 +4,9 @@ namespace Itsmattch\Nexus\Contract;
 
 interface Blueprint
 {
+    public function setInput(array $input): void;
+
     public function process(): void;
 
-    public function getResult(): array;
+    public function getOutput(): array;
 }

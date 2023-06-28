@@ -20,5 +20,5 @@ interface Action
 
     public function perform(): bool;
 
-    public function getContent();
+    public function getContent(): array;
 }

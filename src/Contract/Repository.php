@@ -2,30 +2,22 @@
 
 namespace Itsmattch\Nexus\Contract;
 
-use Itsmattch\Nexus\Contract\Common\Bootable;
-use Itsmattch\Nexus\Model\Collection;
+use Itsmattch\Nexus\Contract\Model\Collection;
 
-interface Repository extends Bootable
+interface Repository
 {
-    /**
-     * Accesses all resources.
-     *
-     * @return bool True on success, false otherwise.
-     */
-    public function access(): bool;
+    /** todo */
+    public function setAction(string $name, Action $action): void;
 
-    /**
-     * Converts the content of the resources into a
-     * collection of model identities.
-     *
-     * @return bool True on success, false otherwise.
-     */
-    public function read(): bool;
+    /** todo */
+    public function setBlueprint(Blueprint $blueprint): void;
 
-    /**
-     * Returns collection of model identities.
-     *
-     * @return Collection Collection of model identities.
-     */
+    /** todo */
+    public function setModel(string $class): void;
+
+    /** todo */
+    public function collect(): bool;
+
+    /** todo */
     public function getCollection(): Collection;
 }
