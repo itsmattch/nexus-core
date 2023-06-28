@@ -22,21 +22,13 @@ class HttpEngine extends Engine
     /** A list of added HTTP headers. */
     private array $headers = [];
 
-    /**
-     * Initializes the cURL session.
-     *
-     * @return bool Returns true if the cURL handle is
-     * successfully initialized, false otherwise.
-     */
-    public function init(): bool
+    public function initialize(): bool
     {
-        $options = [
-            CURLOPT_URL => $this->address(),
-            CURLOPT_RETURNTRANSFER => true,
-        ];
-
         $initializeCurlHandle = curl_init();
-        $initializeCurlOptions = curl_setopt_array($initializeCurlHandle, $options);
+        $initializeCurlOptions = curl_setopt_array($initializeCurlHandle, [
+            CURLOPT_URL => $this->address->getAddress(),
+            CURLOPT_RETURNTRANSFER => true,
+        ]);
 
         if ($initializeCurlHandle === false || $initializeCurlOptions === false) {
             return false;
@@ -46,13 +38,6 @@ class HttpEngine extends Engine
         return true;
     }
 
-    /**
-     * Executes the HTTP request and populates the response
-     * object.
-     *
-     * @return bool Returns true if the request is
-     * successfully executed, false otherwise.
-     */
     public function execute(): bool
     {
         $this->setRequestHeaders();
@@ -72,19 +57,16 @@ class HttpEngine extends Engine
         return true;
     }
 
-    /** Closes the cURL handle. */
     public function close(): void
     {
         curl_close($this->handle);
     }
 
-    /** todo */
     public function setRequest(Message $message): void
     {
         $this->setBody($message);
     }
 
-    /** todo */
     public function getResponse(): Message
     {
         return $this->response;
@@ -108,7 +90,7 @@ class HttpEngine extends Engine
      * manner. For instance, 'Content-Type' and
      * 'content-type' are considered the same header.
      *
-     * @param array $headers
+     * @param array $headers A list of headers.
      */
     public function setHeaders(array $headers): void
     {
@@ -117,19 +99,31 @@ class HttpEngine extends Engine
         }
     }
 
-    /** Sets Authorization: Bearer header. */
+    /**
+     * Sets Authorization: Bearer header.
+     *
+     * @param string $token Authorization token.
+     */
     public function withToken(string $token): void
     {
         $this->setHeaders(['Authorization' => 'Bearer ' . $token]);
     }
 
-    /** Sets HTTP method */
+    /**
+     * Sets HTTP method.
+     *
+     * @param HttpMethod $method Valid HTTP method.
+     */
     public function setMethod(HttpMethod $method): void
     {
         curl_setopt($this->handle, CURLOPT_CUSTOMREQUEST, $method->name);
     }
 
-    /** Sets request body */
+    /**
+     * Sets request body.
+     *
+     * @param Message $request Request message.
+     */
     public function setBody(Message $request): void
     {
         curl_setopt($this->handle, CURLOPT_POSTFIELDS, $request->body);

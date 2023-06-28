@@ -3,7 +3,6 @@
 namespace Itsmattch\Nexus\Contract;
 
 use Itsmattch\Nexus\Common\Message;
-use Itsmattch\Nexus\Contract\Common\Bootable;
 
 /**
  * The Engine class encapsulates the logic responsible for
@@ -11,14 +10,21 @@ use Itsmattch\Nexus\Contract\Common\Bootable;
  *
  * @link https://nexus.itsmattch.com/resources/engines Engines Documentation
  */
-interface Engine extends Bootable
+interface Engine
 {
+    /**
+     * Sets the address.
+     *
+     * @param Address $address
+     */
+    public function setAddress(Address $address): void;
+
     /**
      * Prepares a connection handler.
      *
      * @return bool True on success, false otherwise.
      */
-    public function init(): bool;
+    public function initialize(): bool;
 
     /**
      * Executes the connection and reads the response.
@@ -27,12 +33,22 @@ interface Engine extends Bootable
      */
     public function execute(): bool;
 
-    /** Closes the connection after the execution. */
+    /**
+     * Closes the connection after the execution.
+     */
     public function close(): void;
 
-    /** todo */
+    /**
+     * Sets the request body.
+     *
+     * @param Message $message The request body.
+     */
     public function setRequest(Message $message): void;
 
-    /** Returns the response as Message instance. */
+    /**
+     * Returns the response as Message instance.
+     *
+     * @return Message The response body.
+     */
     public function getResponse(): Message;
 }
