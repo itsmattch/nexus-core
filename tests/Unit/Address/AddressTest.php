@@ -1,7 +1,6 @@
 <?php
 
 use Itsmattch\Nexus\Address\Address;
-use Itsmattch\Nexus\Address\Exception\InvalidSchemeException;
 
 // __construct()
 it('treats all parameters of the same name as required if at least one is required', function () {
@@ -190,12 +189,3 @@ it('emulates getAddress method', function () {
 
     expect((string)$address)->toBe($address->getAddress());
 });
-
-// validate()
-it('throws exception if the scheme violates RFC 3986', function () {
-    $address = new class extends Address {
-        protected string $template = '**dd://{domain}/{path}?{@query_string}';
-    };
-
-    $address->validate();
-})->throws(InvalidSchemeException::class);

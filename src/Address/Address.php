@@ -2,25 +2,29 @@
 
 namespace Itsmattch\Nexus\Address;
 
-use Itsmattch\Nexus\Address\Exception\InvalidSchemeException;
 use Itsmattch\Nexus\Address\Parameter\NullParameter;
 use Itsmattch\Nexus\Address\Parameter\OptionalParameter;
 use Itsmattch\Nexus\Address\Parameter\ParameterProxy;
 use Itsmattch\Nexus\Address\Parameter\RequiredParameter;
 use Itsmattch\Nexus\Contract\Address as AddressContract;
 use Itsmattch\Nexus\Contract\Address\Parameter as ParameterContract;
-use Itsmattch\Nexus\Contract\Common\Validatable;
 use Stringable;
 
-abstract class Address implements AddressContract, Stringable, Validatable
+abstract class Address implements AddressContract, Stringable
 {
-    /** Address template allowing parameters. */
+    /**
+     * Address template allowing parameters.
+     */
     protected string $template = '';
 
-    /** Default values for parameters within the template. */
+    /**
+     * Default values for parameters within the template.
+     */
     protected array $defaults = [];
 
-    /** Collection of all parameter definitions. */
+    /**
+     * Collection of all parameter definitions.
+     */
     private array $parameters = [];
 
     protected static string $parametersTemplate = '/(?<literal>{(?<optional>@)?(?<name>[a-z0-9_]+)})/';
@@ -223,13 +227,5 @@ abstract class Address implements AddressContract, Stringable, Validatable
     private function getParameter(string $name): ParameterContract
     {
         return $this->parameters[$name] ?? NullParameter::getInstance();
-    }
-
-    /** @throws InvalidSchemeException */
-    public function validate(): void
-    {
-        if (!preg_match('/^[a-z][a-z0-9+\-.]*$/', $this->getScheme())) {
-            throw new InvalidSchemeException($this->getScheme());
-        }
     }
 }
