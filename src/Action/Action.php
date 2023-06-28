@@ -43,13 +43,13 @@ class Action implements ActionContract
     protected string $reader = Reader::class;
 
     /** Stores an instance of the Address. */
-    private Address $addressInstance;
+    private readonly Address $addressInstance;
 
     /** Stores an instance of the Engine. */
-    private Engine $engineInstance;
+    private readonly Engine $engineInstance;
 
     /** Stores an instance of the Reader. */
-    private Reader $readerInstance;
+    private readonly Reader $readerInstance;
 
     public function setAddress(Address $address): void
     {
@@ -84,6 +84,10 @@ class Action implements ActionContract
     /** Initializes the address instance and boots it up. */
     private function internallyBootAddress(): bool
     {
+        if (isset($this->address)) {
+            return true;
+        }
+
         $address = is_subclass_of($this->address, Address::class)
             ? new $this->address()
             : AddressFactory::from($this->address);
@@ -97,6 +101,10 @@ class Action implements ActionContract
     /** Initializes the engine instance and boots it up. */
     private function internallyBootEngine(): bool
     {
+        if (isset($this->engine)) {
+            return true;
+        }
+
         $engine = is_subclass_of($this->engine, Engine::class)
             ? new $this->engine()
             : EngineFactory::from($this->addressInstance->getAddress());
@@ -110,6 +118,10 @@ class Action implements ActionContract
     /** Initializes the reader instance and boots it up. */
     private function internallyBootReader(): bool
     {
+        if (isset($this->reader)) {
+            return true;
+        }
+
         $reader = is_subclass_of($this->reader, Reader::class)
             ? new $this->reader()
             : ReaderFactory::from($this->engineInstance->getResponse()->type);
