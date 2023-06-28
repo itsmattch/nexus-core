@@ -4,13 +4,12 @@ namespace Itsmattch\Nexus\Model;
 
 use Itsmattch\Nexus\Contract\Model\Badge as BadgeContract;
 use Itsmattch\Nexus\Contract\Model\Identity as IdentityContract;
-use Itsmattch\Nexus\Model\Exception\IncompatibleIdentityException;
 
 class Badge implements BadgeContract
 {
-    protected string $name;
+    protected readonly string $name;
     protected array $keys = [];
-    protected IdentityContract $identity;
+    protected readonly IdentityContract $identity;
 
     public function getName(): string
     {
@@ -19,9 +18,7 @@ class Badge implements BadgeContract
 
     public function setName(string $name): void
     {
-        if (!empty($name)) {
-            $this->name = $name;
-        }
+        $this->name = $name;
     }
 
     public function getKeys(): array
@@ -49,15 +46,13 @@ class Badge implements BadgeContract
             && $this->keys === $badge->getKeys();
     }
 
-    /**
-     * @throws IncompatibleIdentityException
-     */
-    public function setIdentity(IdentityContract $identity): void
+    public function setIdentity(IdentityContract $identity): bool
     {
-        if ($this->getKeys() !== $identity->getKeys()) {
-            throw new IncompatibleIdentityException();
+        if (empty(array_diff($identity->getKeys(), $this->getKeys()))) {
+            $this->identity = $identity;
+            return true;
         }
-        $this->identity = $identity;
+        return false;
     }
 
     public function getIdentity(): ?IdentityContract

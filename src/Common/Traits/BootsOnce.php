@@ -53,5 +53,5 @@ trait BootsOnce
      * @return bool True if the boot process was successful,
      * false otherwise.
      */
-    protected abstract function safeBoot(): bool;
+    abstract protected function safeBoot(): bool;
 }

@@ -16,7 +16,7 @@ interface Badge
 
     public function equals(Badge $badge): bool;
 
-    public function setIdentity(Identity $identity): void;
+    public function setIdentity(Identity $identity): bool;
 
     public function getIdentity(): ?Identity;
 }

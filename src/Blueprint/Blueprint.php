@@ -19,7 +19,7 @@ abstract class Blueprint implements BlueprintContract
     }
 
     /** todo */
-    protected abstract function steps(): void;
+    abstract protected function steps(): void;
 
     /** Sets new data root */
     public function root(string $newRoot): Blueprint
