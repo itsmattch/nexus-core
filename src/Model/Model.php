@@ -2,22 +2,21 @@
 
 namespace Itsmattch\Nexus\Model;
 
-use Itsmattch\Nexus\Common\Traits\BootsOnce;
-use Itsmattch\Nexus\Contract\Common\Bootable;
 use Itsmattch\Nexus\Contract\Model as ModelContract;
 use Itsmattch\Nexus\Contract\Model\Badge as BadgeContract;
 use ReflectionClass;
 
 /** todo */
-class Model implements ModelContract, Bootable
+class Model implements ModelContract
 {
-    use BootsOnce;
-
     /** The explicit name of the model. */
     protected string $name;
 
+    /** The internal state of the model name. */
+    protected readonly string $internalName;
+
     /** The generic name of the model. */
-    protected string $genericName;
+    protected readonly string $genericName;
 
     /** A preset definition of badges. */
     protected array $badges = [];
@@ -25,13 +24,20 @@ class Model implements ModelContract, Bootable
     /** @var BadgeContract[] a list of Badges */
     private array $badgesList = [];
 
-    protected function safeBoot(): bool
+    public function __construct()
     {
+        $this->loadInternalName();
         $this->loadGenericName();
         $this->normalizeBadges();
         $this->loadBadges();
+    }
 
-        return true;
+    /** todo */
+    protected function loadInternalName(): void
+    {
+        if (isset($this->name) && !isset($this->internalName)) {
+            $this->setName($this->name);
+        }
     }
 
     /**
@@ -88,42 +94,21 @@ class Model implements ModelContract, Bootable
         return $this->genericName;
     }
 
-    /**
-     * @return string the explicit name of the model if set,
-     * or its generic name otherwise.
-     */
     public function getName(): string
     {
-        return $this->name ?? $this->getGenericName();
+        return $this->internalName ?? $this->getGenericName();
     }
 
-    /**
-     * Sets the custom name of the model. This method does
-     * not allow for an existing name to be overridden.
-     *
-     * @param string $name The name to set for the model.
-     */
     public function setName(string $name): void
     {
-        if (!isset($this->name)) {
-            $this->name = $name;
-        }
+        $this->internalName = $name;
     }
 
-    /**
-     * @return BadgeContract[] The array of badges.
-     */
     public function getBadges(): array
     {
         return $this->badgesList;
     }
 
-    /**
-     * @param string $name The name of the badge to find.
-     *
-     * @return ?BadgeContract The found badge if found, or
-     * null otherwise.
-     */
     public function getBadge(string $name): ?BadgeContract
     {
         foreach ($this->badgesList as $badge) {
@@ -134,16 +119,6 @@ class Model implements ModelContract, Bootable
         return null;
     }
 
-    /**
-     * Adds a new badge to the model.
-     *
-     * @param BadgeContract $badge The badge to add to the
-     * model.
-     *
-     * @return bool True if the badge was added
-     * successfully, false if a badge with the same name
-     * already exists.
-     */
     public function addBadge(BadgeContract $badge): bool
     {
         if ($this->hasBadge($badge->getName())) {
@@ -153,21 +128,12 @@ class Model implements ModelContract, Bootable
         return true;
     }
 
-    /**
-     * Checks whether a badge with the given name exists.
-     *
-     * @param string $name The name of the badge to check.
-     *
-     * @return bool True if a badge with the given name
-     * exists, false otherwise.
-     */
     public function hasBadge(string $name): bool
     {
         return $this->getBadge($name) !== null;
     }
 
-    // todo
-    public function identifiesWith(string $badge, array $values): bool
+    public function identifiesWith(string $badge, array $keys): bool
     {
         return true;
     }

@@ -2,6 +2,12 @@
 
 namespace Itsmattch\Nexus\Contract;
 
+/**
+ * The Reader class is responsible for reading raw content
+ * of the resources and turning it into PHP arrays.
+ *
+ * @link https://nexus.itsmattch.com/resources/readers Readers Documentation
+ */
 interface Reader
 {
     /**
@@ -25,7 +31,4 @@ interface Reader
      * content.
      */
     public function get(): array;
-
-    // todo
-    // public function getCounterpart(): Writer;
 }

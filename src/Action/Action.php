@@ -42,13 +42,19 @@ class Action implements ActionContract
      */
     protected string $reader = Reader::class;
 
-    /** Stores an instance of the Address. */
+    /**
+     * Stores an instance of the Address.
+     */
     private readonly Address $addressInstance;
 
-    /** Stores an instance of the Engine. */
+    /**
+     * Stores an instance of the Engine.
+     */
     private readonly Engine $engineInstance;
 
-    /** Stores an instance of the Reader. */
+    /**
+     * Stores an instance of the Reader.
+     */
     private readonly Reader $readerInstance;
 
     public function setAddress(Address $address): void
@@ -81,7 +87,9 @@ class Action implements ActionContract
             : [];
     }
 
-    /** Initializes the address instance and boots it up. */
+    /**
+     * Initializes the address instance and boots it up.
+     */
     private function internallyBootAddress(): bool
     {
         if (isset($this->address)) {
@@ -98,7 +106,9 @@ class Action implements ActionContract
         return $this->bootAddress($this->addressInstance);
     }
 
-    /** Initializes the engine instance and boots it up. */
+    /**
+     * Initializes the engine instance and boots it up.
+     */
     private function internallyBootEngine(): bool
     {
         if (isset($this->engine)) {
@@ -109,13 +119,16 @@ class Action implements ActionContract
             ? new $this->engine()
             : EngineFactory::from($this->addressInstance->getAddress());
 
-        // todo boot reader
+        $engine->setAddress($this->addressInstance);
+
         $this->setEngine($engine);
 
         return $this->bootEngine($this->engineInstance);
     }
 
-    /** Initializes the reader instance and boots it up. */
+    /**
+     * Initializes the reader instance and boots it up.
+     */
     private function internallyBootReader(): bool
     {
         if (isset($this->reader)) {

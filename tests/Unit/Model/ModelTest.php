@@ -15,7 +15,6 @@ it('returns declared name', function () {
 // setName()
 it('returns set name', function () {
     $model = new class extends Model { };
-    $model->boot();
     $model->setName('name');
 
     expect($model->getName())->toBe('name');
@@ -24,7 +23,6 @@ it('returns set name', function () {
 // getGenericName()
 it('returns generic name if name is empty', function () {
     $model = new class extends Model { };
-    $model->boot();
 
     expect($model->getName())->toBe($model->getGenericName());
 });
@@ -39,7 +37,6 @@ it('accepts multiple unique badges', function () {
     $badgeTwo->shouldReceive('getName')->andReturn('two');
 
     $model = new class extends Model { };
-    $model->boot();
     $model->addBadge($badgeOne);
     $model->addBadge($badgeTwo);
 
@@ -56,7 +53,6 @@ it('rejects badges with duplicate names', function () {
     $badgeTwo->shouldReceive('getName')->andReturn('badge');
 
     $model = new class extends Model { };
-    $model->boot();
     $model->addBadge($badgeOne);
     $model->addBadge($badgeTwo);
 
@@ -72,7 +68,6 @@ it('retrieves badge by its name', function () {
     $badge->shouldReceive('getName')->andReturn('badge');
 
     $model = new class extends Model { };
-    $model->boot();
     $model->addBadge($badge);
 
     expect($model->hasBadge('badge'))->toBeTrue();
@@ -89,7 +84,6 @@ it('loads badges defined with $badges property', function () {
             'badge' => ['key', 'example']
         ];
     };
-    $model->boot();
 
     expect($model->getBadges())->toBeArray();
     expect($model->getBadges())->toHaveCount(1);

@@ -13,9 +13,7 @@ use Itsmattch\Nexus\Common\Message;
 interface Engine
 {
     /**
-     * Sets the address.
-     *
-     * @param Address $address
+     * Sets the address to a resource.
      */
     public function setAddress(Address $address): void;
 
@@ -40,15 +38,11 @@ interface Engine
 
     /**
      * Sets the request body.
-     *
-     * @param Message $message The request body.
      */
     public function setRequest(Message $message): void;
 
     /**
      * Returns the response as Message instance.
-     *
-     * @return Message The response body.
      */
     public function getResponse(): Message;
 }

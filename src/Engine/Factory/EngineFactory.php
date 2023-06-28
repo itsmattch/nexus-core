@@ -5,10 +5,14 @@ namespace Itsmattch\Nexus\Engine\Factory;
 use Itsmattch\Nexus\Contract\Engine;
 use Itsmattch\Nexus\Engine\Concrete\HttpEngine;
 
-/** Static factory class for creating Engine instances. */
+/**
+ * Static factory class for creating Engine instances.
+ */
 final class EngineFactory
 {
-    /** Registry of predefined engines mapped to schemes. */
+    /**
+     * Registry of predefined engines mapped to schemes.
+     */
     private static array $registry = [
         'https' => HttpEngine::class,
         'http' => HttpEngine::class,
@@ -43,6 +47,8 @@ final class EngineFactory
         return null;
     }
 
-    /** Disallows instantiation of the factory. */
+    /**
+     * Disallows instantiation of the factory.
+     */
     private function __construct() {}
 }

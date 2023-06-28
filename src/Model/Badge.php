@@ -7,8 +7,19 @@ use Itsmattch\Nexus\Contract\Model\Identity as IdentityContract;
 
 class Badge implements BadgeContract
 {
+    /**
+     * @var string Badge name.
+     */
     protected readonly string $name;
+
+    /**
+     * @var array A list of keys required by the badge.
+     */
     protected array $keys = [];
+
+    /**
+     * @var IdentityContract Assigned valid identity.
+     */
     protected readonly IdentityContract $identity;
 
     public function getName(): string
@@ -28,6 +39,10 @@ class Badge implements BadgeContract
 
     public function addKeys(string ...$names): void
     {
+        if (isset($this->identity)) {
+            return;
+        }
+
         foreach ($names as $name) {
             if (!empty($name) && !in_array($name, $this->keys)) {
                 $this->keys[] = $name;

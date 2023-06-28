@@ -6,7 +6,14 @@ use Itsmattch\Nexus\Contract\Model\Identity as IdentityContract;
 
 class Identity implements IdentityContract
 {
+    /**
+     * @var array A list of identity keys.
+     */
     protected array $keys = [];
+
+    /**
+     * @var array A list of key-value pairs.
+     */
     protected array $values = [];
 
     public function getValues(): array

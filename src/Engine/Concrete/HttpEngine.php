@@ -13,13 +13,19 @@ use Itsmattch\Nexus\Engine\Enum\HttpMethod;
  */
 class HttpEngine extends Engine
 {
-    /** Stores the cURL handle for HTTP communication. */
+    /**
+     * Stores the cURL handle for HTTP communication.
+     */
     private CurlHandle $handle;
 
-    /** Stores the response message. */
+    /** S
+     * tores the response message.
+     */
     private Message $response;
 
-    /** A list of added HTTP headers. */
+    /**
+     * A list of added HTTP headers.
+     */
     private array $headers = [];
 
     public function initialize(): bool
@@ -72,7 +78,9 @@ class HttpEngine extends Engine
         return $this->response;
     }
 
-    /** Wraps curl_setopt on active handle. */
+    /**
+     * Wraps curl_setopt on active handle.
+     */
     public function setOpt(int $option, $value): bool
     {
         return curl_setopt($this->handle, $option, $value);
@@ -133,7 +141,9 @@ class HttpEngine extends Engine
         ]);
     }
 
-    /** Sets current state of $headers array. */
+    /**
+     * Sets current state of $headers array.
+     */
     private function setRequestHeaders(): void
     {
         curl_setopt($this->handle, CURLOPT_HTTPHEADER, array_map(function ($key, $value) {
