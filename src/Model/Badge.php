@@ -32,42 +32,14 @@ class Badge implements BadgeContract
         $this->name = $name;
     }
 
-    public function getKeys(): array
-    {
-        return $this->keys;
-    }
-
-    public function addKeys(string ...$names): void
-    {
-        if (isset($this->identity)) {
-            return;
-        }
-
-        foreach ($names as $name) {
-            if (!empty($name) && !in_array($name, $this->keys)) {
-                $this->keys[] = $name;
-            }
-        }
-    }
-
-    public function hasKey(string $name): bool
-    {
-        return in_array($name, $this->keys);
-    }
-
     public function equals(BadgeContract $badge): bool
     {
-        return $this->name === $badge->getName()
-            && $this->keys === $badge->getKeys();
+        return $this->name === $badge->getName();
     }
 
-    public function setIdentity(IdentityContract $identity): bool
+    public function setIdentity(IdentityContract $identity): void
     {
-        if (empty(array_diff($identity->getKeys(), $this->getKeys()))) {
-            $this->identity = $identity;
-            return true;
-        }
-        return false;
+        $this->identity = $identity;
     }
 
     public function getIdentity(): ?IdentityContract

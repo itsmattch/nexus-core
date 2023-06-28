@@ -16,6 +16,21 @@ class Identity implements IdentityContract
      */
     protected array $values = [];
 
+    public function addKeys(string ...$names): void
+    {
+        $this->keys = array_merge($this->keys, $names);
+    }
+
+    public function hasKey(string $key): bool
+    {
+        return in_array($key, $this->keys);
+    }
+
+    public function getKeys(): array
+    {
+        return $this->keys;
+    }
+
     public function getValues(): array
     {
         return $this->values;
@@ -30,15 +45,5 @@ class Identity implements IdentityContract
     {
         $this->keys[] = $key;
         $this->values[$key] = $value;
-    }
-
-    public function hasKey(string $key): bool
-    {
-        return in_array($key, $this->keys);
-    }
-
-    public function getKeys(): array
-    {
-        return $this->keys;
     }
 }

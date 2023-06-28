@@ -78,9 +78,12 @@ class Model implements ModelContract
     protected function loadBadges(): void
     {
         foreach ($this->badges as $name => $keys) {
+            $identity = new Identity();
+            $identity->addKeys(...$keys);
+
             $badge = new Badge();
             $badge->setName($name);
-            $badge->addKeys(...$keys);
+            $badge->setIdentity($identity);
 
             $this->addBadge($badge);
         }
