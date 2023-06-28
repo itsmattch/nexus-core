@@ -11,13 +11,19 @@ use Itsmattch\Nexus\Contract\Address\Parameter as ParameterContract;
  */
 class ParameterProxy implements ParameterContract
 {
-    /** The original parameter. */
+    /**
+     * The original parameter.
+     */
     protected ParameterContract $parameter;
 
-    /** The callback called upon setting value. */
+    /**
+     * The callback called upon setting value.
+     */
     protected array $captureCallback;
 
-    /** The callback called upon getting value. */
+    /**
+     * The callback called upon getting value.
+     */
     protected array $releaseCallback;
 
     /**

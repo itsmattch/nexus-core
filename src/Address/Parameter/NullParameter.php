@@ -11,7 +11,9 @@ use Itsmattch\Nexus\Contract\Address\Parameter as ParameterContract;
  */
 class NullParameter implements ParameterContract
 {
-    /** The only instance of the NullParameter. */
+    /**
+     * The only instance of the NullParameter.
+     */
     protected static NullParameter $instance;
 
     /**

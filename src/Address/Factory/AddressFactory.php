@@ -4,7 +4,9 @@ namespace Itsmattch\Nexus\Address\Factory;
 
 use Itsmattch\Nexus\Address\Address;
 
-/** Static factory class for Address. */
+/**
+ * Static factory class for Address.
+ */
 class AddressFactory
 {
     /**
