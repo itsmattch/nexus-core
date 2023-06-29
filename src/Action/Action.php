@@ -5,12 +5,13 @@ namespace Itsmattch\Nexus\Action;
 use Itsmattch\Nexus\Address\Factory\AddressFactory;
 use Itsmattch\Nexus\Contract\Action as ActionContract;
 use Itsmattch\Nexus\Contract\Address;
+use Itsmattch\Nexus\Contract\Common\Autonomous;
 use Itsmattch\Nexus\Contract\Engine;
 use Itsmattch\Nexus\Contract\Reader;
 use Itsmattch\Nexus\Engine\Factory\EngineFactory;
 use Itsmattch\Nexus\Reader\Factory\ReaderFactory;
 
-class Action implements ActionContract
+class Action implements ActionContract, Autonomous
 {
     /**
      * Represents the location of the resource. It must be
