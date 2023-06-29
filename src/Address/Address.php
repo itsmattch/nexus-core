@@ -10,7 +10,7 @@ use Itsmattch\Nexus\Contract\Address as AddressContract;
 use Itsmattch\Nexus\Contract\Address\Parameter as ParameterContract;
 use Stringable;
 
-abstract class Address implements AddressContract, Stringable
+class Address implements AddressContract, Stringable
 {
     /**
      * Address template allowing parameters.
@@ -21,6 +21,16 @@ abstract class Address implements AddressContract, Stringable
      * Default values for parameters within the template.
      */
     protected array $defaults = [];
+
+    /**
+     * Internal template.
+     */
+    private readonly string $internalTemplate;
+
+    /**
+     * Internal list of default values.
+     */
+    private array $internalDefaults = [];
 
     /**
      * Collection of all parameter definitions.
@@ -39,7 +49,25 @@ abstract class Address implements AddressContract, Stringable
      */
     public function __construct(array $parameters = [])
     {
-        preg_match_all(self::$parametersTemplate, $this->template, $matchedParameters, PREG_SET_ORDER);
+        $this->setTemplate($this->template);
+        $this->loadDefaults();
+        $this->loadParameters();
+
+        foreach ($parameters as $parameter => $value) {
+            $this->setValue($parameter, $value);
+        }
+    }
+
+    private function loadDefaults(): void
+    {
+        foreach ($this->defaults as $parameter => $value) {
+            $this->setDefault($parameter, $value);
+        }
+    }
+
+    private function loadParameters(): void
+    {
+        preg_match_all(static::$parametersTemplate, $this->internalTemplate, $matchedParameters, PREG_SET_ORDER);
 
         $requiredParameters = [];
         foreach ($matchedParameters as $parameter) {
@@ -50,7 +78,7 @@ abstract class Address implements AddressContract, Stringable
             $name = $parameter['name'];
             $optional = (bool)$parameter['optional'];
             $literal = $parameter['literal'];
-            $default = $this->defaults[$name] ?? '';
+            $default = $this->internalDefaults[$name] ?? '';
             $camelName = str_replace('_', '', ucwords($name, '_'));
 
             if (!$optional) {
@@ -67,39 +95,38 @@ abstract class Address implements AddressContract, Stringable
                 [$this, "release$camelName"],
             );
         }
-
-        foreach ($parameters as $parameter => $value) {
-            $this->set($parameter, $value);
-        }
     }
 
-    /**
-     * Returns the final, valid address. If the address
-     * is not valid, it returns an empty string.
-     *
-     * @return string The final address or an empty string.
-     */
+    public function setTemplate(string $template): void
+    {
+        $this->internalTemplate = $template;
+    }
+
+    public function setDefault(string $parameter, string $value): void
+    {
+        $this->internalDefaults[$parameter] = $value;
+    }
+
+    public function getValue(string $parameter): ?string
+    {
+        return $this->getParameter($parameter)->getValue();
+    }
+
+    public function setValue(string $parameter, mixed $value): void
+    {
+        $this->getParameter($parameter)->setValue($value);
+    }
+
     public function getAddress(): string
     {
         return $this->isValid() ? $this->getCurrentState() : '';
     }
 
-    /**
-     * Returns the scheme of the address
-     *
-     * @return string Scheme part of the address
-     */
     public function getScheme(): string
     {
         return strtolower(strstr($this->getCurrentState(), '://', true));
     }
 
-    /**
-     * Checks if all required parameters are set.
-     *
-     * @return bool True if the address is valid,
-     * false otherwise
-     */
     public function isValid(): bool
     {
         foreach ($this->parameters as $parameter) {
@@ -108,33 +135,6 @@ abstract class Address implements AddressContract, Stringable
             }
         }
         return true;
-    }
-
-    /**
-     * Returns value of a specific parameter.
-     *
-     * @param string $parameter The name of the parameter.
-     *
-     * @return ?string The parameter value, or empty string
-     * if the parameter does not exist.
-     */
-    public function get(string $parameter): ?string
-    {
-        return $this->getParameter($parameter)->getValue();
-    }
-
-    /**
-     * Sets the value of a specific parameter.
-     *
-     * @param string $parameter The name of the parameter.
-     * @param mixed $value The value to be set.
-     *
-     * @return Address The current instance.
-     */
-    public function set(string $parameter, mixed $value): Address
-    {
-        $this->getParameter($parameter)->setValue($value);
-        return $this;
     }
 
     /**
@@ -189,7 +189,7 @@ abstract class Address implements AddressContract, Stringable
      */
     public function getTemplate(): string
     {
-        return $this->template;
+        return $this->internalTemplate;
     }
 
     /**
@@ -200,7 +200,7 @@ abstract class Address implements AddressContract, Stringable
      */
     public function getCurrentState(): string
     {
-        $address = $this->template;
+        $address = $this->internalTemplate;
         foreach ($this->parameters as $parameter) {
             if (!$parameter->isValid()) {
                 continue;
@@ -209,11 +209,6 @@ abstract class Address implements AddressContract, Stringable
             $address = preg_replace("/{@?$name}/", $parameter->getValue(), $address);
         }
         return $address;
-    }
-
-    public function __toString(): string
-    {
-        return $this->getAddress();
     }
 
     /**
@@ -227,5 +222,10 @@ abstract class Address implements AddressContract, Stringable
     private function getParameter(string $name): ParameterContract
     {
         return $this->parameters[$name] ?? NullParameter::getInstance();
+    }
+
+    public function __toString(): string
+    {
+        return $this->getAddress();
     }
 }

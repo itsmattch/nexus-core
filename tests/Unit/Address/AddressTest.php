@@ -44,7 +44,7 @@ it('returns scheme', function () {
         protected array $defaults = ['scheme' => 'https'];
     };
 
-    $address->set('domain', 'example.com');
+    $address->setValue('domain', 'example.com');
 
     expect($address->getScheme())->toBe('https');
 });
@@ -66,7 +66,7 @@ it('is valid if all required parameters are set', function () {
         protected array $defaults = ['scheme' => 'https'];
     };
 
-    $address->set('domain', 'example.com');
+    $address->setValue('domain', 'example.com');
 
     expect($address->isValid())->toBeTrue();
 });
@@ -87,10 +87,10 @@ it('returns default and explicit value of a parameter', function () {
         protected array $defaults = ['scheme' => 'https'];
     };
 
-    $address->set('domain', 'example.com');
+    $address->setValue('domain', 'example.com');
 
-    expect($address->get('scheme'))->toBe('https');
-    expect($address->get('domain'))->toBe('example.com');
+    expect($address->getValue('scheme'))->toBe('https');
+    expect($address->getValue('domain'))->toBe('example.com');
 });
 
 it('returns empty string if a parameter has no value', function () {
@@ -99,8 +99,8 @@ it('returns empty string if a parameter has no value', function () {
         protected array $defaults = ['scheme' => 'https'];
     };
 
-    expect($address->get('domain'))->toBe('');
-    expect($address->get('path'))->toBe('');
+    expect($address->getValue('domain'))->toBe('');
+    expect($address->getValue('path'))->toBe('');
 });
 
 it('returns empty string if parameter of given name does not exist', function () {
@@ -109,7 +109,7 @@ it('returns empty string if parameter of given name does not exist', function ()
         protected array $defaults = ['scheme' => 'https'];
     };
 
-    expect($address->get('invalid'))->toBe('');
+    expect($address->getValue('invalid'))->toBe('');
 });
 
 // set()
@@ -119,7 +119,7 @@ it('does not break anything if a parameter of given name does not exist', functi
         protected array $defaults = ['domain' => 'example.com'];
     };
 
-    $address->set('invalid', 'foo');
+    $address->setValue('invalid', 'foo');
 
     expect($address->isValid())->toBeTrue();
 });
@@ -130,7 +130,7 @@ it('prefers explicit value over default one', function () {
         protected array $defaults = ['domain' => 'example.com'];
     };
 
-    $address->set('domain', 'google.com');
+    $address->setValue('domain', 'google.com');
 
     expect($address->getAddress())->toBe('https://google.com/');
 });
@@ -152,7 +152,7 @@ it('returns true only if parameters exist in collection and are valid', function
         protected array $defaults = ['scheme' => 'https'];
     };
 
-    $address->set('domain', 'example.com');
+    $address->setValue('domain', 'example.com');
 
     expect($address->hasValid('domain', 'path', 'path'))->toBeTrue();
 });
@@ -164,7 +164,7 @@ it('returns the template without any modifications', function () {
         protected array $defaults = ['scheme' => 'https'];
     };
 
-    $address->set('domain', 'example.com');
+    $address->setValue('domain', 'example.com');
 
     expect($address->getTemplate())->toBe('{scheme}://{domain}/{path}');
 });
@@ -176,7 +176,7 @@ it('returns incomplete address', function () {
         protected array $defaults = ['scheme' => 'https'];
     };
 
-    $address->set('domain', 'example.com');
+    $address->setValue('domain', 'example.com');
 
     expect($address->getCurrentState())->toBe('https://example.com/{path}');
 });

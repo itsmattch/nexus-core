@@ -40,7 +40,7 @@ interface Model
      * @param BadgeContract $badge The badge to add to the
      * model.
      *
-     * @return bool True if the badge was added
+     * @return bool Returns true if the badge was added
      * successfully, false if a badge with the same name
      * already exists.
      */
@@ -51,8 +51,8 @@ interface Model
      *
      * @param string $name The name of the badge to check.
      *
-     * @return bool True if a badge with the given name
-     * exists, false otherwise.
+     * @return bool Returns true if a badge with the given
+     * name exists, false otherwise.
      */
     public function hasBadge(string $name): bool;
 

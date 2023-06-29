@@ -18,8 +18,8 @@ class HttpEngine extends Engine
      */
     private CurlHandle $handle;
 
-    /** S
-     * tores the response message.
+    /**
+     * Stores the response message.
      */
     private Message $response;
 
@@ -112,7 +112,7 @@ class HttpEngine extends Engine
      *
      * @param string $token Authorization token.
      */
-    public function withToken(string $token): void
+    public function setToken(string $token): void
     {
         $this->setHeaders(['Authorization' => 'Bearer ' . $token]);
     }

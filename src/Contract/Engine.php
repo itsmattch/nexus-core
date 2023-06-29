@@ -5,29 +5,33 @@ namespace Itsmattch\Nexus\Contract;
 use Itsmattch\Nexus\Common\Message;
 
 /**
- * The Engine class encapsulates the logic responsible for
- * handling the connection and reading of a resource.
+ * Engines encapsulate the logic for connecting to and
+ * reading from a resource.
  *
- * @link https://nexus.itsmattch.com/resources/engines Engines Documentation
+ * @link https://nexus.itsmattch.com/digging-deeper/engine Engines Documentation
  */
 interface Engine
 {
     /**
-     * Sets the address to a resource.
+     * @param Address $address An instance of Address
+     * representing the resource's location.
      */
     public function setAddress(Address $address): void;
 
     /**
      * Prepares a connection handler.
      *
-     * @return bool True on success, false otherwise.
+     * @return bool Returns true if the connection handler
+     * was successfully initialized, false otherwise.
      */
     public function initialize(): bool;
 
     /**
      * Executes the connection and reads the response.
      *
-     * @return bool True on success, false otherwise.
+     * @return bool Returns true if the connection was
+     * successful and the response was successfully read,
+     * false otherwise.
      */
     public function execute(): bool;
 
@@ -38,11 +42,17 @@ interface Engine
 
     /**
      * Sets the request body.
+     *
+     * @param Message $message A Message instance
+     * representing the request body.
      */
     public function setRequest(Message $message): void;
 
     /**
-     * Returns the response as Message instance.
+     * Retrieves the response as Message instance.
+     *
+     * @return Message A Message instance representing the
+     * resource's response.
      */
     public function getResponse(): Message;
 }
