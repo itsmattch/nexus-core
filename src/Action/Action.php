@@ -58,6 +58,42 @@ class Action implements ActionContract, Autonomous
      */
     private readonly Reader $readerInstance;
 
+    public function __construct()
+    {
+        $this->loadAddress();
+        $this->loadEngine();
+    }
+
+    /**
+     * Instantiates and loads address
+     * defined in the $address property.
+     */
+    private function loadAddress(): void
+    {
+        $address = is_subclass_of($this->address, Address::class)
+            ? new $this->address()
+            : AddressFactory::from($this->address);
+
+        $this->setAddress($address);
+        $this->bootAddress($this->addressInstance);
+    }
+
+    /**
+     * Instantiates and loads engine
+     * defined in the $endine property.
+     */
+    private function loadEngine(): void
+    {
+        $engine = is_subclass_of($this->engine, Engine::class)
+            ? new $this->engine()
+            : EngineFactory::from($this->addressInstance->getScheme());
+
+        $engine->setAddress($this->addressInstance);
+
+        $this->setEngine($engine);
+        $this->bootEngine($this->engineInstance);
+    }
+
     public function setAddress(Address $address): void
     {
         $this->addressInstance = $address;
@@ -75,10 +111,24 @@ class Action implements ActionContract, Autonomous
 
     public function perform(): bool
     {
-        // todo
-        return $this->internallyBootAddress()
-            && $this->internallyBootEngine()
-            && $this->internallyBootReader();
+        $this->loadReader();
+        return true;
+    }
+
+    /**
+     * Instantiates and loads the reader
+     * defined in the $reader property.
+     */
+    private function loadReader(): void
+    {
+        if (!isset($this->reader)) {
+            $reader = is_subclass_of($this->reader, Reader::class)
+                ? new $this->reader()
+                : ReaderFactory::from($this->engineInstance->getResponse()->type);
+
+            $this->setReader($reader);
+            $this->bootReader($this->readerInstance);
+        }
     }
 
     public function getContent(): array
@@ -89,94 +139,26 @@ class Action implements ActionContract, Autonomous
     }
 
     /**
-     * Initializes the address instance and boots it up.
-     */
-    private function internallyBootAddress(): bool
-    {
-        if (isset($this->address)) {
-            return true;
-        }
-
-        $address = is_subclass_of($this->address, Address::class)
-            ? new $this->address()
-            : AddressFactory::from($this->address);
-
-        // todo boot reader
-        $this->setAddress($address);
-
-        return $this->bootAddress($this->addressInstance);
-    }
-
-    /**
-     * Initializes the engine instance and boots it up.
-     */
-    private function internallyBootEngine(): bool
-    {
-        if (isset($this->engine)) {
-            return true;
-        }
-
-        $engine = is_subclass_of($this->engine, Engine::class)
-            ? new $this->engine()
-            : EngineFactory::from($this->addressInstance->getAddress());
-
-        $engine->setAddress($this->addressInstance);
-
-        $this->setEngine($engine);
-
-        return $this->bootEngine($this->engineInstance);
-    }
-
-    /**
-     * Initializes the reader instance and boots it up.
-     */
-    private function internallyBootReader(): bool
-    {
-        if (isset($this->reader)) {
-            return true;
-        }
-
-        $reader = is_subclass_of($this->reader, Reader::class)
-            ? new $this->reader()
-            : ReaderFactory::from($this->engineInstance->getResponse()->type);
-
-        // todo boot reader
-        $this->setReader($reader);
-
-        return $this->bootReader($this->readerInstance);
-    }
-
-    /**
      * This method allows you to modify the internally
      * instantiated Address instance.
      *
      * @param Address $address Internally created instance.
-     *
-     * @return bool The result of booting. False indicates
-     * booting failure and will stop the booting process.
      */
-    protected function bootAddress(Address $address): bool { return true; }
+    protected function bootAddress(Address $address): void {}
 
     /**
      * This method allows you to modify the internally
      * instantiated Engine instance.
      *
      * @param Engine $engine Created Engine instance.
-     *
-     *
-     * @return bool The result of booting. False indicates
-     * booting failure and will stop the booting process.
      */
-    protected function bootEngine(Engine $engine): bool { return true; }
+    protected function bootEngine(Engine $engine): void {}
 
     /**
      * This method allows you to modify the internally
      * instantiated Reader instance.
      *
      * @param Reader $reader Internally created instance.
-     *
-     * @return bool The result of booting. False indicates
-     * booting failure and will stop the booting process.
      */
-    protected function bootReader(Reader $reader): bool { return true; }
+    protected function bootReader(Reader $reader): void {}
 }
