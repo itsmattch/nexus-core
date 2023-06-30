@@ -41,6 +41,11 @@ class Repository extends Assembler implements RepositoryContract
         $this->loadActions();
     }
 
+    /**
+     * This function restricts the accepted model to one
+     * that implement the Autonomous interface, ensuring
+     * they are usable immediately upon instantiation.
+     */
     private function loadModel(Model&Autonomous $model): void
     {
         $this->setModel($model);
@@ -69,10 +74,9 @@ class Repository extends Assembler implements RepositoryContract
     }
 
     /**
-     * This function restricts the accepted actions to
-     * models that implement the Autonomous interface,
-     * ensuring they are usable immediately upon
-     * instantiation.
+     * This function restricts the accepted actions to one
+     * that implement the Autonomous interface, ensuring
+     * they are usable immediately upon instantiation.
      */
     private function loadAction(string $name, Action&Autonomous $action): void
     {
