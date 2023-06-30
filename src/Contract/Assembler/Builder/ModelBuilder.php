@@ -2,5 +2,8 @@
 
 namespace Itsmattch\Nexus\Contract\Assembler\Builder;
 
-/** todo */
+/**
+ * Provides additional functionality to the base Builder
+ * for working with models.
+ */
 interface ModelBuilder extends AssemblerBuilder { }

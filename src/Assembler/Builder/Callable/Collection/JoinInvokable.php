@@ -3,38 +3,55 @@
 namespace Itsmattch\Nexus\Assembler\Builder\Callable\Collection;
 
 use Itsmattch\Nexus\Common\Traits\ArrayHelpers;
+use Itsmattch\Nexus\Contract\Assembler\Builder\Callable\Invokable;
 
-/** todo */
-class JoinInvokable
+/**
+ * Merges two arrays using one as a base
+ * and the other as a dictionary.
+ */
+class JoinInvokable implements Invokable
 {
     use ArrayHelpers;
 
-    /** todo */
-    private readonly string $joinArrayPath;
+    /**
+     * The root path for the elements that
+     * should be turned into a dictionary.
+     */
+    private readonly string $dictionaryRoot;
 
-    /** todo */
-    private readonly string $currentPath;
+    /**
+     * The property used as a key in the base array.
+     */
+    private readonly string $left;
 
-    /** todo */
-    private readonly string $originalPath;
+    /**
+     * The property used as a key in the dictionary array.
+     */
+    private readonly string $right;
 
-    /** todo */
-    public function __construct(string $path)
+    /**
+     * @var string $dictionaryRoot The root path for the
+     * elements that should be turned into a dictionary.
+     */
+    public function __construct(string $dictionaryRoot)
     {
-        $this->joinArrayPath = $path;
+        $this->dictionaryRoot = $dictionaryRoot;
     }
 
-    /** todo */
+    /**
+     * Merge the base array with the dictionary array
+     * using the defined properties as keys.
+     */
     public function __invoke(array $current, array $original): array
     {
         $dictionary = [];
-        foreach ($this->traverseDotArray($this->joinArrayPath, $original) as $value) {
-            $dictionary[$this->traverseDotArray($this->originalPath, $value)] = $value;
+        foreach ($this->traverseDotArray($this->dictionaryRoot, $original) as $value) {
+            $dictionary[$this->traverseDotArray($this->right, $value)] = $value;
         }
 
         $newCurrent = [];
         foreach ($current as $key => $value) {
-            $dictionaryKey = $this->traverseDotArray($this->currentPath, $value);
+            $dictionaryKey = $this->traverseDotArray($this->left, $value);
             if (!empty($dictionary[$dictionaryKey])) {
                 $newCurrent[$key] = array_merge($value, $dictionary[$dictionaryKey]);
             }
@@ -42,10 +59,13 @@ class JoinInvokable
         return $newCurrent;
     }
 
-    /** todo */
-    public function on(string $current, string $original): void
+    /**
+     * Define the properties that will be
+     * used as keys in the merge operation.
+     */
+    public function on(string $left, string $right): void
     {
-        $this->currentPath = $current;
-        $this->originalPath = $original;
+        $this->left = $left;
+        $this->right = $right;
     }
 }
