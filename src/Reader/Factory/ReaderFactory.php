@@ -34,7 +34,7 @@ final class ReaderFactory
     public static function from(string $type): ?Reader
     {
         if (isset(self::$registry[$type])) {
-            return new self::$registry[$type];
+            return new self::$registry[$type]();
         }
         return null;
     }

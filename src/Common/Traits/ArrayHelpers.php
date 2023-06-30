@@ -11,6 +11,7 @@ trait ArrayHelpers
      *
      * @param string $path The dot-separated path.
      * @param array $array The array to be traversed.
+     *
      * @return mixed The value from the array based on the
      * provided path, or an array of values if path includes
      * '*'. Returns null if the key does not exist.
@@ -26,6 +27,7 @@ trait ArrayHelpers
      *
      * @param array $keys The keys for the array traversal.
      * @param array $array The array to be traversed.
+     *
      * @return mixed The value from the array based on the
      * provided keys, or an array of values if keys include
      * '*'. Returns null if the key does not exist.

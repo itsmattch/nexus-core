@@ -22,7 +22,7 @@ interface Model
     public function setName(string $name): void;
 
     /**
-     * @return BadgeContract[] The array of badges.
+     * @return array<BadgeContract> The array of badges.
      */
     public function getBadges(): array;
 

@@ -8,7 +8,7 @@ use Itsmattch\Nexus\Contract\Model\Collection as CollectionContract;
 class Collection implements CollectionContract, \Iterator, \Countable
 {
     /**
-     * @var Model[] A list of models.
+     * @var array<Model> A list of models.
      */
     private array $models;
 

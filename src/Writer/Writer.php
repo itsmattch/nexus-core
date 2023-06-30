@@ -15,6 +15,7 @@ abstract class Writer
     }
 
     public abstract function write(): bool;
+
     public abstract function get(): Message;
 
 }

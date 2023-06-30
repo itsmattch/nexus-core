@@ -31,7 +31,7 @@ class Model implements ModelContract, Autonomous
     private readonly string $genericName;
 
     /**
-     * @var BadgeContract[] a list of Badges
+     * @var array<BadgeContract> a list of Badges
      */
     private array $badgesList = [];
 

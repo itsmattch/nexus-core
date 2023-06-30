@@ -39,8 +39,8 @@ abstract class Repository extends Assembler implements RepositoryContract
 
     public function __construct()
     {
-        $this->setCollection(new $this->collection);
-        $this->loadModel(new $this->model);
+        $this->setCollection(new $this->collection());
+        $this->loadModel(new $this->model());
         $this->prepareActions();
         $this->loadActions();
     }
@@ -111,7 +111,7 @@ abstract class Repository extends Assembler implements RepositoryContract
         foreach ($processedCollection as $modelData) {
             $model = $modelBuilder->call($modelData);
 
-            $modelInstance = new $this->model;
+            $modelInstance = new $this->model();
             // feed with data
 
             $this->internalCollection->addModel($modelInstance);
