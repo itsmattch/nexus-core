@@ -49,8 +49,8 @@ class Address implements AddressContract, Stringable
      */
     public function __construct(array $parameters = [])
     {
-        $this->loadTemplate();
         $this->loadDefaults();
+        $this->loadTemplate();
 
         foreach ($parameters as $parameter => $value) {
             $this->setValue($parameter, $value);
