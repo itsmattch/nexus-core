@@ -2,14 +2,18 @@
 
 namespace Itsmattch\Nexus\Assembler;
 
+use Itsmattch\Nexus\Assembler\Builder\CollectionBuilder;
+use Itsmattch\Nexus\Assembler\Builder\ModelBuilder;
 use Itsmattch\Nexus\Contract\Action;
+use Itsmattch\Nexus\Contract\Assembler\Builder\CollectionBuilder as CollectionBuilderContract;
+use Itsmattch\Nexus\Contract\Assembler\Builder\ModelBuilder as ModelBuilderContract;
 use Itsmattch\Nexus\Contract\Assembler\Repository as RepositoryContract;
 use Itsmattch\Nexus\Contract\Common\Autonomous;
 use Itsmattch\Nexus\Contract\Model;
 use Itsmattch\Nexus\Contract\Model\Collection as CollectionContract;
 use Itsmattch\Nexus\Model\Collection;
 
-class Repository extends Assembler implements RepositoryContract
+abstract class Repository extends Assembler implements RepositoryContract
 {
     /**
      * Fully qualified class name of a collection
@@ -18,9 +22,9 @@ class Repository extends Assembler implements RepositoryContract
     protected string $collection = Collection::class;
 
     /**
-     * Internal storage of instantiated action objects.
+     * Internal storage of resources.
      */
-    private array $internalActions = [];
+    private array $internalResources = [];
 
     /**
      * The fully qualified class name of
@@ -86,7 +90,7 @@ class Repository extends Assembler implements RepositoryContract
 
     public function addResource(string $name, array $resource): void
     {
-        $this->internalActions[$name] = $resource;
+        $this->internalResources[$name] = $resource;
     }
 
     public function setModel(Model $model): void
@@ -96,8 +100,31 @@ class Repository extends Assembler implements RepositoryContract
 
     public function assemble(): bool
     {
-        return true; // todo
+        $collectionBuilder = new CollectionBuilder();
+        $this->collection($collectionBuilder);
+
+        $modelBuilder = new ModelBuilder();
+        $this->model($modelBuilder);
+
+        $processedCollection = $collectionBuilder->call($this->internalResources);
+
+        foreach ($processedCollection as $modelData) {
+            $model = $modelBuilder->call($modelData);
+
+            $modelInstance = new $this->model;
+            // feed with data
+
+            $this->internalCollection->addModel($modelInstance);
+        }
+
+        return true;
     }
+
+    /** todo */
+    abstract protected function collection(CollectionBuilderContract $builder): void;
+
+    /** todo */
+    abstract protected function model(ModelBuilderContract $builder): void;
 
     public function setCollection(CollectionContract $collection): void
     {
