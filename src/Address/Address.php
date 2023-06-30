@@ -49,15 +49,28 @@ class Address implements AddressContract, Stringable
      */
     public function __construct(array $parameters = [])
     {
-        $this->setTemplate($this->template);
+        $this->loadTemplate();
         $this->loadDefaults();
-        $this->loadParameters();
 
         foreach ($parameters as $parameter => $value) {
             $this->setValue($parameter, $value);
         }
     }
 
+    /**
+     * Loads the template defined in the $template property.
+     */
+    private function loadTemplate(): void
+    {
+        if (!empty($this->template)) {
+            $this->setTemplate($this->template);
+        }
+    }
+
+    /**
+     * Iterates over the default values defined in the
+     * $defaults property and sets each default value.
+     */
     private function loadDefaults(): void
     {
         foreach ($this->defaults as $parameter => $value) {
@@ -65,6 +78,15 @@ class Address implements AddressContract, Stringable
         }
     }
 
+    public function setTemplate(string $template): void
+    {
+        $this->internalTemplate = $template;
+        $this->loadParameters();
+    }
+
+    /**
+     * Extracts parameter definitions.
+     */
     private function loadParameters(): void
     {
         preg_match_all(static::$parametersTemplate, $this->internalTemplate, $matchedParameters, PREG_SET_ORDER);
@@ -95,11 +117,6 @@ class Address implements AddressContract, Stringable
                 [$this, "release$camelName"],
             );
         }
-    }
-
-    public function setTemplate(string $template): void
-    {
-        $this->internalTemplate = $template;
     }
 
     public function setDefault(string $parameter, string $value): void

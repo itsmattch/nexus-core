@@ -13,7 +13,7 @@ class JsonReader extends Reader
 
     public function read(): bool
     {
-        $jsonArray = json_decode($this->message->body, true);
+        $jsonArray = json_decode($this->raw, true);
 
         if (is_array($jsonArray)) {
             $this->jsonArray = $jsonArray;

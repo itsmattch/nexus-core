@@ -46,17 +46,17 @@ class Action implements ActionContract, Autonomous
     /**
      * Stores an instance of the Address.
      */
-    private readonly Address $addressInstance;
+    private readonly Address $internalAddress;
 
     /**
      * Stores an instance of the Engine.
      */
-    private readonly Engine $engineInstance;
+    private readonly Engine $internalEngine;
 
     /**
      * Stores an instance of the Reader.
      */
-    private readonly Reader $readerInstance;
+    private readonly Reader $internalReader;
 
     public function __construct()
     {
@@ -75,7 +75,7 @@ class Action implements ActionContract, Autonomous
             : AddressFactory::from($this->address);
 
         $this->setAddress($address);
-        $this->bootAddress($this->addressInstance);
+        $this->bootAddress($this->internalAddress);
     }
 
     /**
@@ -86,32 +86,40 @@ class Action implements ActionContract, Autonomous
     {
         $engine = is_subclass_of($this->engine, Engine::class)
             ? new $this->engine()
-            : EngineFactory::from($this->addressInstance->getScheme());
+            : EngineFactory::from($this->internalAddress->getScheme());
 
-        $engine->setAddress($this->addressInstance);
+        $engine->setAddress($this->internalAddress);
 
         $this->setEngine($engine);
-        $this->bootEngine($this->engineInstance);
+        $this->bootEngine($this->internalEngine);
     }
 
     public function setAddress(Address $address): void
     {
-        $this->addressInstance = $address;
+        $this->internalAddress = $address;
     }
 
     public function setEngine(Engine $engine): void
     {
-        $this->engineInstance = $engine;
+        $this->internalEngine = $engine;
     }
 
     public function setReader(Reader $reader): void
     {
-        $this->readerInstance = $reader;
+        $this->internalReader = $reader;
     }
 
     public function perform(): bool
     {
+        $this->internalEngine->initialize();
+        $this->internalEngine->execute();
+        $this->internalEngine->close();
+        $result = $this->internalEngine->getResponse()->body;
+
         $this->loadReader();
+        $this->internalReader->setInput($result);
+        $this->internalReader->read();
+
         return true;
     }
 
@@ -121,20 +129,20 @@ class Action implements ActionContract, Autonomous
      */
     private function loadReader(): void
     {
-        if (!isset($this->reader)) {
+        if (!isset($this->internalReader)) {
             $reader = is_subclass_of($this->reader, Reader::class)
                 ? new $this->reader()
-                : ReaderFactory::from($this->engineInstance->getResponse()->type);
+                : ReaderFactory::from($this->internalEngine->getResponse()->type);
 
             $this->setReader($reader);
-            $this->bootReader($this->readerInstance);
+            $this->bootReader($this->internalReader);
         }
     }
 
     public function getContent(): array
     {
-        return isset($this->readerInstance)
-            ? $this->readerInstance->get()
+        return isset($this->internalReader)
+            ? $this->internalReader->get()
             : [];
     }
 

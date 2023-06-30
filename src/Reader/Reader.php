@@ -2,15 +2,14 @@
 
 namespace Itsmattch\Nexus\Reader;
 
-use Itsmattch\Nexus\Common\Message;
 use Itsmattch\Nexus\Contract\Reader as ReaderContract;
 
 abstract class Reader implements ReaderContract
 {
-    protected readonly Message $message;
+    protected readonly string $raw;
 
-    final public function __construct(Message $message)
+    public function setInput(string $raw): void
     {
-        $this->message = $message;
+        $this->raw = $raw;
     }
 }

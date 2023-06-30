@@ -18,14 +18,16 @@ class AddressFactory
      *
      * @return Address The Address instance.
      */
-    public static function from(string $address): Address
+    public static function from(string $address, array $defaults = []): Address
     {
-        return new class($address) extends Address {
-            public function __construct(string $template)
-            {
-                $this->template = $template;
-            }
-        };
+        $addressInstance = new Address();
+        $addressInstance->setTemplate($address);
+
+        foreach ($defaults as $parameter => $value) {
+            $addressInstance->setDefault($parameter, $value);
+        }
+
+        return $addressInstance;
     }
 
     /** Disallows instantiation of the factory. */
