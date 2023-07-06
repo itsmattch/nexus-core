@@ -155,6 +155,7 @@ it('returns true only if parameters exist in collection and are valid', function
     $address->setValue('domain', 'example.com');
 
     expect($address->hasValid('domain', 'path', 'path'))->toBeTrue();
+    expect($address->hasValid('domain', 'path', 'foo'))->toBeFalse();
 });
 
 // getTemplate()

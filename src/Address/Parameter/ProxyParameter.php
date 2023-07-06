@@ -9,7 +9,7 @@ use Itsmattch\Nexus\Contract\Address\Parameter as ParameterContract;
  * and altering their values with capture and release
  * callbacks.
  */
-class ParameterProxy implements ParameterContract
+class ProxyParameter implements ParameterContract
 {
     /**
      * The original parameter.

@@ -4,7 +4,7 @@ namespace Itsmattch\Nexus\Address;
 
 use Itsmattch\Nexus\Address\Parameter\NullParameter;
 use Itsmattch\Nexus\Address\Parameter\OptionalParameter;
-use Itsmattch\Nexus\Address\Parameter\ParameterProxy;
+use Itsmattch\Nexus\Address\Parameter\ProxyParameter;
 use Itsmattch\Nexus\Address\Parameter\RequiredParameter;
 use Itsmattch\Nexus\Contract\Address as AddressContract;
 use Itsmattch\Nexus\Contract\Address\Parameter as ParameterContract;
@@ -111,7 +111,7 @@ class Address implements AddressContract, Stringable
                 ? new OptionalParameter($literal, $name, $default)
                 : new RequiredParameter($literal, $name, $default);
 
-            $this->parameters[$parameterObject->getName()] = new ParameterProxy(
+            $this->parameters[$parameterObject->getName()] = new ProxyParameter(
                 $parameterObject,
                 [$this, "capture$camelName"],
                 [$this, "release$camelName"],
