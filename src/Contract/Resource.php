@@ -21,11 +21,11 @@ interface Resource
     /**
      * Perform an Action on the Resource.
      *
-     * @param Action $action The action to be performed on
-     * the resource.
+     * @param ?Action $action The action to be performed on
+     * the resource, or null to perform default action.
      *
      * @return array The data received from the resource as
      * a result of the action.
      */
-    public function trigger(Action $action): array;
+    public function trigger(?Action $action = null): array;
 }

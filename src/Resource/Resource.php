@@ -69,14 +69,14 @@ class Resource implements ResourceContract
         $this->loadWriter();
     }
 
-    public function trigger(Action $action): array
+    public function trigger(?Action $action = null): array
     {
         // Ensure the internal engine is in a clean state
         // before starting a new action.
         $this->engineInstance->close();
 
         // Act
-        $action->act($this);
+        $action?->act($this);
 
         // Init, exec & close
         $this->engineInstance->initialize();

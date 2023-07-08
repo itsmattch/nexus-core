@@ -2,7 +2,6 @@
 
 namespace Itsmattch\Nexus\Assembler;
 
-use Itsmattch\Nexus\Action\Common\Read;
 use Itsmattch\Nexus\Assembler\Builder\CollectionBuilder;
 use Itsmattch\Nexus\Assembler\Builder\ModelBuilder;
 use Itsmattch\Nexus\Contract\Assembler\Builder\CollectionBuilder as CollectionBuilderContract;
@@ -136,10 +135,6 @@ abstract class Repository extends Assembler implements RepositoryContract
      */
     private function loadResource(string $name, Resource $resource, ?Action $action = null): void
     {
-        if (!isset($action)) {
-            $action = new Read();
-        }
-
         $this->addResource($name, $resource->trigger($action));
     }
 }
