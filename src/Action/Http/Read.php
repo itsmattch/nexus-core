@@ -7,9 +7,6 @@ use Itsmattch\Nexus\Contract\Resource\Action;
 
 class Read implements Action
 {
-    /**
-     * @param Resource $resource
-     */
     public function act(Resource $resource): void
     {
         //

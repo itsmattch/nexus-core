@@ -8,9 +8,6 @@ use Itsmattch\Nexus\Engine\Enum\HttpMethod;
 
 abstract class Update implements Action
 {
-    /**
-     * @param Resource $resource
-     */
     public function act(Resource $resource): void
     {
         $resource->getEngine()->setMethod(HttpMethod::PUT);
