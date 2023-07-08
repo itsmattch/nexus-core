@@ -11,16 +11,15 @@ namespace Itsmattch\Nexus\Contract;
 interface Action
 {
     /**
-     * Attempts to access and read the resource.
+     * Performs a specific action on the resource
      */
     public function performOnce(): void;
 
     /**
-     * todo return Resource instead?
+     * Retrieves the content resulting from the action
+     * performed on the resource
      *
-     * @return array Returns the content of the resource as
-     * an array, with the content structure depending on the
-     * resource type.
+     * @return array The content of the resource.
      */
     public function getContent(): array;
 }
