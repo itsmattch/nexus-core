@@ -2,7 +2,6 @@
 
 namespace Itsmattch\Nexus\Model;
 
-use Itsmattch\Nexus\Contract\Common\Autonomous;
 use Itsmattch\Nexus\Contract\Model as ModelContract;
 use Itsmattch\Nexus\Contract\Model\Badge as BadgeContract;
 use ReflectionClass;

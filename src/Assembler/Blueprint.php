@@ -2,8 +2,7 @@
 
 namespace Itsmattch\Nexus\Assembler;
 
-use Itsmattch\Nexus\Contract\Action;
-use Itsmattch\Nexus\Contract\Common\Autonomous;
+use Itsmattch\Nexus\Contract\Resource;
 use Itsmattch\Nexus\Contract\Model;
 
 abstract class Blueprint extends Assembler
@@ -59,7 +58,7 @@ abstract class Blueprint extends Assembler
      * ensuring they are usable immediately upon
      * instantiation.
      */
-    private function loadAction(string $name, Action&Autonomous $action): void
+    private function loadAction(string $name, Resource&Autonomous $action): void
     {
         $action->perform();
         $this->addResource($name, $action->getContent());

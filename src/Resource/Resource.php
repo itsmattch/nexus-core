@@ -1,19 +1,18 @@
 <?php
 
-namespace Itsmattch\Nexus\Action;
+namespace Itsmattch\Nexus\Resource;
 
 use Itsmattch\Nexus\Address\Factory\AddressFactory;
 use Itsmattch\Nexus\Common\Message;
-use Itsmattch\Nexus\Contract\Action as ActionContract;
 use Itsmattch\Nexus\Contract\Address;
-use Itsmattch\Nexus\Contract\Common\Autonomous;
 use Itsmattch\Nexus\Contract\Engine;
 use Itsmattch\Nexus\Contract\Reader;
+use Itsmattch\Nexus\Contract\Resource as ResourceContract;
 use Itsmattch\Nexus\Contract\Writer;
 use Itsmattch\Nexus\Engine\Factory\EngineFactory;
 use Itsmattch\Nexus\Reader\Factory\ReaderFactory;
 
-class Action implements ActionContract, Autonomous
+class Resource implements ResourceContract
 {
     /**
      * Represents the location of the resource. It must be
@@ -93,11 +92,9 @@ class Action implements ActionContract, Autonomous
         $this->performed = true;
     }
 
-    public function getContent(): array
+    public function trigger()
     {
-        return isset($this->internalReader)
-            ? $this->internalReader->get()
-            : [];
+        // todo
     }
 
     /**
@@ -189,7 +186,7 @@ class Action implements ActionContract, Autonomous
 
         $writer = is_subclass_of($this->writer, Writer::class)
             ? new $this->writer()
-            : throw new \Exception();
+            : null;
 
         $this->internalWriter = $writer;
         $this->bootWriter($this->internalWriter);

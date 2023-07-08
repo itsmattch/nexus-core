@@ -4,11 +4,10 @@ namespace Itsmattch\Nexus\Assembler;
 
 use Itsmattch\Nexus\Assembler\Builder\CollectionBuilder;
 use Itsmattch\Nexus\Assembler\Builder\ModelBuilder;
-use Itsmattch\Nexus\Contract\Action;
+use Itsmattch\Nexus\Contract\Resource;
 use Itsmattch\Nexus\Contract\Assembler\Builder\CollectionBuilder as CollectionBuilderContract;
 use Itsmattch\Nexus\Contract\Assembler\Builder\ModelBuilder as ModelBuilderContract;
 use Itsmattch\Nexus\Contract\Assembler\Repository as RepositoryContract;
-use Itsmattch\Nexus\Contract\Common\Autonomous;
 use Itsmattch\Nexus\Contract\Model;
 use Itsmattch\Nexus\Contract\Model\Collection as CollectionContract;
 use Itsmattch\Nexus\Model\Collection;
@@ -82,7 +81,7 @@ abstract class Repository extends Assembler implements RepositoryContract
      * that implement the Autonomous interface, ensuring
      * they are usable immediately upon instantiation.
      */
-    private function loadAction(string $name, Action&Autonomous $action): void
+    private function loadAction(string $name, Resource&Autonomous $action): void
     {
         $action->perform();
         $this->addResource($name, $action->getContent());
