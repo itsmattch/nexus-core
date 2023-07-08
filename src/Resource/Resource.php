@@ -84,7 +84,7 @@ class Resource implements ResourceContract
         $this->engineInstance->close();
 
         // Return the content read from the response body.
-        return $this->readerInstance->read($response->body);
+        return $this->readerInstance->read($response);
     }
 
     public function getAddress(): Address
