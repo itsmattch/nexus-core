@@ -16,26 +16,6 @@ use Itsmattch\Nexus\Writer\Factory\WriterFactory;
 class Resource implements ResourceContract
 {
     /**
-     * Stores an instance of the Address.
-     */
-    public readonly Address $addressInstance;
-
-    /**
-     * Stores an instance of the Engine.
-     */
-    public readonly Engine $engineInstance;
-
-    /**
-     * Stores an instance of the Reader.
-     */
-    public readonly Reader $readerInstance;
-
-    /**
-     * Stores an instance of the Writer.
-     */
-    public readonly Writer $writerInstance;
-
-    /**
      * Represents the location of the resource. It must be
      * either a string that points to an Address subclass,
      * or a URI-style string, which directly represents the
@@ -44,7 +24,6 @@ class Resource implements ResourceContract
      * This property is required.
      */
     protected string $address = Address::class;
-
     /**
      * The engine that the Action will use to connect to
      * the resource.
@@ -54,20 +33,27 @@ class Resource implements ResourceContract
      * Engine based on the address scheme.
      */
     protected string $engine = Engine::class;
-
     /**
      * Specifies the data format that the Reader and Writer
      * will use to read and write the resource data.
      */
     protected string $format = '';
-
-    public function __construct()
-    {
-        $this->loadAddress();
-        $this->loadEngine();
-        $this->loadReader();
-        $this->loadWriter();
-    }
+    /**
+     * Stores an instance of the Address.
+     */
+    private readonly Address $addressInstance;
+    /**
+     * Stores an instance of the Engine.
+     */
+    private readonly Engine $engineInstance;
+    /**
+     * Stores an instance of the Reader.
+     */
+    private readonly Reader $readerInstance;
+    /**
+     * Stores an instance of the Writer.
+     */
+    private readonly Writer $writerInstance;
 
     public function trigger(?Action $action = null): array
     {
@@ -89,22 +75,66 @@ class Resource implements ResourceContract
 
     public function getAddress(): Address
     {
+        if (!isset($this->addressInstance)) {
+            $this->loadAddress();
+        }
+
         return $this->addressInstance;
+    }
+
+    public function setAddress(Address $address): void
+    {
+        if (!isset($this->addressInstance)) {
+            $this->addressInstance = $address;
+        }
     }
 
     public function getEngine(): Engine
     {
+        if (!isset($this->engineInstance)) {
+            $this->loadEngine();
+        }
+
         return $this->engineInstance;
+    }
+
+    public function setEngine(Engine $engine): void
+    {
+        if (!isset($this->engineInstance)) {
+            $this->engineInstance = $engine;
+        }
     }
 
     public function getReader(): Reader
     {
+        if (!isset($this->readerInstance)) {
+            $this->loadReader();
+        }
+
         return $this->readerInstance;
+    }
+
+    public function setReader(Reader $reader): void
+    {
+        if (!isset($this->readerInstance)) {
+            $this->readerInstance = $reader;
+        }
     }
 
     public function getWriter(): Writer
     {
+        if (!isset($this->writerInstance)) {
+            $this->loadWriter();
+        }
+
         return $this->writerInstance;
+    }
+
+    public function setWriter(Writer $writer): void
+    {
+        if (!isset($this->writerInstance)) {
+            $this->writerInstance = $writer;
+        }
     }
 
     /**

@@ -37,7 +37,7 @@ abstract class Repository extends Assembler implements RepositoryContract
 
     public function __construct()
     {
-        $this->setCollection(new $this->collection());
+        $this->loadCollection(new $this->collection());
         $this->loadModel(new $this->model());
         $this->prepareResources();
         $this->loadResources();
@@ -80,16 +80,16 @@ abstract class Repository extends Assembler implements RepositoryContract
         return $this->internalCollection;
     }
 
-    public function setCollection(CollectionContract $collection): void
-    {
-        $this->internalCollection = $collection;
-    }
-
     /** todo */
-    abstract protected function collection(CollectionBuilder $builder): void;
+    protected function collection(CollectionBuilder $builder): void {}
 
     /** todo */
     abstract protected function model(ModelBuilder $builder): void;
+
+    private function loadCollection(CollectionContract $collection): void
+    {
+        $this->internalCollection = $collection;
+    }
 
     /**
      * This function restricts the accepted model to one
