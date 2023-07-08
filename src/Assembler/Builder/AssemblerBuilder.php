@@ -21,7 +21,7 @@ class AssemblerBuilder implements AssemblerBuilderContract
 
     public function call(array $array): array
     {
-        $workingArray = [];
+        $workingArray = $array;
         foreach ($this->callableStack as $callable) {
             $workingArray = $callable($workingArray, $array);
         }

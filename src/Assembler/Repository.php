@@ -4,8 +4,6 @@ namespace Itsmattch\Nexus\Assembler;
 
 use Itsmattch\Nexus\Assembler\Builder\CollectionBuilder;
 use Itsmattch\Nexus\Assembler\Builder\ModelBuilder;
-use Itsmattch\Nexus\Contract\Assembler\Builder\CollectionBuilder as CollectionBuilderContract;
-use Itsmattch\Nexus\Contract\Assembler\Builder\ModelBuilder as ModelBuilderContract;
 use Itsmattch\Nexus\Contract\Assembler\Repository as RepositoryContract;
 use Itsmattch\Nexus\Contract\Model;
 use Itsmattch\Nexus\Contract\Model\Collection as CollectionContract;
@@ -88,10 +86,10 @@ abstract class Repository extends Assembler implements RepositoryContract
     }
 
     /** todo */
-    abstract protected function collection(CollectionBuilderContract $builder): void;
+    abstract protected function collection(CollectionBuilder $builder): void;
 
     /** todo */
-    abstract protected function model(ModelBuilderContract $builder): void;
+    abstract protected function model(ModelBuilder $builder): void;
 
     /**
      * This function restricts the accepted model to one
