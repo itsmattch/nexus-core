@@ -124,7 +124,7 @@ abstract class Repository extends Assembler implements RepositoryContract
         foreach ($this->resources as $name => $resource) {
             is_array($resource)
                 ? $this->loadResource($name, new $resource[0](), new $resource[1]())
-                : $this->loadResource($name, $resource);
+                : $this->loadResource($name, new $resource);
         }
     }
 
