@@ -41,18 +41,25 @@ interface Engine
     public function close(): void;
 
     /**
-     * Sets the request body.
+     * Attaches a message to be sent when the execute method
+     * is called. This method must be called prior to
+     * execute().
      *
-     * @param Message $message A Message instance
-     * representing the request body.
+     * @param Message $message An instance of the Message
+     * class representing the payload to be sent with the
+     * execution.
      */
-    public function setRequest(Message $message): void;
+    public function attach(Message $message): void;
 
     /**
-     * Retrieves the response as Message instance.
+     * Retrieves the message received from the execution of
+     * the connection. This method must be called after
+     * execute() has been called.
      *
-     * @return Message A Message instance representing the
-     * resource's response.
+     *
+     * @return Message An instance of the Message class
+     * representing the response received from the execution
+     * of the connection.
      */
-    public function getResponse(): Message;
+    public function read(): Message;
 }

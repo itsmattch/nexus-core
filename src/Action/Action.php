@@ -3,6 +3,7 @@
 namespace Itsmattch\Nexus\Action;
 
 use Itsmattch\Nexus\Address\Factory\AddressFactory;
+use Itsmattch\Nexus\Common\Message;
 use Itsmattch\Nexus\Contract\Action as ActionContract;
 use Itsmattch\Nexus\Contract\Address;
 use Itsmattch\Nexus\Contract\Common\Autonomous;
@@ -44,6 +45,7 @@ class Action implements ActionContract, Autonomous
      */
     protected string $reader = Reader::class;
 
+    /** todo */
     protected string $writer = Writer::class;
 
     /**
@@ -61,6 +63,9 @@ class Action implements ActionContract, Autonomous
      */
     private readonly Reader $internalReader;
 
+    /** todo */
+    private readonly Writer $internalWriter;
+
     /**
      * Action status.
      */
@@ -74,6 +79,8 @@ class Action implements ActionContract, Autonomous
 
         $this->loadAddress();
         $this->loadEngine();
+        $this->loadWriter();
+        $this->optionallyAttachMessage();
         $this->internalEngine->initialize();
         $this->internalEngine->execute();
         $this->internalEngine->close();
@@ -118,6 +125,16 @@ class Action implements ActionContract, Autonomous
     protected function bootReader(Reader $reader): void {}
 
     /**
+     * This method allows you to modify the internally
+     * instantiated Writer instance.
+     *
+     * @param Writer $writer Internally created instance.
+     */
+    protected function bootWriter(Writer $writer): void {}
+
+    protected function message(): ?string { return null; }
+
+    /**
      * Instantiates and loads address
      * defined in the $address property.
      */
@@ -159,5 +176,34 @@ class Action implements ActionContract, Autonomous
 
         $this->internalReader = $reader;
         $this->bootReader($this->internalReader);
+    }
+
+    /** todo */
+    private function loadWriter(): void
+    {
+        $message = $this->message();
+
+        if (!isset($message)) {
+            return;
+        }
+
+        $writer = is_subclass_of($this->writer, Writer::class)
+            ? new $this->writer()
+            : throw new \Exception();
+
+        $this->internalWriter = $writer;
+        $this->bootWriter($this->internalWriter);
+    }
+
+    /** todo */
+    private function optionallyAttachMessage(): void
+    {
+        if (!isset($this->internalWriter)) {
+            return;
+        }
+
+        $message = new Message($this->internalWriter->get(), null);
+
+        $this->internalEngine->attach($message);
     }
 }
