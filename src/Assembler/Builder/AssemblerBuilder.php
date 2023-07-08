@@ -12,7 +12,7 @@ class AssemblerBuilder implements AssemblerBuilderContract
      * Stack of callable transformations
      * to be applied to the array.
      */
-    private array $callableStack;
+    private array $callableStack = [];
 
     public function callable(Closure|Invokable $callable): void
     {
