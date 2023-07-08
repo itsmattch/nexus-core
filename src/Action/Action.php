@@ -8,6 +8,7 @@ use Itsmattch\Nexus\Contract\Address;
 use Itsmattch\Nexus\Contract\Common\Autonomous;
 use Itsmattch\Nexus\Contract\Engine;
 use Itsmattch\Nexus\Contract\Reader;
+use Itsmattch\Nexus\Contract\Writer;
 use Itsmattch\Nexus\Engine\Factory\EngineFactory;
 use Itsmattch\Nexus\Reader\Factory\ReaderFactory;
 
@@ -43,6 +44,8 @@ class Action implements ActionContract, Autonomous
      */
     protected string $reader = Reader::class;
 
+    protected string $writer = Writer::class;
+
     /**
      * Stores an instance of the Address.
      */
@@ -63,76 +66,14 @@ class Action implements ActionContract, Autonomous
      */
     private bool $performed;
 
-    public function __construct()
-    {
-        $this->loadAddress();
-        $this->loadEngine();
-    }
-
-    /**
-     * Instantiates and loads address
-     * defined in the $address property.
-     */
-    private function loadAddress(): void
-    {
-        $address = is_subclass_of($this->address, Address::class)
-            ? new $this->address()
-            : AddressFactory::from($this->address);
-
-        $this->setAddress($address);
-        $this->bootAddress($this->internalAddress);
-    }
-
-    /**
-     * Instantiates and loads engine
-     * defined in the $endine property.
-     */
-    private function loadEngine(): void
-    {
-        $engine = is_subclass_of($this->engine, Engine::class)
-            ? new $this->engine()
-            : EngineFactory::from($this->internalAddress->getScheme());
-
-        $engine->setAddress($this->internalAddress);
-
-        $this->setEngine($engine);
-        $this->bootEngine($this->internalEngine);
-    }
-
-    /**
-     * @param Address $address An instance of the Address
-     * class representing the resource's address.
-     */
-    public function setAddress(Address $address): void
-    {
-        $this->internalAddress = $address;
-    }
-
-    /**
-     * @param Engine $engine An instance of the Engine class
-     * that defines the methods for accessing the resource.
-     */
-    public function setEngine(Engine $engine): void
-    {
-        $this->internalEngine = $engine;
-    }
-
-    /**
-     * @param Reader $reader An instance of the Reader class
-     * that defines methods for interpreting raw resource
-     * data.
-     */
-    public function setReader(Reader $reader): void
-    {
-        $this->internalReader = $reader;
-    }
-
     public function performOnce(): void
     {
         if ($this->performed) {
             return;
         }
 
+        $this->loadAddress();
+        $this->loadEngine();
         $this->internalEngine->initialize();
         $this->internalEngine->execute();
         $this->internalEngine->close();
@@ -143,22 +84,6 @@ class Action implements ActionContract, Autonomous
         $this->internalReader->read();
 
         $this->performed = true;
-    }
-
-    /**
-     * Instantiates and loads the reader
-     * defined in the $reader property.
-     */
-    private function loadReader(): void
-    {
-        if (!isset($this->internalReader)) {
-            $reader = is_subclass_of($this->reader, Reader::class)
-                ? new $this->reader()
-                : ReaderFactory::from($this->internalEngine->getResponse()->type);
-
-            $this->setReader($reader);
-            $this->bootReader($this->internalReader);
-        }
     }
 
     public function getContent(): array
@@ -191,4 +116,48 @@ class Action implements ActionContract, Autonomous
      * @param Reader $reader Internally created instance.
      */
     protected function bootReader(Reader $reader): void {}
+
+    /**
+     * Instantiates and loads address
+     * defined in the $address property.
+     */
+    private function loadAddress(): void
+    {
+        $address = is_subclass_of($this->address, Address::class)
+            ? new $this->address()
+            : AddressFactory::from($this->address);
+
+        $this->internalAddress = $address;
+        $this->bootAddress($this->internalAddress);
+    }
+
+    /**
+     * Instantiates and loads engine
+     * defined in the $endine property.
+     */
+    private function loadEngine(): void
+    {
+        $engine = is_subclass_of($this->engine, Engine::class)
+            ? new $this->engine()
+            : EngineFactory::from($this->internalAddress->getScheme());
+
+        $engine->setAddress($this->internalAddress);
+
+        $this->internalEngine = $engine;
+        $this->bootEngine($this->internalEngine);
+    }
+
+    /**
+     * Instantiates and loads the reader
+     * defined in the $reader property.
+     */
+    private function loadReader(): void
+    {
+        $reader = is_subclass_of($this->reader, Reader::class)
+            ? new $this->reader()
+            : ReaderFactory::from($this->internalEngine->getResponse()->type);
+
+        $this->internalReader = $reader;
+        $this->bootReader($this->internalReader);
+    }
 }
