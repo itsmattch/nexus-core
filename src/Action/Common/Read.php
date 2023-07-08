@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Action\Http;
+namespace Itsmattch\Nexus\Action\Common;
 
 use Itsmattch\Nexus\Contract\Resource;
 use Itsmattch\Nexus\Contract\Resource\Action;
