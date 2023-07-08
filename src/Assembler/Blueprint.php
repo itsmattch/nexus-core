@@ -2,16 +2,17 @@
 
 namespace Itsmattch\Nexus\Assembler;
 
-use Itsmattch\Nexus\Contract\Action;
-use Itsmattch\Nexus\Contract\Common\Autonomous;
+use Itsmattch\Nexus\Action\Common\Read;
 use Itsmattch\Nexus\Contract\Model;
+use Itsmattch\Nexus\Contract\Resource;
+use Itsmattch\Nexus\Contract\Resource\Action;
 
 abstract class Blueprint extends Assembler
 {
     /**
-     * Internal storage of instantiated action objects.
+     * Internal storage of the resources.
      */
-    private array $internalActions = [];
+    private array $internalResources = [];
 
     /**
      * The internal model instance.
@@ -22,23 +23,34 @@ abstract class Blueprint extends Assembler
     public function __construct()
     {
         $this->loadModel(new $this->model);
-        $this->prepareActions();
-        $this->loadActions();
+        $this->prepareResources();
+        $this->loadResources();
     }
 
-    private function loadModel(Model&Autonomous $model): void
+    public function addResource(string $name, array $resource): void
     {
-        $this->setModel($model);
+        $this->internalResources[$name] = $resource;
+    }
+
+    public function assemble(): bool
+    {
+        return true; // todo
+    }
+
+    private function loadModel(Model $model): void
+    {
+        $this->internalModel = $model;
     }
 
     /**
      * Ensures that the actions are represented
      * as arrays for easy iteration.
      */
-    private function prepareActions(): void
+    private function prepareResources(): void
     {
-        if (!is_array($this->actions)) {
-            $this->actions = [$this->actions];
+        // todo edge case [resource, action]
+        if (!is_array($this->resources)) {
+            $this->resources = [$this->resources];
         }
     }
 
@@ -46,10 +58,12 @@ abstract class Blueprint extends Assembler
      * Instantiates and loads actions
      * defined in the $actions property.
      */
-    private function loadActions(): void
+    private function loadResources(): void
     {
-        foreach ($this->actions as $name => $action) {
-            $this->loadAction($name, new $action());
+        foreach ($this->resources as $name => $resource) {
+            is_array($resource)
+                ? $this->loadResource($name, new $resource[0](), new $resource[1]())
+                : $this->loadResource($name, $resource);
         }
     }
 
@@ -59,24 +73,12 @@ abstract class Blueprint extends Assembler
      * ensuring they are usable immediately upon
      * instantiation.
      */
-    private function loadAction(string $name, Action&Autonomous $action): void
+    private function loadResource(string $name, Resource $resource, ?Action $action = null): void
     {
-        $action->perform();
-        $this->addResource($name, $action->getContent());
-    }
+        if (!isset($action)) {
+            $action = new Read();
+        }
 
-    public function addResource(string $name, array $resource): void
-    {
-        $this->internalActions[$name] = $resource;
-    }
-
-    public function setModel(Model $model): void
-    {
-        $this->internalModel = $model;
-    }
-
-    public function assemble(): bool
-    {
-        return true; // todo
+        $this->addResource($name, $resource->trigger($action));
     }
 }

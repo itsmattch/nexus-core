@@ -9,8 +9,5 @@ use Itsmattch\Nexus\Contract\Model\Collection;
 interface Repository extends Assembler
 {
     /** todo */
-    public function setCollection(Collection $collection): void;
-
-    /** todo */
     public function getCollection(): Collection;
 }

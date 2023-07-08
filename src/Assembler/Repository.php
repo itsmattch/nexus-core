@@ -2,15 +2,16 @@
 
 namespace Itsmattch\Nexus\Assembler;
 
+use Itsmattch\Nexus\Action\Common\Read;
 use Itsmattch\Nexus\Assembler\Builder\CollectionBuilder;
 use Itsmattch\Nexus\Assembler\Builder\ModelBuilder;
-use Itsmattch\Nexus\Contract\Action;
 use Itsmattch\Nexus\Contract\Assembler\Builder\CollectionBuilder as CollectionBuilderContract;
 use Itsmattch\Nexus\Contract\Assembler\Builder\ModelBuilder as ModelBuilderContract;
 use Itsmattch\Nexus\Contract\Assembler\Repository as RepositoryContract;
-use Itsmattch\Nexus\Contract\Common\Autonomous;
 use Itsmattch\Nexus\Contract\Model;
 use Itsmattch\Nexus\Contract\Model\Collection as CollectionContract;
+use Itsmattch\Nexus\Contract\Resource;
+use Itsmattch\Nexus\Contract\Resource\Action;
 use Itsmattch\Nexus\Model\Collection;
 
 abstract class Repository extends Assembler implements RepositoryContract
@@ -41,51 +42,8 @@ abstract class Repository extends Assembler implements RepositoryContract
     {
         $this->setCollection(new $this->collection());
         $this->loadModel(new $this->model());
-        $this->prepareActions();
-        $this->loadActions();
-    }
-
-    /**
-     * This function restricts the accepted model to one
-     * that implement the Autonomous interface, ensuring
-     * they are usable immediately upon instantiation.
-     */
-    private function loadModel(Model&Autonomous $model): void
-    {
-        $this->setModel($model);
-    }
-
-    /**
-     * Ensures that the actions are represented
-     * as arrays for easy iteration.
-     */
-    private function prepareActions(): void
-    {
-        if (!is_array($this->actions)) {
-            $this->actions = [$this->actions];
-        }
-    }
-
-    /**
-     * Instantiates and loads actions
-     * defined in the $actions property.
-     */
-    private function loadActions(): void
-    {
-        foreach ($this->actions as $name => $action) {
-            $this->loadAction($name, new $action());
-        }
-    }
-
-    /**
-     * This function restricts the accepted actions to one
-     * that implement the Autonomous interface, ensuring
-     * they are usable immediately upon instantiation.
-     */
-    private function loadAction(string $name, Action&Autonomous $action): void
-    {
-        $action->perform();
-        $this->addResource($name, $action->getContent());
+        $this->prepareResources();
+        $this->loadResources();
     }
 
     public function addResource(string $name, array $resource): void
@@ -120,19 +78,68 @@ abstract class Repository extends Assembler implements RepositoryContract
         return true;
     }
 
-    /** todo */
-    abstract protected function collection(CollectionBuilderContract $builder): void;
-
-    /** todo */
-    abstract protected function model(ModelBuilderContract $builder): void;
+    public function getCollection(): CollectionContract
+    {
+        return $this->internalCollection;
+    }
 
     public function setCollection(CollectionContract $collection): void
     {
         $this->internalCollection = $collection;
     }
 
-    public function getCollection(): CollectionContract
+    /** todo */
+    abstract protected function collection(CollectionBuilderContract $builder): void;
+
+    /** todo */
+    abstract protected function model(ModelBuilderContract $builder): void;
+
+    /**
+     * This function restricts the accepted model to one
+     * that implement the Autonomous interface, ensuring
+     * they are usable immediately upon instantiation.
+     */
+    private function loadModel(Model $model): void
     {
-        return $this->internalCollection;
+        $this->setModel($model);
+    }
+
+    /**
+     * Ensures that the actions are represented
+     * as arrays for easy iteration.
+     */
+    private function prepareResources(): void
+    {
+        // todo edge case [resource, action]
+        if (!is_array($this->resources)) {
+            $this->resources = [$this->resources];
+        }
+    }
+
+    /**
+     * Instantiates and loads actions
+     * defined in the $actions property.
+     */
+    private function loadResources(): void
+    {
+        foreach ($this->resources as $name => $resource) {
+            is_array($resource)
+                ? $this->loadResource($name, new $resource[0](), new $resource[1]())
+                : $this->loadResource($name, $resource);
+        }
+    }
+
+    /**
+     * This function restricts the accepted actions to one
+     * that implement the Autonomous interface, ensuring
+     * they are usable immediately upon instantiation.
+     */
+    private function loadResource(string $name, Resource $resource, ?Action $action = null): void
+    {
+        if (!isset($action)) {
+            $action = new Read();
+        }
+
+        $this->addResource($name, $resource->trigger($action));
     }
 }

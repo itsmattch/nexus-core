@@ -9,8 +9,5 @@ interface Assembler
     public function addResource(string $name, array $resource): void;
 
     /** todo */
-    public function setModel(Model $model): void;
-
-    /** todo */
     public function assemble(): bool;
 }

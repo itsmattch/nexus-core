@@ -2,14 +2,21 @@
 
 namespace Itsmattch\Nexus\Contract;
 
-// todo
+use Itsmattch\Nexus\Common\Message;
 
+/**
+ * Writer interface specifies methods for
+ * transforming data into a Message.
+ */
 interface Writer
 {
-    public function setInput(mixed $input): void;
-
-    public function write(): bool;
-
-    public function get(): string;
-
+    /**
+     * Transforms input data into a Message.
+     *
+     * @param array $input The data to be transformed.
+     *
+     * @return ?Message The resulting Message or null if
+     * unsuccessful.
+     */
+    public function write(array $input): ?Message;
 }

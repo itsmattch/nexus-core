@@ -2,35 +2,19 @@
 
 namespace Itsmattch\Nexus\Contract;
 
+use Itsmattch\Nexus\Common\Message;
+
 /**
- * The Reader class is responsible for reading raw content
- * of the resources and turning it into PHP arrays.
- *
- * @link https://nexus.itsmattch.com/digging-deeper/reader Readers Documentation
+ * Reader interface specifies methods for interpreting
+ * a Message into data.
  */
 interface Reader
 {
     /**
-     * @param string $raw The raw content to be processed.
-     */
-    public function setInput(string $raw): void;
-
-    /**
-     * Processes the raw input content and attempts to
-     * convert it into a PHP array.
+     * Reads the given message and converts it into an array.
      *
-     * @return bool Returns true if the content was
-     * successfully read and converted, false otherwise.
+     * @param Message $message The message to be read.
+     * @return array The interpreted data from the message.
      */
-    public function read(): bool;
-
-    /**
-     * Retrieves the PHP array produced by the read
-     * operation. This is the array representation of the
-     * previously raw content.
-     *
-     * @return array The array representation of the
-     * content.
-     */
-    public function get(): array;
+    public function read(Message $message): array;
 }
