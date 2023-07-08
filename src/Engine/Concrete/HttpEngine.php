@@ -19,11 +19,6 @@ class HttpEngine extends Engine
     private CurlHandle $handle;
 
     /**
-     * Stores the response message.
-     */
-    private Message $response;
-
-    /**
      * A list of added HTTP headers.
      */
     private array $headers = [];
@@ -44,7 +39,7 @@ class HttpEngine extends Engine
         return true;
     }
 
-    public function execute(): bool
+    public function execute(): ?Message
     {
         $this->setRequestHeaders();
 
@@ -52,15 +47,13 @@ class HttpEngine extends Engine
         $responseType = $this->getContentType();
 
         if ($responseBody === false) {
-            return false;
+            return null;
         }
 
-        $this->response = new Message(
+        return new Message(
             body: $responseBody,
             type: $responseType,
         );
-
-        return true;
     }
 
     public function close(): void
@@ -68,14 +61,9 @@ class HttpEngine extends Engine
         curl_close($this->handle);
     }
 
-    public function setRequest(Message $message): void
+    public function attach(Message $message): void
     {
         $this->setBody($message);
-    }
-
-    public function getResponse(): Message
-    {
-        return $this->response;
     }
 
     /**

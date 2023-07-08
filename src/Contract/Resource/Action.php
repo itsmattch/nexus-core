@@ -2,12 +2,11 @@
 
 namespace Itsmattch\Nexus\Contract\Resource;
 
-use Itsmattch\Nexus\Contract\Engine;
-use Itsmattch\Nexus\Contract\Writer;
+use Itsmattch\Nexus\Contract\Resource;
 
 /** todo */
 interface Action
 {
     /** todo */
-    public function act(Engine $engine, Writer $writer): void;
+    public function act(Resource $resource): void;
 }

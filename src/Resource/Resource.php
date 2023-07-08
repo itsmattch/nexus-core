@@ -11,9 +11,30 @@ use Itsmattch\Nexus\Contract\Resource\Action;
 use Itsmattch\Nexus\Contract\Writer;
 use Itsmattch\Nexus\Engine\Factory\EngineFactory;
 use Itsmattch\Nexus\Reader\Factory\ReaderFactory;
+use Itsmattch\Nexus\Writer\Factory\WriterFactory;
 
 class Resource implements ResourceContract
 {
+    /**
+     * Stores an instance of the Address.
+     */
+    public readonly Address $addressInstance;
+
+    /**
+     * Stores an instance of the Engine.
+     */
+    public readonly Engine $engineInstance;
+
+    /**
+     * Stores an instance of the Reader.
+     */
+    public readonly Reader $readerInstance;
+
+    /**
+     * Stores an instance of the Writer.
+     */
+    public readonly Writer $writerInstance;
+
     /**
      * Represents the location of the resource. It must be
      * either a string that points to an Address subclass,
@@ -34,43 +55,53 @@ class Resource implements ResourceContract
      */
     protected string $engine = Engine::class;
 
-    /**
-     * The Reader that the Action will use to interpret the
-     * retrieved data.
-     *
-     * If this property is not explicitly set, Nexus will
-     * attempt to automatically select an appropriate
-     * Reader based on the type of the retrieved data.
-     */
-    protected string $reader = Reader::class;
-
     /** todo */
-    protected string $writer = Writer::class;
-
-    /**
-     * Stores an instance of the Address.
-     */
-    private readonly Address $internalAddress;
+    protected string $format = '';
 
     public function __construct()
     {
         $this->loadAddress();
+        $this->loadEngine();
+        $this->loadReader();
+        $this->loadWriter();
     }
 
-    public function trigger(Action $action): void
+    public function trigger(Action $action): array
     {
-        $engine = $this->getEngine();
-        $writer = $this->getWriter();
+        // Ensure the internal engine is in a clean state
+        // before starting a new action.
+        $this->engineInstance->close();
 
-        // todo
+        // Act
+        $action->act($this);
 
-        $engine->initialize();
-        $engine->execute();
-        $engine->close();
+        // Init, exec & close
+        $this->engineInstance->initialize();
+        $response = $this->engineInstance->execute();
+        $this->engineInstance->close();
 
-        $reader = $this->getReader($engine->getResponse()->type);
-        $reader->setInput($engine->getResponse()->body);
-        $reader->read();
+        // Return the content read from the response body.
+        return $this->readerInstance->read($response->body);
+    }
+
+    public function getAddress(): Address
+    {
+        return $this->addressInstance;
+    }
+
+    public function getEngine(): Engine
+    {
+        return $this->engineInstance;
+    }
+
+    public function getReader(): Reader
+    {
+        return $this->readerInstance;
+    }
+
+    public function getWriter(): Writer
+    {
+        return $this->writerInstance;
     }
 
     /**
@@ -106,49 +137,6 @@ class Resource implements ResourceContract
     protected function bootWriter(Writer $writer): void {}
 
     /**
-     * Instantiates and returns engine
-     * defined in the $endine property.
-     */
-    private function getEngine(): Engine
-    {
-        $engine = is_subclass_of($this->engine, Engine::class)
-            ? new $this->engine()
-            : EngineFactory::from($this->internalAddress->getScheme());
-
-        $engine->setAddress($this->internalAddress);
-        $this->bootEngine($engine);
-        return $engine;
-    }
-
-    /**
-     * Instantiates and returns the reader
-     * defined in the $reader property.
-     */
-    private function getReader(?string $type): Reader
-    {
-        $reader = is_subclass_of($this->reader, Reader::class)
-            ? new $this->reader()
-            : ReaderFactory::from($type);
-
-        $this->bootReader($reader);
-        return $reader;
-    }
-
-    /**
-     * Instantiates and returns the writer
-     * defined in the $writer property.
-     */
-    private function getWriter(): Writer
-    {
-        $writer = is_subclass_of($this->writer, Writer::class)
-            ? new $this->writer()
-            : null;
-
-        $this->bootWriter($writer);
-        return $writer;
-    }
-
-    /**
      * Instantiates and loads address
      * defined in the $address property.
      */
@@ -158,7 +146,43 @@ class Resource implements ResourceContract
             ? new $this->address()
             : AddressFactory::from($this->address);
 
-        $this->internalAddress = $address;
-        $this->bootAddress($this->internalAddress);
+        $this->addressInstance = $address;
+        $this->bootAddress($this->addressInstance);
+    }
+
+    /**
+     * Instantiates and loads engine
+     * defined in the $endine property.
+     */
+    private function loadEngine(): void
+    {
+        $engine = is_subclass_of($this->engine, Engine::class)
+            ? new $this->engine()
+            : EngineFactory::from($this->addressInstance->getScheme());
+
+        $engine->setAddress($this->addressInstance);
+
+        $this->engineInstance = $engine;
+        $this->bootEngine($this->engineInstance);
+    }
+
+    /**
+     * Instantiates and loads the reader
+     * based on the $format.
+     */
+    private function loadReader(): void
+    {
+        $this->readerInstance = ReaderFactory::from($this->format);
+        $this->bootReader($this->readerInstance);
+    }
+
+    /**
+     * Instantiates and loads the writer
+     * based on the $format.
+     */
+    private function loadWriter(): void
+    {
+        $this->writerInstance = WriterFactory::from($this->format);
+        $this->bootWriter($this->writerInstance);
     }
 }

@@ -29,11 +29,15 @@ interface Engine
     /**
      * Executes the connection and reads the response.
      *
-     * @return bool Returns true if the connection was
-     * successful and the response was successfully read,
-     * false otherwise.
+     * Retrieves the message received from the execution of
+     * the connection. This method must be called after
+     * execute() has been called.
+     *
+     * @return ?Message An instance of the Message class
+     * representing the response received from the execution
+     * of the connection.
      */
-    public function execute(): bool;
+    public function execute(): ?Message;
 
     /**
      * Closes the connection after the execution.
@@ -50,16 +54,4 @@ interface Engine
      * execution.
      */
     public function attach(Message $message): void;
-
-    /**
-     * Retrieves the message received from the execution of
-     * the connection. This method must be called after
-     * execute() has been called.
-     *
-     *
-     * @return Message An instance of the Message class
-     * representing the response received from the execution
-     * of the connection.
-     */
-    public function read(): Message;
 }

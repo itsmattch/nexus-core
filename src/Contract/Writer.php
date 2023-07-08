@@ -6,10 +6,6 @@ namespace Itsmattch\Nexus\Contract;
 
 interface Writer
 {
-    public function setInput(mixed $input): void;
-
-    public function write(): bool;
-
-    public function get(): string;
-
+    /** todo */
+    public function write(array $input): string;
 }
