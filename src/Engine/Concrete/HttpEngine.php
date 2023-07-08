@@ -58,7 +58,9 @@ class HttpEngine extends Engine
 
     public function close(): void
     {
-        curl_close($this->handle);
+        if (isset($this->handle)) {
+            curl_close($this->handle);
+        }
     }
 
     public function attach(Message $message): void
