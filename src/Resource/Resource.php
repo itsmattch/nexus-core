@@ -55,7 +55,10 @@ class Resource implements ResourceContract
      */
     protected string $engine = Engine::class;
 
-    /** todo */
+    /**
+     * Specifies the data format that the Reader and Writer
+     * will use to read and write the resource data.
+     */
     protected string $format = '';
 
     public function __construct()

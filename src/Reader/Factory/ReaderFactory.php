@@ -3,7 +3,7 @@
 namespace Itsmattch\Nexus\Reader\Factory;
 
 use Itsmattch\Nexus\Contract\Reader;
-use Itsmattch\Nexus\Reader\Concrete\JsonReader;
+use Itsmattch\Nexus\Reader\JsonReader;
 
 /**
  * Static factory class for creating Reader instances.

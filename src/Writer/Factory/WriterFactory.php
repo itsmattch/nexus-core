@@ -3,7 +3,7 @@
 namespace Itsmattch\Nexus\Writer\Factory;
 
 use Itsmattch\Nexus\Contract\Writer;
-use Itsmattch\Nexus\Writer\Concrete\JsonWriter;
+use Itsmattch\Nexus\Writer\JsonWriter;
 
 /**
  * Static factory class for creating Writer instances.

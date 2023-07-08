@@ -5,7 +5,8 @@ namespace Itsmattch\Nexus\Contract;
 use Itsmattch\Nexus\Contract\Resource\Action;
 
 /**
- * todo
+ * A Resource represents an external entity that can be
+ * interacted with different Actions.
  */
 interface Resource
 {
@@ -17,5 +18,14 @@ interface Resource
 
     public function getWriter(): Writer;
 
-    public function trigger(Action $action);
+    /**
+     * Perform an Action on the Resource.
+     *
+     * @param Action $action The action to be performed on
+     * the resource.
+     *
+     * @return array The data received from the resource as
+     * a result of the action.
+     */
+    public function trigger(Action $action): array;
 }

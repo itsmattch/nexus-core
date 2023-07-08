@@ -7,7 +7,7 @@ use Itsmattch\Nexus\Contract\Model\Badge as BadgeContract;
 use ReflectionClass;
 
 /** todo */
-abstract class Model implements ModelContract, Autonomous
+abstract class Model implements ModelContract
 {
     /**
      * The explicit name of the model.

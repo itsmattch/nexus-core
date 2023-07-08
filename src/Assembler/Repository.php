@@ -49,7 +49,7 @@ abstract class Repository extends Assembler implements RepositoryContract
      * that implement the Autonomous interface, ensuring
      * they are usable immediately upon instantiation.
      */
-    private function loadModel(Model&Autonomous $model): void
+    private function loadModel(Model $model): void
     {
         $this->setModel($model);
     }
@@ -81,7 +81,7 @@ abstract class Repository extends Assembler implements RepositoryContract
      * that implement the Autonomous interface, ensuring
      * they are usable immediately upon instantiation.
      */
-    private function loadAction(string $name, Resource&Autonomous $action): void
+    private function loadAction(string $name, Resource $action): void
     {
         $action->perform();
         $this->addResource($name, $action->getContent());

@@ -2,10 +2,10 @@
 
 namespace Itsmattch\Nexus\Contract;
 
-// todo
+use Itsmattch\Nexus\Common\Message;
 
 interface Writer
 {
     /** todo */
-    public function write(array $input): string;
+    public function write(array $input): ?Message;
 }

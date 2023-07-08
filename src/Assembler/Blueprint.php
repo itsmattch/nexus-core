@@ -25,7 +25,7 @@ abstract class Blueprint extends Assembler
         $this->loadActions();
     }
 
-    private function loadModel(Model&Autonomous $model): void
+    private function loadModel(Model $model): void
     {
         $this->setModel($model);
     }
@@ -58,7 +58,7 @@ abstract class Blueprint extends Assembler
      * ensuring they are usable immediately upon
      * instantiation.
      */
-    private function loadAction(string $name, Resource&Autonomous $action): void
+    private function loadAction(string $name, Resource $action): void
     {
         $action->perform();
         $this->addResource($name, $action->getContent());
