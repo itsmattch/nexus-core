@@ -58,6 +58,11 @@ class Action implements ActionContract, Autonomous
      */
     private readonly Reader $internalReader;
 
+    /**
+     * Action status.
+     */
+    private bool $performed;
+
     public function __construct()
     {
         $this->loadAddress();
@@ -94,23 +99,40 @@ class Action implements ActionContract, Autonomous
         $this->bootEngine($this->internalEngine);
     }
 
+    /**
+     * @param Address $address An instance of the Address
+     * class representing the resource's address.
+     */
     public function setAddress(Address $address): void
     {
         $this->internalAddress = $address;
     }
 
+    /**
+     * @param Engine $engine An instance of the Engine class
+     * that defines the methods for accessing the resource.
+     */
     public function setEngine(Engine $engine): void
     {
         $this->internalEngine = $engine;
     }
 
+    /**
+     * @param Reader $reader An instance of the Reader class
+     * that defines methods for interpreting raw resource
+     * data.
+     */
     public function setReader(Reader $reader): void
     {
         $this->internalReader = $reader;
     }
 
-    public function perform(): bool
+    public function performOnce(): void
     {
+        if ($this->performed) {
+            return;
+        }
+
         $this->internalEngine->initialize();
         $this->internalEngine->execute();
         $this->internalEngine->close();
@@ -120,7 +142,7 @@ class Action implements ActionContract, Autonomous
         $this->internalReader->setInput($result);
         $this->internalReader->read();
 
-        return true;
+        $this->performed = true;
     }
 
     /**
