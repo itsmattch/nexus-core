@@ -2,15 +2,12 @@
 
 namespace Itsmattch\Nexus\Contract;
 
+use Itsmattch\Nexus\Contract\Resource\Action;
+
 /**
  * todo
  */
 interface Resource
 {
-    /**
-     * Performs a specific action on the resource
-     */
-    public function performOnce(): void;
-
-    public function trigger();
+    public function trigger(Action $action): void;
 }
