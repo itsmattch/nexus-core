@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Engine\Concrete\Action;
+namespace Itsmattch\Nexus\Engine\Concrete\Action\Http;
 
 use Itsmattch\Nexus\Contract\Engine;
 use Itsmattch\Nexus\Contract\Resource\Action;
@@ -8,7 +8,7 @@ use Itsmattch\Nexus\Contract\Writer;
 use Itsmattch\Nexus\Engine\Concrete\HttpEngine;
 use Itsmattch\Nexus\Engine\Enum\HttpMethod;
 
-abstract class Create implements Action
+class Delete implements Action
 {
     /**
      * @param HttpEngine $engine
@@ -16,6 +16,6 @@ abstract class Create implements Action
      */
     public function act(Engine $engine, Writer $writer): void
     {
-        $engine->setMethod(HttpMethod::POST);
+        $engine->setMethod(HttpMethod::DELETE);
     }
 }
