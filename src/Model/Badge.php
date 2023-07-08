@@ -37,13 +37,13 @@ class Badge implements BadgeContract
         return $this->name === $badge->getName();
     }
 
-    public function setIdentity(IdentityContract $identity): void
-    {
-        $this->identity = $identity;
-    }
-
     public function getIdentity(): ?IdentityContract
     {
         return $this->identity ?? null;
+    }
+
+    public function setIdentity(IdentityContract $identity): void
+    {
+        $this->identity = $identity;
     }
 }

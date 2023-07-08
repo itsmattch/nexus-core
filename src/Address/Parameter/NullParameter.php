@@ -17,6 +17,12 @@ class NullParameter implements ParameterContract
     protected static NullParameter $instance;
 
     /**
+     * The private constructor for the NullParameter class.
+     * Prevents external instantiation.
+     */
+    private function __construct() {}
+
+    /**
      * Returns the singleton instance of the NullParameter.
      *
      * @return NullParameter The singleton instance.
@@ -29,12 +35,6 @@ class NullParameter implements ParameterContract
 
         return self::$instance;
     }
-
-    /**
-     * The private constructor for the NullParameter class.
-     * Prevents external instantiation.
-     */
-    private function __construct() {}
 
     /**
      * Overrides the setValue method from Parameter.

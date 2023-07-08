@@ -9,6 +9,9 @@ use Itsmattch\Nexus\Address\Address;
  */
 class AddressFactory
 {
+    /** Disallows instantiation of the factory. */
+    private function __construct() {}
+
     /**
      * Constructs an Address based on a passed string and
      * optional list of parameters.
@@ -29,7 +32,4 @@ class AddressFactory
 
         return $addressInstance;
     }
-
-    /** Disallows instantiation of the factory. */
-    private function __construct() {}
 }

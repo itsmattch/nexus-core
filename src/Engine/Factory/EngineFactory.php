@@ -19,6 +19,11 @@ final class EngineFactory
     ];
 
     /**
+     * Disallows instantiation of the factory.
+     */
+    private function __construct() {}
+
+    /**
      * Associates an engine class with a scheme.
      *
      * @param string $scheme The scheme.
@@ -46,9 +51,4 @@ final class EngineFactory
         }
         return null;
     }
-
-    /**
-     * Disallows instantiation of the factory.
-     */
-    private function __construct() {}
 }

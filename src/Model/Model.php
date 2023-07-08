@@ -43,6 +43,58 @@ abstract class Model implements ModelContract
     }
 
     /**
+     * @return string The generic name of the model.
+     */
+    final public function getGenericName(): string
+    {
+        return $this->genericName;
+    }
+
+    public function getName(): string
+    {
+        return $this->internalName ?? $this->getGenericName();
+    }
+
+    public function setName(string $name): void
+    {
+        $this->internalName = $name;
+    }
+
+    public function getBadges(): array
+    {
+        return $this->badgesList;
+    }
+
+    public function getBadge(string $name): ?BadgeContract
+    {
+        foreach ($this->badgesList as $badge) {
+            if ($badge->getName() === $name) {
+                return $badge;
+            }
+        }
+        return null;
+    }
+
+    public function addBadge(BadgeContract $badge): bool
+    {
+        if ($this->hasBadge($badge->getName())) {
+            return false;
+        }
+        $this->badgesList[] = $badge;
+        return true;
+    }
+
+    public function hasBadge(string $name): bool
+    {
+        return $this->getBadge($name) !== null;
+    }
+
+    public function identifiesWith(string $badge, array $keys): bool
+    {
+        return true;
+    }
+
+    /**
      * Sets the name of the model using the explicitly
      * declared model name.
      */
@@ -100,57 +152,5 @@ abstract class Model implements ModelContract
 
             $this->addBadge($badge);
         }
-    }
-
-    /**
-     * @return string The generic name of the model.
-     */
-    final public function getGenericName(): string
-    {
-        return $this->genericName;
-    }
-
-    public function getName(): string
-    {
-        return $this->internalName ?? $this->getGenericName();
-    }
-
-    public function setName(string $name): void
-    {
-        $this->internalName = $name;
-    }
-
-    public function getBadges(): array
-    {
-        return $this->badgesList;
-    }
-
-    public function getBadge(string $name): ?BadgeContract
-    {
-        foreach ($this->badgesList as $badge) {
-            if ($badge->getName() === $name) {
-                return $badge;
-            }
-        }
-        return null;
-    }
-
-    public function addBadge(BadgeContract $badge): bool
-    {
-        if ($this->hasBadge($badge->getName())) {
-            return false;
-        }
-        $this->badgesList[] = $badge;
-        return true;
-    }
-
-    public function hasBadge(string $name): bool
-    {
-        return $this->getBadge($name) !== null;
-    }
-
-    public function identifiesWith(string $badge, array $keys): bool
-    {
-        return true;
     }
 }

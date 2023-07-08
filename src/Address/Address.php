@@ -12,32 +12,27 @@ use Stringable;
 
 class Address implements AddressContract, Stringable
 {
+    protected static string $parametersTemplate = '/(?<literal>{(?<optional>@)?(?<name>[a-z0-9_]+)})/';
     /**
      * Address template allowing parameters.
      */
     protected string $template = '';
-
     /**
      * Default values for parameters within the template.
      */
     protected array $defaults = [];
-
     /**
      * Internal template.
      */
     private readonly string $internalTemplate;
-
     /**
      * Internal list of default values.
      */
     private array $internalDefaults = [];
-
     /**
      * Collection of all parameter definitions.
      */
     private array $parameters = [];
-
-    protected static string $parametersTemplate = '/(?<literal>{(?<optional>@)?(?<name>[a-z0-9_]+)})/';
 
     /**
      * Constructs a new Address instance. It processes the
@@ -54,68 +49,6 @@ class Address implements AddressContract, Stringable
 
         foreach ($parameters as $parameter => $value) {
             $this->setValue($parameter, $value);
-        }
-    }
-
-    /**
-     * Loads the template defined in the $template property.
-     */
-    private function loadTemplate(): void
-    {
-        if (!empty($this->template)) {
-            $this->setTemplate($this->template);
-        }
-    }
-
-    /**
-     * Iterates over the default values defined in the
-     * $defaults property and sets each default value.
-     */
-    private function loadDefaults(): void
-    {
-        foreach ($this->defaults as $parameter => $value) {
-            $this->setDefault($parameter, $value);
-        }
-    }
-
-    public function setTemplate(string $template): void
-    {
-        $this->internalTemplate = $template;
-        $this->loadParameters();
-    }
-
-    /**
-     * Extracts parameter definitions.
-     */
-    private function loadParameters(): void
-    {
-        preg_match_all(static::$parametersTemplate, $this->internalTemplate, $matchedParameters, PREG_SET_ORDER);
-
-        $requiredParameters = [];
-        foreach ($matchedParameters as $parameter) {
-            if (in_array($parameter['name'], $requiredParameters)) {
-                continue;
-            }
-
-            $name = $parameter['name'];
-            $optional = (bool)$parameter['optional'];
-            $literal = $parameter['literal'];
-            $default = $this->internalDefaults[$name] ?? '';
-            $camelName = str_replace('_', '', ucwords($name, '_'));
-
-            if (!$optional) {
-                $requiredParameters[] = $name;
-            }
-
-            $parameterObject = $optional
-                ? new OptionalParameter($literal, $name, $default)
-                : new RequiredParameter($literal, $name, $default);
-
-            $this->parameters[$parameterObject->getName()] = new ProxyParameter(
-                $parameterObject,
-                [$this, "capture$camelName"],
-                [$this, "release$camelName"],
-            );
         }
     }
 
@@ -209,6 +142,12 @@ class Address implements AddressContract, Stringable
         return $this->internalTemplate;
     }
 
+    public function setTemplate(string $template): void
+    {
+        $this->internalTemplate = $template;
+        $this->loadParameters();
+    }
+
     /**
      * Returns the address in its current state,
      * irrespective of its validity.
@@ -228,6 +167,67 @@ class Address implements AddressContract, Stringable
         return $address;
     }
 
+    public function __toString(): string
+    {
+        return $this->getAddress();
+    }
+
+    /**
+     * Loads the template defined in the $template property.
+     */
+    private function loadTemplate(): void
+    {
+        if (!empty($this->template)) {
+            $this->setTemplate($this->template);
+        }
+    }
+
+    /**
+     * Iterates over the default values defined in the
+     * $defaults property and sets each default value.
+     */
+    private function loadDefaults(): void
+    {
+        foreach ($this->defaults as $parameter => $value) {
+            $this->setDefault($parameter, $value);
+        }
+    }
+
+    /**
+     * Extracts parameter definitions.
+     */
+    private function loadParameters(): void
+    {
+        preg_match_all(static::$parametersTemplate, $this->internalTemplate, $matchedParameters, PREG_SET_ORDER);
+
+        $requiredParameters = [];
+        foreach ($matchedParameters as $parameter) {
+            if (in_array($parameter['name'], $requiredParameters)) {
+                continue;
+            }
+
+            $name = $parameter['name'];
+            $optional = (bool)$parameter['optional'];
+            $literal = $parameter['literal'];
+            $default = $this->internalDefaults[$name] ?? '';
+            $camelName = str_replace('_', '', ucwords($name, '_'));
+
+            if (!$optional) {
+                $requiredParameters[] = $name;
+            }
+
+            $parameterObject = $optional
+                ? new OptionalParameter($literal, $name, $default)
+                : new RequiredParameter($literal, $name, $default);
+
+            $this->parameters[$parameterObject->getName()] = new ProxyParameter(
+                $parameterObject,
+                [$this, "capture$camelName"],
+                [$this, "release$camelName"],
+            );
+        }
+    }
+
     /**
      * Get parameter by its name. Returns singleton instance
      * of null parameter if the name is not found.
@@ -239,10 +239,5 @@ class Address implements AddressContract, Stringable
     private function getParameter(string $name): ParameterContract
     {
         return $this->parameters[$name] ?? NullParameter::getInstance();
-    }
-
-    public function __toString(): string
-    {
-        return $this->getAddress();
     }
 }

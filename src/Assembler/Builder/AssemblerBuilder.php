@@ -6,7 +6,6 @@ use Closure;
 use Itsmattch\Nexus\Contract\Assembler\Builder\AssemblerBuilder as AssemblerBuilderContract;
 use Itsmattch\Nexus\Contract\Assembler\Builder\Callable\Invokable;
 
-
 class AssemblerBuilder implements AssemblerBuilderContract
 {
     /**
