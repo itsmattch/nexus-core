@@ -43,10 +43,6 @@ class FilterInvokable implements Invokable
      */
     public function __invoke(array $current, array $original): array
     {
-        if (empty($this->filterStack)) {
-            $this->filterStack = [null];
-        }
-
         foreach ($this->filterStack as $filterCallback) {
             $current = array_filter($current, $filterCallback);
         }
@@ -63,7 +59,7 @@ class FilterInvokable implements Invokable
         $path = $this->path;
         $this->filterStack[] = function ($value) use ($path) {
             $pathValue = $this->traverseDotArray($path, $value);
-            return empty($pathValue);
+            return !empty($pathValue);
         };
     }
 
@@ -76,7 +72,7 @@ class FilterInvokable implements Invokable
         $path = $this->path;
         $this->filterStack[] = function ($value) use ($path) {
             $pathValue = $this->traverseDotArray($path, $value);
-            return !empty($pathValue);
+            return empty($pathValue);
         };
     }
 }
