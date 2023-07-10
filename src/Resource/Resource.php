@@ -24,6 +24,7 @@ class Resource implements ResourceContract
      * This property is required.
      */
     protected string $address = Address::class;
+
     /**
      * The engine that the Action will use to connect to
      * the resource.
@@ -33,27 +34,42 @@ class Resource implements ResourceContract
      * Engine based on the address scheme.
      */
     protected string $engine = Engine::class;
+
     /**
      * Specifies the data format that the Reader and Writer
      * will use to read and write the resource data.
      */
     protected string $format = '';
+
     /**
      * Stores an instance of the Address.
      */
     private readonly Address $addressInstance;
+
     /**
      * Stores an instance of the Engine.
      */
     private readonly Engine $engineInstance;
+
     /**
      * Stores an instance of the Reader.
      */
     private readonly Reader $readerInstance;
+
     /**
      * Stores an instance of the Writer.
      */
     private readonly Writer $writerInstance;
+
+    /**
+     * Stores address parameters.
+     */
+    private array $parameters;
+
+    public function __construct(array $parameters = [])
+    {
+        $this->parameters = $parameters;
+    }
 
     public function trigger(?Action $action = null): array
     {
@@ -176,8 +192,8 @@ class Resource implements ResourceContract
     private function loadAddress(): void
     {
         $address = is_subclass_of($this->address, Address::class)
-            ? new $this->address()
-            : AddressFactory::from($this->address);
+            ? new $this->address($this->parameters)
+            : AddressFactory::from($this->address, $this->parameters);
 
         $this->addressInstance = $address;
         $this->bootAddress($this->addressInstance);
