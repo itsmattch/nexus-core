@@ -23,7 +23,6 @@ abstract class Blueprint extends Assembler
     public function __construct()
     {
         $this->loadModel(new $this->model);
-        $this->prepareResources();
         $this->loadResources();
     }
 
@@ -40,18 +39,6 @@ abstract class Blueprint extends Assembler
     private function loadModel(Model $model): void
     {
         $this->internalModel = $model;
-    }
-
-    /**
-     * Ensures that the actions are represented
-     * as arrays for easy iteration.
-     */
-    private function prepareResources(): void
-    {
-        // todo edge case [resource, action]
-        if (!is_array($this->resources)) {
-            $this->resources = [$this->resources];
-        }
     }
 
     /**

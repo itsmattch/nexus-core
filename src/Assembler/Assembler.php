@@ -15,8 +15,7 @@ abstract class Assembler implements AssemblerContract
 
     /**
      * Fully qualified class names of the resources this
-     * repository uses to discover models. Can be either a
-     * single class as a string or an array of classes.
+     * repository uses to discover models.
      */
-    protected string|array $resources = [];
+    protected array $resources = [];
 }
