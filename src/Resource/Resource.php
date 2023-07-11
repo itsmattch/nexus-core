@@ -73,20 +73,23 @@ class Resource implements ResourceContract
 
     public function trigger(?Action $action = null): array
     {
+        $engine = $this->getEngine();
+        $reader = $this->getReader();
+
         // Ensure the internal engine is in a clean state
         // before starting a new action.
-        $this->engineInstance->close();
+        $engine->close();
 
         // Act
         $action?->act($this);
 
         // Init, exec & close
-        $this->engineInstance->initialize();
-        $response = $this->engineInstance->execute();
-        $this->engineInstance->close();
+        $engine->initialize();
+        $response = $engine->execute();
+        $engine->close();
 
         // Return the content read from the response body.
-        return $this->readerInstance->read($response);
+        return $reader->read($response);
     }
 
     public function getAddress(): Address
@@ -207,9 +210,9 @@ class Resource implements ResourceContract
     {
         $engine = is_subclass_of($this->engine, Engine::class)
             ? new $this->engine()
-            : EngineFactory::from($this->addressInstance->getScheme());
+            : EngineFactory::from($this->getAddress()->getScheme());
 
-        $engine->setAddress($this->addressInstance);
+        $engine->setAddress($this->getAddress());
 
         $this->engineInstance = $engine;
         $this->bootEngine($this->engineInstance);
