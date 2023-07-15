@@ -2,22 +2,22 @@
 
 namespace Itsmattch\Nexus\Contract;
 
-use Itsmattch\Nexus\Contract\Model\Badge;
-use Itsmattch\Nexus\Contract\Model\Badge as BadgeContract;
+use Itsmattch\Nexus\Contract\Entity\Badge;
+use Itsmattch\Nexus\Contract\Entity\Badge as BadgeContract;
 
-interface Model
+interface Entity
 {
     /**
-     * @return string the explicit name of the model if set,
+     * @return string the explicit name of the entity if set,
      * or its generic name otherwise.
      */
     public function getName(): string;
 
     /**
-     * Sets the custom name of the model. This method does
+     * Sets the custom name of the entity. This method does
      * not allow for an existing name to be overridden.
      *
-     * @param string $name The name to set for the model.
+     * @param string $name The name to set for the entity.
      */
     public function setName(string $name): void;
 
@@ -35,10 +35,10 @@ interface Model
     public function getBadge(string $name): ?Badge;
 
     /**
-     * Adds a new badge to the model.
+     * Adds a new badge to the entity.
      *
      * @param BadgeContract $badge The badge to add to the
-     * model.
+     * entity.
      */
     public function addBadge(Badge $badge): void;
 
@@ -53,7 +53,7 @@ interface Model
     public function hasBadge(string $name): bool;
 
     /**
-     * Checks whether the model identifies with a badge of
+     * Checks whether the entity identifies with a badge of
      * given name and if it has certain values assigned.
      *
      * @param string $badge The name of the badge.
@@ -61,7 +61,7 @@ interface Model
      * key is a part of the primary key and each value is
      * the corresponding value for that key.
      *
-     * @return bool Returns true if the model identifies
+     * @return bool Returns true if the entity identifies
      * with passed badge and keys, false otherwise.
      */
     public function identifiesWith(string $badge, array $keys): bool;

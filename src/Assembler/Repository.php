@@ -3,19 +3,19 @@
 namespace Itsmattch\Nexus\Assembler;
 
 use Itsmattch\Nexus\Assembler\Builder\CollectionBuilder;
-use Itsmattch\Nexus\Assembler\Builder\ModelBuilder;
+use Itsmattch\Nexus\Assembler\Builder\EntityBuilder;
 use Itsmattch\Nexus\Contract\Assembler\Repository as RepositoryContract;
-use Itsmattch\Nexus\Contract\Model;
-use Itsmattch\Nexus\Contract\Model\Collection as CollectionContract;
+use Itsmattch\Nexus\Contract\Entity;
+use Itsmattch\Nexus\Contract\Entity\Collection as CollectionContract;
 use Itsmattch\Nexus\Contract\Resource;
 use Itsmattch\Nexus\Contract\Resource\Action;
-use Itsmattch\Nexus\Model\Collection;
+use Itsmattch\Nexus\Entity\Collection;
 
 abstract class Repository extends Assembler implements RepositoryContract
 {
     /**
      * Fully qualified class name of a collection
-     * that stores discovered models.
+     * that stores discovered entities.
      */
     protected string $collection = Collection::class;
 
@@ -26,9 +26,9 @@ abstract class Repository extends Assembler implements RepositoryContract
 
     /**
      * The fully qualified class name of
-     * the internally used model.
+     * the internally used entity.
      */
-    private readonly string $internalModel;
+    private readonly string $internalEntity;
 
     /**
      * Internal storage of instantiated collection object.
@@ -38,7 +38,7 @@ abstract class Repository extends Assembler implements RepositoryContract
     public function __construct()
     {
         $this->loadCollection(new $this->collection());
-        $this->loadModel(new $this->model());
+        $this->loadEntity(new $this->entity());
         $this->loadResources();
     }
 
@@ -47,9 +47,9 @@ abstract class Repository extends Assembler implements RepositoryContract
         $this->internalResources[$name] = $resource;
     }
 
-    public function setModel(Model $model): void
+    public function setEntity(Entity $entity): void
     {
-        $this->internalModel = $model::class;
+        $this->internalEntity = $entity::class;
     }
 
     public function assemble(): bool
@@ -57,18 +57,18 @@ abstract class Repository extends Assembler implements RepositoryContract
         $collectionBuilder = new CollectionBuilder();
         $this->collection($collectionBuilder);
 
-        $modelBuilder = new ModelBuilder();
-        $this->model($modelBuilder);
+        $entityBuilder = new EntityBuilder();
+        $this->entity($entityBuilder);
 
         $processedCollection = $collectionBuilder->call($this->internalResources);
 
-        foreach ($processedCollection as $modelData) {
-            $model = $modelBuilder->call($modelData);
+        foreach ($processedCollection as $entityData) {
+            $entity = $entityBuilder->call($entityData);
 
-            $modelInstance = new $this->model();
+            $entityInstance = new $this->entity();
             // feed with data
 
-            $this->internalCollection->addModel($modelInstance);
+            $this->internalCollection->addEntity($entityInstance);
         }
 
         return true;
@@ -83,7 +83,7 @@ abstract class Repository extends Assembler implements RepositoryContract
     protected function collection(CollectionBuilder $builder): void {}
 
     /** todo */
-    abstract protected function model(ModelBuilder $builder): void;
+    abstract protected function entity(EntityBuilder $builder): void;
 
     private function loadCollection(CollectionContract $collection): void
     {
@@ -91,13 +91,13 @@ abstract class Repository extends Assembler implements RepositoryContract
     }
 
     /**
-     * This function restricts the accepted model to one
+     * This function restricts the accepted entity to one
      * that implement the Autonomous interface, ensuring
      * they are usable immediately upon instantiation.
      */
-    private function loadModel(Model $model): void
+    private function loadEntity(Entity $entity): void
     {
-        $this->setModel($model);
+        $this->setEntity($entity);
     }
 
     /**

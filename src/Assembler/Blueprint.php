@@ -2,8 +2,7 @@
 
 namespace Itsmattch\Nexus\Assembler;
 
-use Itsmattch\Nexus\Action\Common\Read;
-use Itsmattch\Nexus\Contract\Model;
+use Itsmattch\Nexus\Contract\Entity;
 use Itsmattch\Nexus\Contract\Resource;
 use Itsmattch\Nexus\Contract\Resource\Action;
 
@@ -15,14 +14,14 @@ abstract class Blueprint extends Assembler
     private array $internalResources = [];
 
     /**
-     * The internal model instance.
+     * The internal entity instance.
      */
-    private readonly Model $internalModel;
+    private readonly Entity $internalEntity;
 
 
     public function __construct()
     {
-        $this->loadModel(new $this->model);
+        $this->loadEntity(new $this->entity);
         $this->loadResources();
     }
 
@@ -36,9 +35,9 @@ abstract class Blueprint extends Assembler
         return true; // todo
     }
 
-    private function loadModel(Model $model): void
+    private function loadEntity(Entity $entity): void
     {
-        $this->internalModel = $model;
+        $this->internalEntity = $entity;
     }
 
     /**
@@ -56,16 +55,12 @@ abstract class Blueprint extends Assembler
 
     /**
      * This function restricts the accepted actions to
-     * models that implement the Autonomous interface,
+     * entities that implement the Autonomous interface,
      * ensuring they are usable immediately upon
      * instantiation.
      */
     private function loadResource(string $name, Resource $resource, ?Action $action = null): void
     {
-        if (!isset($action)) {
-            $action = new Read();
-        }
-
         $this->addResource($name, $resource->trigger($action));
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace Itsmattch\Nexus\Model;
+namespace Itsmattch\Nexus\Entity;
 
-use Itsmattch\Nexus\Contract\Model\Badge as BadgeContract;
-use Itsmattch\Nexus\Contract\Model\Identity as IdentityContract;
+use Itsmattch\Nexus\Contract\Entity\Badge as BadgeContract;
+use Itsmattch\Nexus\Contract\Entity\Identity as IdentityContract;
 
 class Badge implements BadgeContract
 {

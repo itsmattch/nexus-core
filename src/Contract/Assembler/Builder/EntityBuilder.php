@@ -4,6 +4,6 @@ namespace Itsmattch\Nexus\Contract\Assembler\Builder;
 
 /**
  * Provides additional functionality to the base Builder
- * for working with models.
+ * for working with entities.
  */
-interface ModelBuilder extends AssemblerBuilder { }
+interface EntityBuilder extends AssemblerBuilder { }

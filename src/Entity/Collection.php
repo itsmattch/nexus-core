@@ -1,30 +1,30 @@
 <?php
 
-namespace Itsmattch\Nexus\Model;
+namespace Itsmattch\Nexus\Entity;
 
-use Itsmattch\Nexus\Contract\Model as ModelContract;
-use Itsmattch\Nexus\Contract\Model\Collection as CollectionContract;
+use Itsmattch\Nexus\Contract\Entity as EntityContract;
+use Itsmattch\Nexus\Contract\Entity\Collection as CollectionContract;
 
 class Collection implements CollectionContract, \Iterator, \Countable
 {
     /**
-     * @var array<Model> A list of models.
+     * @var array<Entity> A list of entities.
      */
-    private array $models;
+    private array $entities;
 
     /**
      * The position of the iterator.
      */
     private int $position = 0;
 
-    public function addModel(ModelContract $model): void
+    public function addEntity(EntityContract $entity): void
     {
-        $this->models[] = $model;
+        $this->entities[] = $entity;
     }
 
-    public function current(): Model
+    public function current(): Entity
     {
-        return $this->models[$this->position];
+        return $this->entities[$this->position];
     }
 
     public function next(): void
@@ -39,7 +39,7 @@ class Collection implements CollectionContract, \Iterator, \Countable
 
     public function valid(): bool
     {
-        return isset($this->models[$this->position]);
+        return isset($this->entities[$this->position]);
     }
 
     public function rewind(): void
@@ -49,6 +49,6 @@ class Collection implements CollectionContract, \Iterator, \Countable
 
     public function count(): int
     {
-        return count($this->models);
+        return count($this->entities);
     }
 }

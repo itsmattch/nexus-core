@@ -1,16 +1,16 @@
 <?php
 
-namespace Itsmattch\Nexus\Model;
+namespace Itsmattch\Nexus\Entity;
 
-use Itsmattch\Nexus\Contract\Model as ModelContract;
-use Itsmattch\Nexus\Contract\Model\Badge as BadgeContract;
+use Itsmattch\Nexus\Contract\Entity as EntityContract;
+use Itsmattch\Nexus\Contract\Entity\Badge as BadgeContract;
 use ReflectionClass;
 
 /** todo */
-abstract class Model implements ModelContract
+abstract class Entity implements EntityContract
 {
     /**
-     * The explicit name of the model.
+     * The explicit name of the entity.
      */
     protected string $name;
 
@@ -20,12 +20,12 @@ abstract class Model implements ModelContract
     protected array $badges = [];
 
     /**
-     * The internal state of the model name.
+     * The internal state of the entity name.
      */
     private readonly string $internalName;
 
     /**
-     * The generic name of the model.
+     * The generic name of the entity.
      */
     private readonly string $genericName;
 
@@ -45,7 +45,7 @@ abstract class Model implements ModelContract
     }
 
     /**
-     * @return string The generic name of the model.
+     * @return string The generic name of the entity.
      */
     public function getGenericName(): string
     {
@@ -107,8 +107,8 @@ abstract class Model implements ModelContract
     }
 
     /**
-     * Sets the name of the model using the explicitly
-     * declared model name.
+     * Sets the name of the entity using the explicitly
+     * declared entity name.
      */
     private function loadInternalName(): void
     {
@@ -118,7 +118,7 @@ abstract class Model implements ModelContract
     }
 
     /**
-     * Generates and assigns a generic name to the model
+     * Generates and assigns a generic name to the entity
      * based on its fully qualified class name. For
      * anonymous classes, it uses the first 8 characters
      * of an MD5 hash of the class name, prefixed with
