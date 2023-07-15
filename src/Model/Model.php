@@ -34,6 +34,8 @@ abstract class Model implements ModelContract
      */
     private array $badgesList = [];
 
+    private array $data = [];
+
     public function __construct()
     {
         $this->loadInternalName();
@@ -45,7 +47,7 @@ abstract class Model implements ModelContract
     /**
      * @return string The generic name of the model.
      */
-    final public function getGenericName(): string
+    public function getGenericName(): string
     {
         return $this->genericName;
     }
@@ -75,13 +77,11 @@ abstract class Model implements ModelContract
         return null;
     }
 
-    public function addBadge(BadgeContract $badge): bool
+    public function addBadge(BadgeContract $badge): void
     {
-        if ($this->hasBadge($badge->getName())) {
-            return false;
+        if (!$this->hasBadge($badge->getName())) {
+            $this->badgesList[] = $badge;
         }
-        $this->badgesList[] = $badge;
-        return true;
     }
 
     public function hasBadge(string $name): bool
@@ -92,6 +92,18 @@ abstract class Model implements ModelContract
     public function identifiesWith(string $badge, array $keys): bool
     {
         return true;
+    }
+
+    /** todo */
+    public function fill(array $values)
+    {
+        // todo load many?
+    }
+
+    /** todo */
+    public function load(string $name, mixed $value)
+    {
+        // todo load data into $data.
     }
 
     /**

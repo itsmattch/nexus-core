@@ -11,6 +11,15 @@ class CollectionBuilder extends AssemblerBuilder implements CollectionBuilderCon
 {
     use ArrayHelpers;
 
+    public function call(array $array): array
+    {
+        $workingArray = $array;
+        foreach ($this->callableStack as $callable) {
+            $workingArray = $callable($workingArray, $array);
+        }
+        return $workingArray;
+    }
+
     /**
      * Adds a root callable to the callable stack that is
      * responsible for returning a subarray of the original
