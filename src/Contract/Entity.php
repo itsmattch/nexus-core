@@ -14,14 +14,6 @@ interface Entity
     public function getName(): string;
 
     /**
-     * Sets the custom name of the entity. This method does
-     * not allow for an existing name to be overridden.
-     *
-     * @param string $name The name to set for the entity.
-     */
-    public function setName(string $name): void;
-
-    /**
      * @return array<BadgeContract> The array of badges.
      */
     public function getBadges(): array;
@@ -35,12 +27,12 @@ interface Entity
     public function getBadge(string $name): ?Badge;
 
     /**
-     * Adds a new badge to the entity.
+     * Adds or overrides a badge.
      *
-     * @param BadgeContract $badge The badge to add to the
-     * entity.
+     * @param BadgeContract $badge The badge to set or
+     * override to the entity.
      */
-    public function addBadge(Badge $badge): void;
+    public function setBadge(Badge $badge): void;
 
     /**
      * Checks whether a badge with the given name exists.

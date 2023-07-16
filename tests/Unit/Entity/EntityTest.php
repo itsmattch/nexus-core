@@ -12,14 +12,6 @@ it('returns declared name', function () {
     expect($entity->getName())->toBe('name');
 });
 
-// setName()
-it('returns set name', function () {
-    $entity = new class extends Entity { };
-    $entity->setName('name');
-
-    expect($entity->getName())->toBe('name');
-});
-
 // getGenericName()
 it('returns generic name if name is empty', function () {
     $entity = new class extends Entity { };
@@ -37,8 +29,8 @@ it('accepts multiple unique badges', function () {
     $badgeTwo->shouldReceive('getName')->andReturn('two');
 
     $entity = new class extends Entity { };
-    $entity->addBadge($badgeOne);
-    $entity->addBadge($badgeTwo);
+    $entity->setBadge($badgeOne);
+    $entity->setBadge($badgeTwo);
 
     expect($entity->getBadges())->toBeArray();
     expect($entity->getBadges())->toHaveCount(2);
@@ -53,8 +45,8 @@ it('rejects badges with duplicate names', function () {
     $badgeTwo->shouldReceive('getName')->andReturn('badge');
 
     $entity = new class extends Entity { };
-    $entity->addBadge($badgeOne);
-    $entity->addBadge($badgeTwo);
+    $entity->setBadge($badgeOne);
+    $entity->setBadge($badgeTwo);
 
     expect($entity->getBadges())->toBeArray();
     expect($entity->getBadges())->toHaveCount(1);
@@ -68,7 +60,7 @@ it('retrieves badge by its name', function () {
     $badge->shouldReceive('getName')->andReturn('badge');
 
     $entity = new class extends Entity { };
-    $entity->addBadge($badge);
+    $entity->setBadge($badge);
 
     expect($entity->hasBadge('badge'))->toBeTrue();
     expect($entity->getBadge('badge'))->toBe($badge);
