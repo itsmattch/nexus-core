@@ -76,14 +76,14 @@ class Resource implements ResourceContract
         $engine = $this->getEngine();
         $reader = $this->getReader();
 
-        // Ensure the internal engine is in a clean state
-        // before starting a new action.
+        // Make sure that the internal engine is in
+        // a clean state  before starting a new action.
         $engine->close();
 
-        // Act
+        // Perform passed action on self.
         $action?->act($this);
 
-        // Init, exec & close
+        // Initialize, execute and close connection.
         $engine->initialize();
         $response = $engine->execute();
         $engine->close();
