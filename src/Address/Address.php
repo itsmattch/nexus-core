@@ -57,14 +57,14 @@ class Address implements AddressContract, Stringable
         $this->internalDefaults[$parameter] = $value;
     }
 
-    public function getValue(string $parameter): ?string
+    public function getValue(string $parameter): string
     {
-        return $this->getParameter($parameter)->getValue();
+        return $this->getParameter($parameter)?->getValue() ?? '';
     }
 
     public function setValue(string $parameter, mixed $value): void
     {
-        $this->getParameter($parameter)->setValue($value);
+        $this->getParameter($parameter)?->setValue($value);
     }
 
     public function getAddress(): string
@@ -234,10 +234,10 @@ class Address implements AddressContract, Stringable
      *
      * @param string $name Parameter name.
      *
-     * @return ParameterContract Found parameter, or null.
+     * @return ?ParameterContract Found parameter, or null.
      */
-    private function getParameter(string $name): ParameterContract
+    private function getParameter(string $name): ?ParameterContract
     {
-        return $this->parameters[$name] ?? NullParameter::getInstance();
+        return $this->parameters[$name] ?? null;
     }
 }
