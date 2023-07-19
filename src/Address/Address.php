@@ -2,7 +2,6 @@
 
 namespace Itsmattch\Nexus\Address;
 
-use Itsmattch\Nexus\Address\Parameter\NullParameter;
 use Itsmattch\Nexus\Address\Parameter\OptionalParameter;
 use Itsmattch\Nexus\Address\Parameter\ProxyParameter;
 use Itsmattch\Nexus\Address\Parameter\RequiredParameter;
@@ -13,22 +12,27 @@ use Stringable;
 class Address implements AddressContract, Stringable
 {
     protected static string $parametersTemplate = '/(?<literal>{(?<optional>@)?(?<name>[a-z0-9_]+)})/';
+
     /**
      * Address template allowing parameters.
      */
     protected string $template = '';
+
     /**
      * Default values for parameters within the template.
      */
     protected array $defaults = [];
+
     /**
      * Internal template.
      */
     private readonly string $internalTemplate;
+
     /**
      * Internal list of default values.
      */
     private array $internalDefaults = [];
+
     /**
      * Collection of all parameter definitions.
      */
@@ -158,11 +162,10 @@ class Address implements AddressContract, Stringable
     {
         $address = $this->internalTemplate;
         foreach ($this->parameters as $parameter) {
-            if (!$parameter->isValid()) {
-                continue;
+            if ($parameter->isValid()) {
+                $name = $parameter->getName();
+                $address = preg_replace("/{@?$name}/", $parameter->getValue(), $address);
             }
-            $name = $parameter->getName();
-            $address = preg_replace("/{@?$name}/", $parameter->getValue(), $address);
         }
         return $address;
     }
