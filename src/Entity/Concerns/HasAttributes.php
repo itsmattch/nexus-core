@@ -2,10 +2,14 @@
 
 namespace Itsmattch\Nexus\Entity\Concerns;
 
-/** todo */
+/**
+ * Allows the entities to define and manage attributes.
+ */
 trait HasAttributes
 {
-    /** todo */
+    /**
+     * A preset definition of attributes.
+     */
     protected array $attributes = [];
 
     /** todo */

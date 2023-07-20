@@ -6,7 +6,9 @@ use Itsmattch\Nexus\Contract\Entity\Badge as BadgeContract;
 use Itsmattch\Nexus\Entity\Badge;
 use Itsmattch\Nexus\Entity\Identity;
 
-/** todo */
+/**
+ * Allows the entities to define and manage badges.
+ */
 trait HasBadges
 {
     /**

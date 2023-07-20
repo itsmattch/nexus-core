@@ -79,10 +79,20 @@ abstract class Repository extends Assembler implements RepositoryContract
         return $this->internalCollection;
     }
 
-    /** todo */
+    /**
+     * Provides a mechanism for the transformation of raw
+     * array data into a structured collection of entities.
+     *
+     * @param CollectionBuilder $builder
+     */
     protected function collection(CollectionBuilder $builder): void {}
 
-    /** todo */
+    /**
+     * Serves as a blueprint for the extraction and
+     * organization of specific data about each entity.
+     *
+     * @param EntityBuilder $builder
+     */
     abstract protected function entity(EntityBuilder $builder): void;
 
     private function loadCollection(CollectionContract $collection): void

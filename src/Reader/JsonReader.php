@@ -2,7 +2,6 @@
 
 namespace Itsmattch\Nexus\Reader;
 
-
 use Itsmattch\Nexus\Common\Message;
 use Itsmattch\Nexus\Contract\Reader;
 

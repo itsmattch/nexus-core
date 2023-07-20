@@ -2,10 +2,14 @@
 
 namespace Itsmattch\Nexus\Entity\Concerns;
 
-/** todo */
+/**
+ * Allows the entities to define and manage relationships.
+ */
 trait HasRelationships
 {
-    /** todo */
+    /**
+     * A preset definition of relationships.
+     */
     protected array $relationships = [];
 
     protected function bootRelationships(): void
