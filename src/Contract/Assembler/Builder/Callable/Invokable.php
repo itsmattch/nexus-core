@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Contract\Assembler\Builder\Callable;
+namespace Itsmattch\NexusCore\Contract\Assembler\Builder\Callable;
 
 /**
  * The Invokable interface is designed for classes

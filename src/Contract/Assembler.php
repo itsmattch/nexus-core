@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Contract;
+namespace Itsmattch\NexusCore\Contract;
 
 /** todo */
 interface Assembler

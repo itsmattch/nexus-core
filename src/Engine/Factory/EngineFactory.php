@@ -1,9 +1,9 @@
 <?php
 
-namespace Itsmattch\Nexus\Engine\Factory;
+namespace Itsmattch\NexusCore\Engine\Factory;
 
-use Itsmattch\Nexus\Contract\Engine;
-use Itsmattch\Nexus\Engine\Concrete\HttpEngine;
+use Itsmattch\NexusCore\Contract\Engine;
+use Itsmattch\NexusCore\Engine\Concrete\HttpEngine;
 
 /**
  * Static factory class for creating Engine instances.

@@ -1,10 +1,10 @@
 <?php
 
-namespace Itsmattch\Nexus\Assembler;
+namespace Itsmattch\NexusCore\Assembler;
 
-use Itsmattch\Nexus\Contract\Entity;
-use Itsmattch\Nexus\Contract\Resource;
-use Itsmattch\Nexus\Contract\Resource\Action;
+use Itsmattch\NexusCore\Contract\Entity;
+use Itsmattch\NexusCore\Contract\Resource;
+use Itsmattch\NexusCore\Contract\Resource\Action;
 
 abstract class Blueprint extends Assembler
 {

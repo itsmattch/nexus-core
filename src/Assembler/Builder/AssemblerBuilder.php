@@ -1,10 +1,10 @@
 <?php
 
-namespace Itsmattch\Nexus\Assembler\Builder;
+namespace Itsmattch\NexusCore\Assembler\Builder;
 
 use Closure;
-use Itsmattch\Nexus\Contract\Assembler\Builder\AssemblerBuilder as AssemblerBuilderContract;
-use Itsmattch\Nexus\Contract\Assembler\Builder\Callable\Invokable;
+use Itsmattch\NexusCore\Contract\Assembler\Builder\AssemblerBuilder as AssemblerBuilderContract;
+use Itsmattch\NexusCore\Contract\Assembler\Builder\Callable\Invokable;
 
 abstract class AssemblerBuilder implements AssemblerBuilderContract
 {

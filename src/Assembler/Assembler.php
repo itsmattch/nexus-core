@@ -1,9 +1,9 @@
 <?php
 
-namespace Itsmattch\Nexus\Assembler;
+namespace Itsmattch\NexusCore\Assembler;
 
-use Itsmattch\Nexus\Contract\Assembler as AssemblerContract;
-use Itsmattch\Nexus\Contract\Entity;
+use Itsmattch\NexusCore\Contract\Assembler as AssemblerContract;
+use Itsmattch\NexusCore\Contract\Entity;
 
 abstract class Assembler implements AssemblerContract
 {

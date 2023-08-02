@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Contract\Address;
+namespace Itsmattch\NexusCore\Contract\Address;
 
 /**
  * Represents a parameter in an address template

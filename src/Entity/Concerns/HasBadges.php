@@ -1,10 +1,10 @@
 <?php
 
-namespace Itsmattch\Nexus\Entity\Concerns;
+namespace Itsmattch\NexusCore\Entity\Concerns;
 
-use Itsmattch\Nexus\Contract\Entity\Badge as BadgeContract;
-use Itsmattch\Nexus\Entity\Badge;
-use Itsmattch\Nexus\Entity\Identity;
+use Itsmattch\NexusCore\Contract\Entity\Badge as BadgeContract;
+use Itsmattch\NexusCore\Entity\Badge;
+use Itsmattch\NexusCore\Entity\Identity;
 
 /**
  * Allows the entities to define and manage badges.

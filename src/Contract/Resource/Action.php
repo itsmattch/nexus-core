@@ -1,8 +1,8 @@
 <?php
 
-namespace Itsmattch\Nexus\Contract\Resource;
+namespace Itsmattch\NexusCore\Contract\Resource;
 
-use Itsmattch\Nexus\Contract\Resource;
+use Itsmattch\NexusCore\Contract\Resource;
 
 /**
  * The Action interface represents an action that can be

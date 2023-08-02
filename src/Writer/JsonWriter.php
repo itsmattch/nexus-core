@@ -1,9 +1,9 @@
 <?php
 
-namespace Itsmattch\Nexus\Writer;
+namespace Itsmattch\NexusCore\Writer;
 
-use Itsmattch\Nexus\Common\Message;
-use Itsmattch\Nexus\Contract\Writer;
+use Itsmattch\NexusCore\Common\Message;
+use Itsmattch\NexusCore\Contract\Writer;
 
 class JsonWriter implements Writer
 {

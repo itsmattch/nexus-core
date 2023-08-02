@@ -1,6 +1,6 @@
 <?php
 
-use Itsmattch\Nexus\Assembler\Builder\Callable\Collection\JoinInvokable;
+use Itsmattch\NexusCore\Assembler\Builder\Callable\Collection\JoinInvokable;
 
 it('properly joins two arrays', function () {
     $invokable = new JoinInvokable('people');

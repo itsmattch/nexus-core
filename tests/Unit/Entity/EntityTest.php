@@ -1,7 +1,7 @@
 <?php
 
-use Itsmattch\Nexus\Contract\Entity\Badge;
-use Itsmattch\Nexus\Entity\Entity;
+use Itsmattch\NexusCore\Contract\Entity\Badge;
+use Itsmattch\NexusCore\Entity\Entity;
 
 // getName()
 it('returns declared name', function () {

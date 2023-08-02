@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Common;
+namespace Itsmattch\NexusCore\Common;
 
 /**
  * A simple encapsulation of the most important

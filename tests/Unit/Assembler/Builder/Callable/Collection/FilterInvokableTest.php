@@ -1,6 +1,6 @@
 <?php
 
-use Itsmattch\Nexus\Assembler\Builder\Callable\Collection\FilterInvokable;
+use Itsmattch\NexusCore\Assembler\Builder\Callable\Collection\FilterInvokable;
 
 // empty()
 it('invokes empty filter', function () {

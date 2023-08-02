@@ -1,9 +1,9 @@
 <?php
 
-namespace Itsmattch\Nexus\Reader\Factory;
+namespace Itsmattch\NexusCore\Reader\Factory;
 
-use Itsmattch\Nexus\Contract\Reader;
-use Itsmattch\Nexus\Reader\JsonReader;
+use Itsmattch\NexusCore\Contract\Reader;
+use Itsmattch\NexusCore\Reader\JsonReader;
 
 /**
  * Static factory class for creating Reader instances.

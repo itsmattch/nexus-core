@@ -1,8 +1,8 @@
 <?php
 
-namespace Itsmattch\Nexus\Contract\Entity;
+namespace Itsmattch\NexusCore\Contract\Entity;
 
-use Itsmattch\Nexus\Entity\Entity;
+use Itsmattch\NexusCore\Entity\Entity;
 
 interface Collection
 {

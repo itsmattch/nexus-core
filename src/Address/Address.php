@@ -1,12 +1,12 @@
 <?php
 
-namespace Itsmattch\Nexus\Address;
+namespace Itsmattch\NexusCore\Address;
 
-use Itsmattch\Nexus\Address\Parameter\OptionalParameter;
-use Itsmattch\Nexus\Address\Parameter\ProxyParameter;
-use Itsmattch\Nexus\Address\Parameter\RequiredParameter;
-use Itsmattch\Nexus\Contract\Address as AddressContract;
-use Itsmattch\Nexus\Contract\Address\Parameter as ParameterContract;
+use Itsmattch\NexusCore\Address\Parameter\OptionalParameter;
+use Itsmattch\NexusCore\Address\Parameter\ProxyParameter;
+use Itsmattch\NexusCore\Address\Parameter\RequiredParameter;
+use Itsmattch\NexusCore\Contract\Address as AddressContract;
+use Itsmattch\NexusCore\Contract\Address\Parameter as ParameterContract;
 use Stringable;
 
 class Address implements AddressContract, Stringable

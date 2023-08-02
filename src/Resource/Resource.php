@@ -1,17 +1,17 @@
 <?php
 
-namespace Itsmattch\Nexus\Resource;
+namespace Itsmattch\NexusCore\Resource;
 
-use Itsmattch\Nexus\Address\Factory\AddressFactory;
-use Itsmattch\Nexus\Contract\Address;
-use Itsmattch\Nexus\Contract\Engine;
-use Itsmattch\Nexus\Contract\Reader;
-use Itsmattch\Nexus\Contract\Resource as ResourceContract;
-use Itsmattch\Nexus\Contract\Resource\Action;
-use Itsmattch\Nexus\Contract\Writer;
-use Itsmattch\Nexus\Engine\Factory\EngineFactory;
-use Itsmattch\Nexus\Reader\Factory\ReaderFactory;
-use Itsmattch\Nexus\Writer\Factory\WriterFactory;
+use Itsmattch\NexusCore\Address\Factory\AddressFactory;
+use Itsmattch\NexusCore\Contract\Address;
+use Itsmattch\NexusCore\Contract\Engine;
+use Itsmattch\NexusCore\Contract\Reader;
+use Itsmattch\NexusCore\Contract\Resource as ResourceContract;
+use Itsmattch\NexusCore\Contract\Resource\Action;
+use Itsmattch\NexusCore\Contract\Writer;
+use Itsmattch\NexusCore\Engine\Factory\EngineFactory;
+use Itsmattch\NexusCore\Reader\Factory\ReaderFactory;
+use Itsmattch\NexusCore\Writer\Factory\WriterFactory;
 
 class Resource implements ResourceContract
 {

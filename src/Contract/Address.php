@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Contract;
+namespace Itsmattch\NexusCore\Contract;
 
 /**
  * Address encapsulates an address pointing to a resource.

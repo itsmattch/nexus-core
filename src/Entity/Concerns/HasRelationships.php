@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Entity\Concerns;
+namespace Itsmattch\NexusCore\Entity\Concerns;
 
 /**
  * Allows the entities to define and manage relationships.

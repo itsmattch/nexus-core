@@ -1,8 +1,8 @@
 <?php
 
-namespace Itsmattch\Nexus\Contract;
+namespace Itsmattch\NexusCore\Contract;
 
-use Itsmattch\Nexus\Common\Message;
+use Itsmattch\NexusCore\Common\Message;
 
 /**
  * Reader interface specifies methods for interpreting

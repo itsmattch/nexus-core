@@ -1,11 +1,11 @@
 <?php
 
-namespace Itsmattch\Nexus\Engine\Concrete;
+namespace Itsmattch\NexusCore\Engine\Concrete;
 
 use CurlHandle;
-use Itsmattch\Nexus\Common\Message;
-use Itsmattch\Nexus\Engine\Engine;
-use Itsmattch\Nexus\Engine\Enum\HttpMethod;
+use Itsmattch\NexusCore\Common\Message;
+use Itsmattch\NexusCore\Engine\Engine;
+use Itsmattch\NexusCore\Engine\Enum\HttpMethod;
 
 /**
  * The HttpEngine is a simple implementation of the Engine

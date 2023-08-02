@@ -1,10 +1,10 @@
 <?php
 
-namespace Itsmattch\Nexus\Assembler\Builder;
+namespace Itsmattch\NexusCore\Assembler\Builder;
 
-use Itsmattch\Nexus\Common\Traits\ArrayHelpers;
-use Itsmattch\Nexus\Contract\Assembler\Builder\EntityBuilder as EntityBuilderContract;
-use Itsmattch\Nexus\Contract\Entity;
+use Itsmattch\NexusCore\Common\Traits\ArrayHelpers;
+use Itsmattch\NexusCore\Contract\Assembler\Builder\EntityBuilder as EntityBuilderContract;
+use Itsmattch\NexusCore\Contract\Entity;
 
 class EntityBuilder extends AssemblerBuilder implements EntityBuilderContract
 {

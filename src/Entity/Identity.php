@@ -1,8 +1,8 @@
 <?php
 
-namespace Itsmattch\Nexus\Entity;
+namespace Itsmattch\NexusCore\Entity;
 
-use Itsmattch\Nexus\Contract\Entity\Identity as IdentityContract;
+use Itsmattch\NexusCore\Contract\Entity\Identity as IdentityContract;
 
 class Identity implements IdentityContract
 {

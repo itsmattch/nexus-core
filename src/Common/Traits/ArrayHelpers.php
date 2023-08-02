@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Common\Traits;
+namespace Itsmattch\NexusCore\Common\Traits;
 
 trait ArrayHelpers
 {

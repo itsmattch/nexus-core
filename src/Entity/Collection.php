@@ -1,9 +1,9 @@
 <?php
 
-namespace Itsmattch\Nexus\Entity;
+namespace Itsmattch\NexusCore\Entity;
 
-use Itsmattch\Nexus\Contract\Entity as EntityContract;
-use Itsmattch\Nexus\Contract\Entity\Collection as CollectionContract;
+use Itsmattch\NexusCore\Contract\Entity as EntityContract;
+use Itsmattch\NexusCore\Contract\Entity\Collection as CollectionContract;
 
 class Collection implements CollectionContract, \Iterator, \Countable
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Itsmattch\Nexus\Writer\Factory;
+namespace Itsmattch\NexusCore\Writer\Factory;
 
-use Itsmattch\Nexus\Contract\Writer;
-use Itsmattch\Nexus\Writer\JsonWriter;
+use Itsmattch\NexusCore\Contract\Writer;
+use Itsmattch\NexusCore\Writer\JsonWriter;
 
 /**
  * Static factory class for creating Writer instances.

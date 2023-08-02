@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Contract\Entity;
+namespace Itsmattch\NexusCore\Contract\Entity;
 
 interface Badge
 {

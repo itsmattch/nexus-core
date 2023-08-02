@@ -1,8 +1,8 @@
 <?php
 
-namespace Itsmattch\Nexus\Address\Factory;
+namespace Itsmattch\NexusCore\Address\Factory;
 
-use Itsmattch\Nexus\Address\Address;
+use Itsmattch\NexusCore\Address\Address;
 
 /**
  * Static factory class for Address.

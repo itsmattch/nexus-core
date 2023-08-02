@@ -1,8 +1,8 @@
 <?php
 
-namespace Itsmattch\Nexus\Address\Parameter;
+namespace Itsmattch\NexusCore\Address\Parameter;
 
-use Itsmattch\Nexus\Contract\Address\Parameter as ParameterContract;
+use Itsmattch\NexusCore\Contract\Address\Parameter as ParameterContract;
 use Stringable;
 
 /**

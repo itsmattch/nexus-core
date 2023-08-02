@@ -1,11 +1,11 @@
 <?php
 
-namespace Itsmattch\Nexus\Assembler\Builder;
+namespace Itsmattch\NexusCore\Assembler\Builder;
 
-use Itsmattch\Nexus\Assembler\Builder\Callable\Collection\FilterInvokable;
-use Itsmattch\Nexus\Assembler\Builder\Callable\Collection\JoinInvokable;
-use Itsmattch\Nexus\Common\Traits\ArrayHelpers;
-use Itsmattch\Nexus\Contract\Assembler\Builder\CollectionBuilder as CollectionBuilderContract;
+use Itsmattch\NexusCore\Assembler\Builder\Callable\Collection\FilterInvokable;
+use Itsmattch\NexusCore\Assembler\Builder\Callable\Collection\JoinInvokable;
+use Itsmattch\NexusCore\Common\Traits\ArrayHelpers;
+use Itsmattch\NexusCore\Contract\Assembler\Builder\CollectionBuilder as CollectionBuilderContract;
 
 class CollectionBuilder extends AssemblerBuilder implements CollectionBuilderContract
 {

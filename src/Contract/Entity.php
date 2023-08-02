@@ -1,9 +1,9 @@
 <?php
 
-namespace Itsmattch\Nexus\Contract;
+namespace Itsmattch\NexusCore\Contract;
 
-use Itsmattch\Nexus\Contract\Entity\Badge;
-use Itsmattch\Nexus\Contract\Entity\Badge as BadgeContract;
+use Itsmattch\NexusCore\Contract\Entity\Badge;
+use Itsmattch\NexusCore\Contract\Entity\Badge as BadgeContract;
 
 interface Entity
 {

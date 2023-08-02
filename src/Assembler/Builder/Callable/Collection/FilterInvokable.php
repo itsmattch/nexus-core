@@ -1,9 +1,9 @@
 <?php
 
-namespace Itsmattch\Nexus\Assembler\Builder\Callable\Collection;
+namespace Itsmattch\NexusCore\Assembler\Builder\Callable\Collection;
 
-use Itsmattch\Nexus\Common\Traits\ArrayHelpers;
-use Itsmattch\Nexus\Contract\Assembler\Builder\Callable\Invokable;
+use Itsmattch\NexusCore\Common\Traits\ArrayHelpers;
+use Itsmattch\NexusCore\Contract\Assembler\Builder\Callable\Invokable;
 
 /**
  * FilterInvokable provides a way to filter elements from an

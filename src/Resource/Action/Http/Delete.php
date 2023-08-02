@@ -1,10 +1,10 @@
 <?php
 
-namespace Itsmattch\Nexus\Resource\Action\Http;
+namespace Itsmattch\NexusCore\Resource\Action\Http;
 
-use Itsmattch\Nexus\Contract\Resource;
-use Itsmattch\Nexus\Contract\Resource\Action;
-use Itsmattch\Nexus\Engine\Enum\HttpMethod;
+use Itsmattch\NexusCore\Contract\Resource;
+use Itsmattch\NexusCore\Contract\Resource\Action;
+use Itsmattch\NexusCore\Engine\Enum\HttpMethod;
 
 class Delete implements Action
 {

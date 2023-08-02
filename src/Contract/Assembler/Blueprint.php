@@ -1,9 +1,9 @@
 <?php
 
-namespace Itsmattch\Nexus\Contract\Assembler;
+namespace Itsmattch\NexusCore\Contract\Assembler;
 
-use Itsmattch\Nexus\Contract\Assembler;
-use Itsmattch\Nexus\Contract\Entity;
+use Itsmattch\NexusCore\Contract\Assembler;
+use Itsmattch\NexusCore\Contract\Entity;
 
 /** todo */
 interface Blueprint extends Assembler

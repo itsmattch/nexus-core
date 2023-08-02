@@ -1,9 +1,9 @@
 <?php
 
-namespace Itsmattch\Nexus\Contract\Assembler\Builder;
+namespace Itsmattch\NexusCore\Contract\Assembler\Builder;
 
 use Closure;
-use Itsmattch\Nexus\Contract\Assembler\Builder\Callable\Invokable;
+use Itsmattch\NexusCore\Contract\Assembler\Builder\Callable\Invokable;
 
 /**
  * Defines a mechanism to build up an array by

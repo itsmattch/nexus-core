@@ -1,9 +1,9 @@
 <?php
 
-namespace Itsmattch\Nexus\Engine;
+namespace Itsmattch\NexusCore\Engine;
 
-use Itsmattch\Nexus\Contract\Address as AddressContract;
-use Itsmattch\Nexus\Contract\Engine as EngineContract;
+use Itsmattch\NexusCore\Contract\Address as AddressContract;
+use Itsmattch\NexusCore\Contract\Engine as EngineContract;
 
 abstract class Engine implements EngineContract
 {

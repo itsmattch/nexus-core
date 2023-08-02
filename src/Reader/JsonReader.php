@@ -1,9 +1,9 @@
 <?php
 
-namespace Itsmattch\Nexus\Reader;
+namespace Itsmattch\NexusCore\Reader;
 
-use Itsmattch\Nexus\Common\Message;
-use Itsmattch\Nexus\Contract\Reader;
+use Itsmattch\NexusCore\Common\Message;
+use Itsmattch\NexusCore\Contract\Reader;
 
 class JsonReader implements Reader
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Itsmattch\Nexus\Entity;
+namespace Itsmattch\NexusCore\Entity;
 
-use Itsmattch\Nexus\Contract\Entity as EntityContract;
-use Itsmattch\Nexus\Entity\Concerns\HasAttributes;
-use Itsmattch\Nexus\Entity\Concerns\HasBadges;
-use Itsmattch\Nexus\Entity\Concerns\HasDependencies;
-use Itsmattch\Nexus\Entity\Concerns\HasRelationships;
+use Itsmattch\NexusCore\Contract\Entity as EntityContract;
+use Itsmattch\NexusCore\Entity\Concerns\HasAttributes;
+use Itsmattch\NexusCore\Entity\Concerns\HasBadges;
+use Itsmattch\NexusCore\Entity\Concerns\HasDependencies;
+use Itsmattch\NexusCore\Entity\Concerns\HasRelationships;
 use ReflectionClass;
 
 /** todo */

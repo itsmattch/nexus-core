@@ -1,8 +1,8 @@
 <?php
 
-namespace Itsmattch\Nexus\Contract;
+namespace Itsmattch\NexusCore\Contract;
 
-use Itsmattch\Nexus\Contract\Resource\Action;
+use Itsmattch\NexusCore\Contract\Resource\Action;
 
 /**
  * A Resource represents an external entity that can be

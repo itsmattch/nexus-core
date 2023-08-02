@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Contract\Resource;
+namespace Itsmattch\NexusCore\Contract\Resource;
 
 /**
  * Cacheable indicates that the execution of an action

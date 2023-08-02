@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Engine\Enum;
+namespace Itsmattch\NexusCore\Engine\Enum;
 
 enum HttpMethod
 {

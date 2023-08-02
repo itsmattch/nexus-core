@@ -1,6 +1,6 @@
 <?php
 
-use Itsmattch\Nexus\Address\Address;
+use Itsmattch\NexusCore\Address\Address;
 
 // __construct()
 it('treats all parameters of the same name as required if at least one is required', function () {

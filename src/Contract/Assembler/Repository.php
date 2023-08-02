@@ -1,9 +1,9 @@
 <?php
 
-namespace Itsmattch\Nexus\Contract\Assembler;
+namespace Itsmattch\NexusCore\Contract\Assembler;
 
-use Itsmattch\Nexus\Contract\Assembler;
-use Itsmattch\Nexus\Contract\Entity\Collection;
+use Itsmattch\NexusCore\Contract\Assembler;
+use Itsmattch\NexusCore\Contract\Entity\Collection;
 
 /** todo */
 interface Repository extends Assembler

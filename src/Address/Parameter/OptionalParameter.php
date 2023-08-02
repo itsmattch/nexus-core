@@ -1,6 +1,6 @@
 <?php
 
-namespace Itsmattch\Nexus\Address\Parameter;
+namespace Itsmattch\NexusCore\Address\Parameter;
 
 /**
  * An optional parameter that is always considered valid.

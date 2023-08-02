@@ -1,15 +1,15 @@
 <?php
 
-namespace Itsmattch\Nexus\Assembler;
+namespace Itsmattch\NexusCore\Assembler;
 
-use Itsmattch\Nexus\Assembler\Builder\CollectionBuilder;
-use Itsmattch\Nexus\Assembler\Builder\EntityBuilder;
-use Itsmattch\Nexus\Contract\Assembler\Repository as RepositoryContract;
-use Itsmattch\Nexus\Contract\Entity;
-use Itsmattch\Nexus\Contract\Entity\Collection as CollectionContract;
-use Itsmattch\Nexus\Contract\Resource;
-use Itsmattch\Nexus\Contract\Resource\Action;
-use Itsmattch\Nexus\Entity\Collection;
+use Itsmattch\NexusCore\Assembler\Builder\CollectionBuilder;
+use Itsmattch\NexusCore\Assembler\Builder\EntityBuilder;
+use Itsmattch\NexusCore\Contract\Assembler\Repository as RepositoryContract;
+use Itsmattch\NexusCore\Contract\Entity;
+use Itsmattch\NexusCore\Contract\Entity\Collection as CollectionContract;
+use Itsmattch\NexusCore\Contract\Resource;
+use Itsmattch\NexusCore\Contract\Resource\Action;
+use Itsmattch\NexusCore\Entity\Collection;
 
 abstract class Repository extends Assembler implements RepositoryContract
 {
