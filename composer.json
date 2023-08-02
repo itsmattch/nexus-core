@@ -1,5 +1,5 @@
 {
-  "name": "itsmattch/nexus",
+  "name": "itsmattch/nexus-core",
   "description": "Nexus is an automation library that takes the dirty work off your plate.",
   "type": "library",
   "license": "MIT",
